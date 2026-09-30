@@ -8,7 +8,7 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('push', (event) => {
-  let data = { title: 'Güvenlik Bildirimi', body: 'Yeni bir güvenlik olayı gerçekleşti.' };
+  let data = { title: 'Security Alert', body: 'A new security event was triggered.' };
   if (event.data) {
     try {
       data = event.data.json();
