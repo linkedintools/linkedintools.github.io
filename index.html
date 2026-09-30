@@ -320,7 +320,9 @@
 
     function urlBase64ToUint8Array(base64String) {
       const padding = '='.repeat((4 - base64String.length % 4) % 4);
-      const base64 = (base64String + padding).replace(/\-/g, '+').replace(/_/g, '/');
+      const base64 = (base64String + padding)
+        .replace(/\-/g, '+')
+        .replace(/_/g, '/');
       const rawData = window.atob(base64);
       const outputArray = new Uint8Array(rawData.length);
       for (let i = 0; i < rawData.length; ++i) {
@@ -345,7 +347,7 @@
       try {
         const permission = await Notification.requestPermission();
         if (permission !== 'granted') {
-          alert('Notification permission was denied.');
+          alert('Notification permission was denied. Please allow notifications in your browser settings.');
           return;
         }
 
@@ -353,12 +355,19 @@
         await navigator.serviceWorker.ready;
 
         let subscription = await registration.pushManager.getSubscription();
-        if (!subscription) {
-          subscription = await registration.pushManager.subscribe({
-            userVisibleOnly: true,
-            applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY)
-          });
+        
+        // Eğer eski/geçersiz abonelik varsa önce temizle
+        if (subscription) {
+          try {
+            await subscription.unsubscribe();
+          } catch(e) {}
         }
+
+        const convertedKey = urlBase64ToUint8Array(VAPID_PUBLIC_KEY);
+        subscription = await registration.pushManager.subscribe({
+          userVisibleOnly: true,
+          applicationServerKey: convertedKey
+        });
 
         const subJson = subscription.toJSON();
         const res = await fetch(`${WORKER_URL}/api/subscribe`, {
@@ -373,10 +382,15 @@
           alert('✅ Web Push alerts have been successfully activated!');
           loadLogs(aid);
         } else {
-          alert('Error: ' + (result.error || 'Failed to register'));
+          alert('Registration error: ' + (result.error || 'Server error'));
         }
       } catch (err) {
-        alert('Push activation error: ' + err.message);
+        console.error('Push registration error:', err);
+        if (navigator.userAgent.includes('Brave') || navigator.brave) {
+          alert('Brave Browser Note:\nIf you see "push service error", please ensure "Use Google services for push messaging" is enabled in Brave Settings (brave://settings/privacy).');
+        } else {
+          alert('Push activation error: ' + err.message);
+        }
       }
     }
 
@@ -444,3 +458,4 @@
   </script>
 </body>
 </html>
+
