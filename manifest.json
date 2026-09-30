@@ -1,7 +1,7 @@
 ﻿{
-  "name": "LinkedIn Tools Güvenlik & Bildirim Merkezi",
+  "name": "LinkedIn Tools Security & Notification Hub",
   "short_name": "LIT Security",
-  "description": "LinkedIn Panel Güvenlik Olayları ve Canlı Bildirimler",
+  "description": "LinkedIn Session Protection Alerts and Real-Time Event Audit Log",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#0b0f19",
