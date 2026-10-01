@@ -46,7 +46,57 @@
     .btn { width: 100%; background: var(--accent); color: #fff; border: none; border-radius: 8px; padding: 12px; font-size: 14px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: background 0.2s; }
     .btn:hover { background: var(--accent-hover); }
 
-    .log-list { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; max-height: 380px; overflow-y: auto; }
+    .refresh-icon-btn {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      width: 30px;
+      height: 30px;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-left: auto;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+    }
+    .refresh-icon-btn:hover {
+      background: rgba(255, 255, 255, 0.12);
+      color: #ffffff;
+      border-color: rgba(255, 255, 255, 0.22);
+    }
+    .refresh-icon-btn.spinning svg {
+      animation: spin 0.6s linear infinite;
+    }
+    @keyframes spin {
+      100% { transform: rotate(360deg); }
+    }
+
+    .log-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 10px;
+      max-height: 380px;
+      overflow-y: auto;
+      padding-right: 4px;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+    }
+    .log-list::-webkit-scrollbar {
+      width: 6px;
+    }
+    .log-list::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .log-list::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.18);
+      border-radius: 4px;
+    }
+    .log-list::-webkit-scrollbar-thumb:hover {
+      background: rgba(255, 255, 255, 0.35);
+    }
+
     .log-item { background: #181818; border: 1px solid #282828; border-radius: 8px; padding: 12px 14px; font-size: 13px; border-left: 4px solid #3b82f6; }
     .log-item.danger { border-left-color: var(--danger); }
     .log-item.warning { border-left-color: var(--warning); }
@@ -60,10 +110,10 @@
   <div class="container">
     <div class="header">
       <h1>
-        <img src="icons/logo.svg" alt="LiT Logo" style="width: 30px; height: 30px; object-fit: contain; border-radius: 6px;" />
-        LiT Security Hub
+        <img src="icons/logo.svg" alt="Logo" style="width: 30px; height: 30px; object-fit: contain; border-radius: 6px;" />
+        Security Hub
       </h1>
-      <p>You can track unauthorized access to LinkedIn.com and requests to remove the "LiT" extension without authorization.</p>
+      <p>You can track unauthorized access to LinkedIn.com and requests to remove the "LinkedInTools" extension without authorization.</p>
     </div>
 
     <!-- iOS Setup Callout -->
@@ -112,7 +162,9 @@
           </span>
           Real-Time Security Audit Trail
         </span>
-        <button id="refreshLogsBtn" style="background:none; border:none; color:var(--accent); font-size:12px; cursor:pointer; margin-left:auto; font-weight:600;">Refresh</button>
+        <button id="refreshLogsBtn" title="Refresh Security Logs" class="refresh-icon-btn">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-refresh-cw preview-icon"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></svg>
+        </button>
       </div>
       <div id="logList" class="log-list">
         <div style="text-align: center; color: var(--text-muted); padding: 20px; font-size: 13px;">
@@ -211,6 +263,9 @@
 
     async function loadLogs(aid) {
       if (!aid) return;
+      const refreshBtn = document.getElementById('refreshLogsBtn');
+      if (refreshBtn) refreshBtn.classList.add('spinning');
+
       try {
         const res = await fetch(`${WORKER_URL}/api/logs?accountId=${encodeURIComponent(aid)}`);
         const data = await res.json();
@@ -239,6 +294,10 @@
         }).join('');
       } catch (e) {
         console.error('Log fetch error:', e);
+      } finally {
+        if (refreshBtn) {
+          setTimeout(() => refreshBtn.classList.remove('spinning'), 500);
+        }
       }
     }
 
