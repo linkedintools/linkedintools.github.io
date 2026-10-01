@@ -29,7 +29,7 @@
     .container { width: 100%; max-width: 540px; display: flex; flex-direction: column; gap: 20px; }
     .header { text-align: center; margin-top: 10px; margin-bottom: 10px; }
     .header h1 { font-size: 24px; font-weight: 700; color: #fff; margin-bottom: 8px; display: flex; align-items: center; justify-content: center; gap: 10px; }
-    .header p { font-size: 13.5px; color: var(--text-muted); line-height: 1.5; max-width: 480px; margin: 0 auto; }
+    .header p { font-size: 13.5px; color: rgba(255,255,255,.65); line-height: 1.5; max-width: 480px; margin: 0 auto; }
 
     .card { background-color: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; padding: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
     .card-title { font-size: 16px; font-weight: 600; margin-bottom: 14px; display: flex; align-items: center; justify-content: space-between; }
@@ -39,7 +39,7 @@
     .status-inactive { background: rgba(239, 68, 68, 0.15); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.3); }
 
     .input-group { margin-bottom: 16px; }
-    .input-group label { display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 6px; }
+    .input-group label { display: block; font-size: 13px; color: rgba(255,255,255,.65); margin-bottom: 6px; }
     .input-group input { width: 100%; background: #141414; border: 1px solid var(--border-color); border-radius: 8px; padding: 12px 14px; color: #fff; font-size: 14px; font-family: monospace; outline: none; }
     .input-group input:focus { border-color: var(--accent); }
 
@@ -107,17 +107,7 @@
       border-top: 1px solid rgba(255, 255, 255, 0.06);
       padding-top: 8px;
     }
-    .link-btn {
-      background: none;
-      border: none;
-      color: var(--text-muted);
-      font-size: 11.5px;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      transition: color 0.15s;
-    }
+    .link-btn { background: none; border: none; color: rgba(255,255,255,.65); font-size: 11.5px; cursor: pointer; display: inline-flex; align-items: center; gap: 5px; transition: color 0.15s; }
     .link-btn:hover {
       color: #ffffff;
       text-decoration: underline;
@@ -203,21 +193,21 @@
     }
 
     .log-title {
-      color: #ffffff;
+      color: rgba(255,255,255,.65);
       font-weight: 600;
       font-size: 13px;
     }
     .log-date {
-      color: var(--text-muted);
+      color: rgba(255,255,255,.50);
       font-size: 11.5px;
     }
     .log-desc {
-      color: var(--text-muted);
+      color: rgba(255,255,255,.50);
       font-size: 12px;
       line-height: 1.4;
     }
     .log-ip {
-      color: var(--text-muted);
+      color: rgba(255,255,255,.50);
       font-size: 11px;
     }
 
