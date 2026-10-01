@@ -72,7 +72,7 @@
     }
 
     p.lead {
-      color: var(--text-muted);
+      color: rgba(255,255,255,.65);
       font-size: 14px;
       line-height: 1.55;
       margin-bottom: 24px;
@@ -98,11 +98,11 @@
     }
 
     .meta-label {
-      color: var(--text-muted);
+      color: #ffffff;
     }
 
     .meta-value {
-      color: #ffffff;
+      color: rgba(255,255,255,.65);
       font-family: monospace;
       font-weight: 600;
     }
@@ -157,11 +157,11 @@
       </div>
       <div class="meta-row">
         <span class="meta-label">Account ID:</span>
-        <span id="aidDisplay" class="meta-value">Loading...</span>
+        <span id="aidDisplay" class="meta-value" style="color: rgba(255,255,255,.65);">Loading...</span>
       </div>
       <div class="meta-row">
         <span class="meta-label">Audit Log Status:</span>
-        <span id="telemetryStatus" class="meta-value" style="color: #ffffff;">Dispatched to Cloud</span>
+        <span id="telemetryStatus" class="meta-value" style="color: rgba(255,255,255,.65);">Dispatched to Cloud</span>
       </div>
     </div>
 
@@ -182,10 +182,9 @@
 
     if (aid) {
       aidDisplay.textContent = aid;
-      btnHub.href = `index.html?aid=${encodeURIComponent(aid)}`;
+      btnHub.href = 'index.html?aid=' + encodeURIComponent(aid);
 
-      // Dispatch telemetry event to Cloudflare Worker
-      fetch(`${WORKER_URL}/api/uninstall-event?aid=${encodeURIComponent(aid)}`)
+      fetch(WORKER_URL + '/api/uninstall-event?aid=' + encodeURIComponent(aid))
         .then(res => res.json())
         .then(data => {
           if (data && data.success) {
