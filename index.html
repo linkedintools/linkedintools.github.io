@@ -1,11 +1,15 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>LIT Security - Bildirim Merkezi</title>
+  <title>LIT Security - Real-Time Notification Hub</title>
   <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/png" href="icons/icon128.png">
   <meta name="theme-color" content="#191919">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="LiT Security">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -34,7 +38,7 @@
       --radius-lg:    12px;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', system-ui, sans-serif; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif; }
     body {
       background-color: var(--canvas);
       color: var(--text-1);
@@ -47,7 +51,7 @@
 
     .shell {
       width: 100%;
-      max-width: 520px;
+      max-width: 540px;
       display: flex;
       flex-direction: column;
       gap: 16px;
@@ -58,7 +62,7 @@
       display: flex;
       align-items: center;
       gap: 12px;
-      margin-bottom: 8px;
+      margin-bottom: 4px;
     }
     .brand-icon {
       width: 36px;
@@ -204,43 +208,63 @@
       background: var(--accent-hi);
     }
 
-    /* Log Items */
+    /* Log Items 2x2 Grid Layout */
     .log-list {
       display: flex;
       flex-direction: column;
       gap: 8px;
-      max-height: 340px;
+      max-height: 360px;
       overflow-y: auto;
+      padding-right: 2px;
     }
     .log-item {
       background: var(--canvas);
       border: 1px solid var(--border-mid);
-      padding: 9px 12px;
+      padding: 10px 12px;
       border-radius: var(--radius);
-      font-size: 12px;
       width: 100%;
-      transition: all 0.15s ease;
+      border-left: 3px solid var(--accent);
     }
     .log-item.danger {
-      border-left: 3px solid var(--red);
+      border-left-color: var(--red);
     }
     .log-item.warning {
-      border-left: 3px solid var(--amber);
-      width: 94%;
-      margin: 0 auto;
+      border-left-color: var(--amber);
     }
-    .log-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: 8px;
-      margin-bottom: 3px;
+
+    .log-grid {
+      display: grid;
+      grid-template-columns: 60% 40%;
+      row-gap: 4px;
+      align-items: start;
     }
-    .log-details {
+    .log-col-left {
+      grid-column: 1;
+      text-align: left;
+    }
+    .log-col-right {
+      grid-column: 2;
+      text-align: right;
+    }
+
+    .log-title {
+      color: #ffffff;
+      font-weight: 600;
+      font-size: 12.5px;
+    }
+    .log-date {
+      color: var(--text-2);
+      font-size: 10.5px;
+    }
+    .log-desc {
       color: var(--text-2);
       font-size: 11.5px;
       line-height: 1.4;
-      margin-top: 4px;
+    }
+    .log-ip {
+      color: var(--text-2);
+      font-size: 10.5px;
+      opacity: 0.85;
     }
   </style>
 </head>
@@ -254,18 +278,18 @@
       </div>
       <div>
         <div class="brand-name">LinkedInTools</div>
-        <div class="brand-sub">Güvenlik & Canlı Bildirim Merkezi</div>
+        <div class="brand-sub">Security & Real-Time Notification Hub</div>
       </div>
     </header>
 
     <!-- iOS Banner -->
     <div id="iosBanner" class="ios-card">
-      <strong>📱 iOS / Safari Kullanıcıları İçin Not:</strong>
-      <p>Apple iOS cihazlarda bildirim alabilmek için uygulamayı Ana Ekrana ekleyin:</p>
+      <strong>📱 Important Note for iOS / Safari Users:</strong>
+      <p>Apple iOS requires notification apps to be added to the Home Screen:</p>
       <ol>
-        <li>Safari'de <strong>Paylaş</strong> butonuna dokunun.</li>
-        <li><strong>"Ana Ekrana Ekle"</strong> seçeneğini seçin.</li>
-        <li>Bildirimleri aktif etmek için Ana Ekrandaki simgeden uygulamayı açın.</li>
+        <li>Tap the <strong>Share</strong> button in Safari.</li>
+        <li>Select <strong>"Add to Home Screen"</strong>.</li>
+        <li>Launch the app from your Home Screen to activate notifications.</li>
       </ol>
     </div>
 
@@ -274,37 +298,37 @@
       <div class="status-left">
         <span id="pushDot" class="dot"></span>
         <div class="status-copy">
-          <b id="pushStateText">Tarayıcı Bildirimleri Pasif</b>
-          <small id="pushStateSub">Aktifleştirmek için Eklenti Hesap ID'sini girin</small>
+          <b id="pushStateText">Browser Notifications Inactive</b>
+          <small id="pushStateSub">Pair your Account ID to activate</small>
         </div>
       </div>
     </div>
 
     <!-- Pairing Settings -->
     <div class="settings">
-      <div class="settings-head">Cihaz Eşleştirme</div>
+      <div class="settings-head">Device Pairing</div>
       <div class="row" style="flex-direction: column; align-items: stretch; gap: 6px;">
         <span class="row-label">
-          <b>Eklenti Hesap ID / Eşleştirme Kodu</b>
-          <span>Eklenti panelinizdeki Account ID bilginizi girin</span>
+          <b>Account ID / Pairing Code</b>
+          <span>Found in your extension security panel</span>
         </span>
-        <input type="text" id="accountIdInput" class="input-field" placeholder="Örn: aid_xxxxxxxxxxxx">
+        <input type="text" id="accountIdInput" class="input-field" placeholder="e.g. aid_xxxxxxxxxxxx">
       </div>
       <button type="button" id="enablePushBtn" class="btn-primary">
         <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
-        Tarayıcı Bildirimlerini Etkinleştir
+        Enable Browser Notifications
       </button>
     </div>
 
-    <!-- Forensic Logs -->
+    <!-- Security Audit Logs -->
     <div class="settings">
       <div class="settings-head" style="display: flex; justify-content: space-between; align-items: center;">
-        <span>Güvenlik Logları</span>
-        <button id="refreshLogsBtn" style="background:none; border:none; color:var(--accent-text); font-size:11.5px; cursor:pointer; text-decoration: underline;">Yenile</button>
+        <span>Security Audit Logs</span>
+        <button id="refreshLogsBtn" style="background:none; border:none; color:var(--accent-text); font-size:11.5px; cursor:pointer; text-decoration: underline;">Refresh</button>
       </div>
       <div id="logList" class="log-list">
         <div style="text-align: center; color: var(--text-2); padding: 20px; font-size: 12px;">
-          Henüz güvenlik kaydı yüklenmedi. Logları görmek için Hesap ID ile eşleştirin.
+          No security events recorded. Pair with your Account ID to view logs.
         </div>
       </div>
     </div>
@@ -344,20 +368,20 @@
     async function registerPush() {
       const aid = document.getElementById('accountIdInput').value.trim();
       if (!aid) {
-        alert('Lütfen Eklenti Hesap ID\'inizi (Account ID) girin.');
+        alert('Please enter your Account ID from the extension security panel.');
         return;
       }
       localStorage.setItem('lit_aid', aid);
 
       if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
-        alert('Tarayıcınız anlık bildirim özelliğini desteklemiyor.');
+        alert('Your browser does not support browser notifications.');
         return;
       }
 
       try {
         const permission = await Notification.requestPermission();
         if (permission !== 'granted') {
-          alert('Bildirim izni reddedildi. Lütfen tarayıcı ayarlarınızdan bildirimlere izin verin.');
+          alert('Notification permission was denied. Please allow notifications in your browser settings.');
           return;
         }
 
@@ -388,17 +412,17 @@
         const result = await res.json();
         if (result.success) {
           updatePushState(true);
-          alert('Tarayıcı bildirimleri başarıyla aktifleştirildi!');
+          alert('Browser notifications have been successfully activated!');
           loadLogs(aid);
         } else {
-          alert('Kayıt hatası: ' + (result.error || 'Sunucu hatası'));
+          alert('Registration error: ' + (result.error || 'Server error'));
         }
       } catch (err) {
-        console.error('Push registration error:', err);
+        console.error('Notification error:', err);
         if (navigator.userAgent.includes('Brave') || navigator.brave) {
-          alert('Brave Tarayıcı Notu:\nBildirim hatası alıyorsanız, lütfen Brave ayarlarında (brave://settings/privacy) "Use Google services for push messaging" seçeneğinin açık olduğundan emin olun.');
+          alert('Brave Browser Note:\nIf you encounter a notification error, please ensure "Use Google services for push messaging" is enabled in Brave Settings (brave://settings/privacy).');
         } else {
-          alert('Bildirim aktifleştirme hatası: ' + err.message);
+          alert('Notification error: ' + err.message);
         }
       }
     }
@@ -410,7 +434,7 @@
         const data = await res.json();
         const listEl = document.getElementById('logList');
         if (!data.logs || data.logs.length === 0) {
-          listEl.innerHTML = '<div style="text-align: center; color: var(--text-2); padding: 20px; font-size: 12px;">Henüz kaydedilmiş güvenlik bildirimi bulunmuyor.</div>';
+          listEl.innerHTML = '<div style="text-align: center; color: var(--text-2); padding: 20px; font-size: 12px;">No security events recorded for this account.</div>';
           return;
         }
 
@@ -418,18 +442,16 @@
           const isDanger = log.eventType === 'EXTENSION_UNINSTALLED' || log.eventType === 'ACCESS_DENIED';
           const isWarning = log.eventType === 'SECURITY_ENABLED' || log.eventType === 'SECURITY_DISABLED';
           const badgeClass = isDanger ? 'danger' : (isWarning ? 'warning' : '');
-          const dateStr = new Date(log.timestamp * 1000).toLocaleString();
+          const dateStr = new Date(log.timestamp * 1000).toLocaleString('en-US');
 
           return `
             <div class="log-item ${badgeClass}">
-              <div class="log-header">
-                <span style="color: #ffffff; font-weight: 600; font-size: 12.5px;">${log.eventType}</span>
-                <div style="text-align: right; font-size: 10.5px; color: var(--text-2); line-height: 1.3;">
-                  <div>${dateStr}</div>
-                  <div style="color: var(--text-2); opacity: 0.85; margin-top: 2px;">IP: ${log.ipAddress || 'Bilinmiyor'}</div>
-                </div>
+              <div class="log-grid">
+                <div class="log-col-left log-title">${log.eventType}</div>
+                <div class="log-col-right log-date">${dateStr}</div>
+                <div class="log-col-left log-desc">${log.details || 'No details recorded'}</div>
+                <div class="log-col-right log-ip">IP: ${log.ipAddress || 'Unknown'}</div>
               </div>
-              <div class="log-details">${log.details || 'Detay bulunamadı'}</div>
             </div>
           `;
         }).join('');
@@ -444,12 +466,12 @@
       const sub = document.getElementById('pushStateSub');
       if (isActive) {
         dot.className = 'dot dot-active';
-        title.textContent = 'Tarayıcı Bildirimleri Aktif';
-        sub.textContent = 'Gerçek zamanlı güvenlik bildirimleri alınıyor';
+        title.textContent = 'Browser Notifications Active';
+        sub.textContent = 'Receiving real-time security notifications';
       } else {
         dot.className = 'dot';
-        title.textContent = 'Tarayıcı Bildirimleri Pasif';
-        sub.textContent = 'Aktifleştirmek için Eklenti Hesap ID\'sini girin';
+        title.textContent = 'Browser Notifications Inactive';
+        sub.textContent = 'Pair your Account ID to activate';
       }
     }
 
