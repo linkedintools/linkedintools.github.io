@@ -195,7 +195,7 @@
 
     <!-- iOS Setup Callout -->
     <div id="iosBanner" class="ios-banner">
-      <strong>📱 Important for iOS / Safari Users:</strong>
+      <strong>Important for iOS / Safari Users:</strong>
       <p>To receive instant Web Push notifications on Apple devices, add this application to your Home Screen:</p>
       <ol>
         <li>Tap the <strong>Share</strong> icon in the Safari bottom toolbar.</li>
@@ -209,7 +209,7 @@
       <div class="card-title">
         <span style="display: flex; align-items: center; gap: 8px;">
           <span id="bellIconContainer" style="display: inline-flex; align-items: center; color: #ffffff;">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bell-off preview-icon"><path d="M10.268 21a2 2 0 0 0 3.464 0"/><path d="M17 17H4a1 1 0 0 1-.74-1.673C4.59 13.956 6 12.499 6 8a6 6 0 0 1 .258-1.742"/><path d="m2 2 20 20"/><path d="M8.668 3.01A6 6 0 0 1 18 8c0 2.687.77 4.653 1.707 6.05"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bell-off preview-icon"><path d="M10.268 21a2 2 0 0 0 3.464 0"/><path d="M17 17H4a1 1 0 0 1-.74-1.673C4.59 13.956 6 12.499 6 8a6 6 0 0 1 .258-1.742"/><path d="m2 2 20 20"/><path d="M8.668 3.01A6 6 0 0 1 18 8c0 2.687.77 4.653 1.707 6.05"/></svg>
           </span>
           Live Alert Status
         </span>
@@ -349,7 +349,7 @@
         const result = await res.json();
         if (result.success) {
           updateBadge(true);
-          alert('✅ Web Push alerts have been successfully activated! Check your notification bar for the confirmation message.');
+          alert('Web Push alerts have been successfully activated! Check your notification bar for the confirmation message.');
           loadLogs(aid);
         } else {
           alert('Error: ' + (result.error || 'Failed to register subscription'));
@@ -412,10 +412,10 @@
         badge.textContent = 'Active';
         if (bellContainer) {
           bellContainer.style.color = 'var(--success)';
-          bellContainer.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bell preview-icon"><path d="M10.268 21a2 2 0 0 0 3.464 0"/><path d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 1 6 8c0 4.499-1.411 5.956-2.738 7.326"/></svg>';
+          bellContainer.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bell preview-icon"><path d="M10.268 21a2 2 0 0 0 3.464 0"/><path d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"/></svg>';
         }
         if (alertDesc) {
-          alertDesc.innerHTML = '✅ <strong>Protected:</strong> Real-time Web Push telemetry is actively monitoring this device. You will receive instant push notifications upon extension removal or unauthorized access.';
+          alertDesc.innerHTML = '<strong>Protected:</strong> Real-time Web Push telemetry is actively monitoring this device. You will receive instant push notifications upon extension removal or unauthorized access.';
           alertDesc.style.color = '#e2e8f0';
         }
         if (enablePushBtn) enablePushBtn.style.display = 'none';
@@ -425,7 +425,7 @@
         badge.textContent = 'Inactive';
         if (bellContainer) {
           bellContainer.style.color = '#ffffff';
-          bellContainer.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bell-off preview-icon"><path d="M10.268 21a2 2 0 0 0 3.464 0"/><path d="M17 17H4a1 1 0 0 1-.74-1.673C4.59 13.956 6 12.499 6 8a6 6 0 0 1 .258-1.742"/><path d="m2 2 20 20"/><path d="M8.668 3.01A6 6 0 0 1 18 8c0 2.687.77 4.653 1.707 6.05"/></svg>';
+          bellContainer.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bell-off preview-icon"><path d="M10.268 21a2 2 0 0 0 3.464 0"/><path d="M17 17H4a1 1 0 0 1-.74-1.673C4.59 13.956 6 12.499 6 8a6 6 0 0 1 .258-1.742"/><path d="m2 2 20 20"/><path d="M8.668 3.01A6 6 0 0 1 18 8c0 2.687.77 4.653 1.707 6.05"/></svg>';
         }
         if (alertDesc) {
           alertDesc.innerHTML = 'Instant Web Push alerts are dispatched to this device upon extension removal or unauthorized access attempts.';
