@@ -246,7 +246,7 @@
           Inactive
         </span>
       </div>
-      <p id="alertDesc" style="font-size: 13px; color: var(--text-muted); margin-bottom: 16px; line-height: 1.5;">
+      <p id="alertDesc" style="font-size: 13px; color: rgba(255,255,255,.65); margin-bottom: 16px; line-height: 1.5;">
         Instant browser notifications are dispatched to this device upon extension removal or unauthorized access attempts.
       </p>
 
@@ -452,7 +452,7 @@
         }
         if (alertDesc) {
           alertDesc.innerHTML = '<strong>Protected:</strong> Real-time browser notifications are actively monitoring this device. You will receive instant notifications upon extension removal or unauthorized access.';
-          alertDesc.style.color = '#e2e8f0';
+          alertDesc.style.color = 'rgba(255,255,255,.65)';
         }
         if (enablePushBtn) enablePushBtn.style.display = 'none';
         if (activeShieldWrap) activeShieldWrap.style.display = 'flex';
@@ -463,7 +463,7 @@
         }
         if (alertDesc) {
           alertDesc.innerHTML = 'Instant browser notifications are dispatched to this device upon extension removal or unauthorized access attempts.';
-          alertDesc.style.color = 'var(--text-muted)';
+          alertDesc.style.color = 'rgba(255,255,255,.65)';
         }
         if (enablePushBtn) enablePushBtn.style.display = 'flex';
         if (activeShieldWrap) activeShieldWrap.style.display = 'none';
