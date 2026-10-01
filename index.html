@@ -411,6 +411,17 @@
         const result = await res.json();
         if (result.success) {
           updatePushState(true);
+          try {
+            await fetch(`${WORKER_URL}/api/log`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                accountId: aid,
+                eventType: 'PUSH_SUBSCRIBED',
+                details: 'Browser notifications enabled on device'
+              })
+            });
+          } catch (_) {}
           alert('Browser notifications have been successfully activated!');
           loadLogs(aid);
         } else {
