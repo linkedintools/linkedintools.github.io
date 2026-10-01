@@ -46,9 +46,6 @@
     .btn { width: 100%; background: var(--accent); color: #fff; border: none; border-radius: 8px; padding: 12px; font-size: 14px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: background 0.2s; }
     .btn:hover { background: var(--accent-hover); }
 
-    .btn-secondary { background: #282828; border: 1px solid var(--border-color); color: #fff; }
-    .btn-secondary:hover { background: #333333; }
-
     .refresh-icon-btn {
       background: rgba(255, 255, 255, 0.05);
       border: 1px solid var(--border-color);
@@ -150,16 +147,10 @@
         <input type="text" id="accountIdInput" placeholder="e.g. aid_0b122689a89f46c1">
       </div>
 
-      <div style="display: flex; flex-direction: column; gap: 10px;">
-        <button id="enablePushBtn" class="btn">
-          <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
-          Enable Web Push Notifications
-        </button>
-        <button id="testPushBtn" class="btn btn-secondary" style="display: none;">
-          <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-          Send Test Push Alert to this Device
-        </button>
-      </div>
+      <button id="enablePushBtn" class="btn">
+        <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+        Enable Web Push Notifications
+      </button>
     </div>
 
     <!-- Forensic Audit Log Card -->
@@ -270,25 +261,6 @@
       }
     }
 
-    async function testPush() {
-      const aid = document.getElementById('accountIdInput').value.trim();
-      if (!aid) {
-        alert('Please enter your Account ID first.');
-        return;
-      }
-      try {
-        const res = await fetch(`${WORKER_URL}/api/test-push?aid=${encodeURIComponent(aid)}`);
-        const data = await res.json();
-        if (data.success && data.dispatchedDevices > 0) {
-          alert(`✅ Test alert sent to ${data.dispatchedDevices} device(s)! Check your notifications.`);
-        } else {
-          alert('⚠️ No active push subscriptions found for this Account ID. Please click "Enable Web Push Notifications" first.');
-        }
-      } catch (err) {
-        alert('Test failed: ' + err.message);
-      }
-    }
-
     async function loadLogs(aid) {
       if (!aid) return;
       const refreshBtn = document.getElementById('refreshLogsBtn');
@@ -332,18 +304,15 @@
     function updateBadge(isActive) {
       const badge = document.getElementById('pushStatusBadge');
       const bellContainer = document.getElementById('bellIconContainer');
-      const testBtn = document.getElementById('testPushBtn');
       if (isActive) {
         badge.className = 'status-badge status-active';
         badge.textContent = 'Active';
-        if (testBtn) testBtn.style.display = 'flex';
         if (bellContainer) {
           bellContainer.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bell preview-icon"><path d="M10.268 21a2 2 0 0 0 3.464 0"/><path d="M17 17H4a1 1 0 0 1-.74-1.673C4.59 13.956 6 12.499 6 8a6 6 0 0 1 .258-1.742"/><path d="m2 2 20 20"/><path d="M8.668 3.01A6 6 0 0 1 18 8c0 2.687.77 4.653 1.707 6.05"/></svg>';
         }
       } else {
         badge.className = 'status-badge status-inactive';
         badge.textContent = 'Inactive';
-        if (testBtn) testBtn.style.display = 'none';
         if (bellContainer) {
           bellContainer.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bell-off preview-icon"><path d="M10.268 21a2 2 0 0 0 3.464 0"/><path d="M17 17H4a1 1 0 0 1-.74-1.673C4.59 13.956 6 12.499 6 8a6 6 0 0 1 .258-1.742"/><path d="m2 2 20 20"/><path d="M8.668 3.01A6 6 0 0 1 18 8c0 2.687.77 4.653 1.707 6.05"/></svg>';
         }
@@ -351,7 +320,6 @@
     }
 
     document.getElementById('enablePushBtn').addEventListener('click', registerPush);
-    document.getElementById('testPushBtn').addEventListener('click', testPush);
     document.getElementById('refreshLogsBtn').addEventListener('click', () => {
       const aid = document.getElementById('accountIdInput').value.trim();
       loadLogs(aid);
