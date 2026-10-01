@@ -437,15 +437,25 @@
       }
     }
 
-    async function loadLogs(aid) {
+    let lastLogsPayload = '';
+
+    async function loadLogs(aid, isAuto = false) {
       if (!aid) return;
       const refreshBtn = document.getElementById('refreshLogsBtn');
-      if (refreshBtn) refreshBtn.classList.add('spinning');
+      if (refreshBtn && !isAuto) refreshBtn.classList.add('spinning');
 
       try {
         const res = await fetch(`${WORKER_URL}/api/logs?accountId=${encodeURIComponent(aid)}`);
         const data = await res.json();
         const listEl = document.getElementById('logList');
+        
+        const payloadStr = JSON.stringify(data.logs || []);
+        if (payloadStr === lastLogsPayload && listEl.innerHTML !== '') {
+          // No changes detected, skip re-rendering to preserve scroll position
+          return;
+        }
+        lastLogsPayload = payloadStr;
+
         if (!data.logs || data.logs.length === 0) {
           listEl.innerHTML = '<div style="text-align: center; color: var(--text-muted); padding: 20px; font-size: 13px;">No security events recorded yet.</div>';
           return;
@@ -471,7 +481,7 @@
       } catch (e) {
         console.error('Log fetch error:', e);
       } finally {
-        if (refreshBtn) {
+        if (refreshBtn && !isAuto) {
           setTimeout(() => refreshBtn.classList.remove('spinning'), 500);
         }
       }
@@ -546,13 +556,37 @@
     document.getElementById('reSyncPushBtn')?.addEventListener('click', registerPush);
     document.getElementById('refreshLogsBtn')?.addEventListener('click', () => {
       const aid = document.getElementById('accountIdInput').value.trim();
-      loadLogs(aid);
+      loadLogs(aid, false);
     });
 
+    document.getElementById('accountIdInput')?.addEventListener('change', () => {
+      const aid = document.getElementById('accountIdInput').value.trim();
+      if (aid) {
+        localStorage.setItem('lit_aid', aid);
+        loadLogs(aid, false);
+      }
+    });
+
+    // Auto-refresh audit trail every 15 seconds in background
+    setInterval(() => {
+      const aid = document.getElementById('accountIdInput')?.value.trim() || initialAid;
+      if (aid && !document.hidden) {
+        loadLogs(aid, true);
+      }
+    }, 15000);
+
     checkSubscriptionState();
-    window.addEventListener('focus', checkSubscriptionState);
+    window.addEventListener('focus', () => {
+      checkSubscriptionState();
+      const aid = document.getElementById('accountIdInput')?.value.trim() || initialAid;
+      if (aid) loadLogs(aid, true);
+    });
     window.addEventListener('visibilitychange', () => {
-      if (!document.hidden) checkSubscriptionState();
+      if (!document.hidden) {
+        checkSubscriptionState();
+        const aid = document.getElementById('accountIdInput')?.value.trim() || initialAid;
+        if (aid) loadLogs(aid, true);
+      }
     });
     if (navigator.permissions && navigator.permissions.query) {
       navigator.permissions.query({ name: 'notifications' }).then(status => {
