@@ -512,6 +512,7 @@
     }
 
     async function checkSubscriptionState() {
+      const aid = document.getElementById('accountIdInput')?.value.trim() || initialAid;
       if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
         updatePushState(false);
         return;
@@ -523,7 +524,19 @@
       try {
         const reg = await navigator.serviceWorker.ready;
         const sub = await reg.pushManager.getSubscription();
-        updatePushState(Boolean(sub));
+        if (sub) {
+          updatePushState(true);
+          // Auto-sync existing subscription with current Account ID in Cloudflare D1
+          if (aid) {
+            fetch(`${WORKER_URL}/api/subscribe`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ accountId: aid, subscription: sub.toJSON() })
+            }).catch(() => {});
+          }
+        } else {
+          updatePushState(false);
+        }
       } catch (_) {
         updatePushState(false);
       }
