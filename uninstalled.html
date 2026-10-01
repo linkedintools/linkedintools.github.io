@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Extension Uninstalled - LinkedInTools</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <link rel="icon" type="image/png" href="icons/icon128.png">
+  <meta name="theme-color" content="#0072A9">
+  <style>
+    :root {
+      --bg-main: #191919;
+      --bg-card: #202020;
+      --border-color: #2d2d2d;
+      --text-main: #ffffff;
+      --text-muted: #94a3b8;
+      --accent: #0072A9;
+      --accent-hover: #005885;
+      --danger: #ef4444;
+      --danger-bg: rgba(239, 68, 68, 0.12);
+      --danger-border: rgba(239, 68, 68, 0.3);
+      --success: #10b981;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+    body { background-color: var(--bg-main); color: var(--text-main); min-height: 100vh; padding: 24px 16px; display: flex; align-items: center; justify-content: center; }
+    
+    .card {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      padding: 32px 28px;
+      max-width: 480px;
+      width: 100%;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
+      text-align: center;
+    }
+
+    .logo-container {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .logo-container img {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      object-fit: contain;
+    }
+
+    .alert-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--danger-bg);
+      border: 1px solid var(--danger-border);
+      color: var(--danger);
+      font-size: 12px;
+      font-weight: 600;
+      padding: 5px 12px;
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 16px;
+    }
+
+    h1 {
+      font-size: 22px;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 10px;
+    }
+
+    p.lead {
+      color: var(--text-muted);
+      font-size: 14px;
+      line-height: 1.55;
+      margin-bottom: 24px;
+    }
+
+    .meta-box {
+      background: #141414;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 14px 16px;
+      margin-bottom: 24px;
+      text-align: left;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .meta-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12.5px;
+    }
+
+    .meta-label {
+      color: var(--text-muted);
+    }
+
+    .meta-value {
+      color: #ffffff;
+      font-family: monospace;
+      font-weight: 600;
+    }
+
+    .meta-value.event {
+      color: var(--danger);
+    }
+
+    .btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      background: var(--accent);
+      color: #ffffff;
+      text-decoration: none;
+      border-radius: 8px;
+      padding: 13px 18px;
+      font-size: 14px;
+      font-weight: 600;
+      transition: background 0.2s;
+    }
+
+    .btn:hover {
+      background: var(--accent-hover);
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="logo-container">
+      <img src="icons/logo.svg" alt="LiT Logo">
+    </div>
+    
+    <div>
+      <div class="alert-badge">
+        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        Security Telemetry Triggered
+      </div>
+    </div>
+
+    <h1>Extension Was Uninstalled</h1>
+    <p class="lead">
+      The <strong>LinkedInTools (LiT)</strong> extension was uninstalled from your browser. A forensic security record has been preserved and instant Web Push telemetry was dispatched to your paired devices.
+    </p>
+
+    <div class="meta-box">
+      <div class="meta-row">
+        <span class="meta-label">Event:</span>
+        <span class="meta-value event">EXTENSION_UNINSTALLED</span>
+      </div>
+      <div class="meta-row">
+        <span class="meta-label">Account ID:</span>
+        <span id="aidDisplay" class="meta-value">Loading...</span>
+      </div>
+      <div class="meta-row">
+        <span class="meta-label">Audit Log Status:</span>
+        <span id="telemetryStatus" class="meta-value" style="color: var(--success);">Dispatched to Cloud</span>
+      </div>
+    </div>
+
+    <a id="btnHub" href="index.html" class="btn">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>
+      Open Security Hub
+    </a>
+  </div>
+
+  <script>
+    const WORKER_URL = 'https://lit-security-worker.linkedintools1.workers.dev';
+    const params = new URLSearchParams(window.location.search);
+    const aid = params.get('aid') || localStorage.getItem('lit_aid') || '';
+
+    const aidDisplay = document.getElementById('aidDisplay');
+    const btnHub = document.getElementById('btnHub');
+    const telemetryStatus = document.getElementById('telemetryStatus');
+
+    if (aid) {
+      aidDisplay.textContent = aid;
+      btnHub.href = `index.html?aid=${encodeURIComponent(aid)}`;
+
+      // Dispatch telemetry event to Cloudflare Worker
+      fetch(`${WORKER_URL}/api/uninstall-event?aid=${encodeURIComponent(aid)}`)
+        .then(res => res.json())
+        .then(data => {
+          if (data && data.success) {
+            telemetryStatus.textContent = 'Recorded & Dispatched';
+          }
+        })
+        .catch(err => {
+          console.error('Telemetry error:', err);
+        });
+    } else {
+      aidDisplay.textContent = 'Not Provided';
+      telemetryStatus.textContent = 'No Account ID';
+    }
+  </script>
+</body>
+</html>
