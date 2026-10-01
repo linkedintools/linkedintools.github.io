@@ -1,31 +1,25 @@
-﻿// PWA Service Worker - Push & Notification Listener
-self.addEventListener('install', (event) => {
-  self.skipWaiting();
-});
-
-self.addEventListener('activate', (event) => {
-  event.waitUntil(clients.claim());
-});
-
-self.addEventListener('push', (event) => {
-  let data = { title: 'Security Alert', body: 'A new security event was triggered.' };
-  if (event.data) {
-    try {
+// Service Worker for W3C Web Push Notifications
+self.addEventListener('push', event => {
+  let data = { title: 'Security Alert', body: 'A new security event has been recorded.' };
+  try {
+    if (event.data) {
       data = event.data.json();
-    } catch (e) {
+    }
+  } catch (e) {
+    if (event.data) {
       data.body = event.data.text();
     }
   }
 
   const options = {
     body: data.body,
-    icon: 'icon-192.png',
-    badge: 'icon-192.png',
-    vibrate: [200, 100, 200, 100, 400],
-    data: data,
-    tag: data.eventType || 'security-alert',
-    renotify: true,
-    requireInteraction: true
+    icon: '/icons/icon128.png',
+    badge: '/icons/icon128.png',
+    vibrate: [200, 100, 200, 100, 200],
+    data: data.data || {},
+    actions: [
+      { action: 'view', title: 'View Audit Log' }
+    ]
   };
 
   event.waitUntil(
@@ -33,16 +27,19 @@ self.addEventListener('push', (event) => {
   );
 });
 
-self.addEventListener('notificationclick', (event) => {
+self.addEventListener('notificationclick', event => {
   event.notification.close();
+  const urlToOpen = '/index.html';
   event.waitUntil(
-    clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
-      if (clientList.length > 0) {
-        let client = clientList[0];
-        client.focus();
-        return;
+    clients.matchAll({ type: 'window', includeUncontrolled: true }).then(windowClients => {
+      for (let client of windowClients) {
+        if (client.url.includes('index.html') && 'focus' in client) {
+          return client.focus();
+        }
       }
-      return clients.openWindow('./index.html');
+      if (clients.openWindow) {
+        return clients.openWindow(urlToOpen);
+      }
     })
   );
 });

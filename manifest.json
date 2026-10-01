@@ -1,20 +1,15 @@
-﻿{
+{
   "name": "LinkedIn Tools Security & Notification Hub",
-  "short_name": "LIT Security",
-  "description": "LinkedIn Session Protection Alerts and Real-Time Event Audit Log",
-  "start_url": "./index.html",
+  "short_name": "LiT Security",
+  "description": "Real-time Security Logs and Web Push Alerts for LinkedIn Automation",
+  "start_url": "/index.html",
   "display": "standalone",
-  "background_color": "#0b0f19",
-  "theme_color": "#2563eb",
+  "background_color": "#191919",
+  "theme_color": "#0072A9",
   "icons": [
     {
-      "src": "icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png"
-    },
-    {
-      "src": "icon-512.png",
-      "sizes": "512x512",
+      "src": "/icons/icon128.png",
+      "sizes": "128x128",
       "type": "image/png"
     }
   ]

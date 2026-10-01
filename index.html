@@ -1,300 +1,109 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>LIT Security - Hub & Realtime Notifications</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>LiT Security - Real-Time Alert & Audit Hub</title>
   <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#191919">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="icons/icon128.png">
+  <meta name="theme-color" content="#0072A9">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="LiT Security">
   <style>
     :root {
-      --canvas:       #191919;
-      --surface:      #202020;
-      --raised:       #2C2C2A;
-      --hover:        #323230;
-      --text-1:       #FFFFFF;
-      --text-2:       rgba(255,255,255,.65);
-      --text-3:       rgba(255,255,255,.35);
-      --border:       rgba(255,255,255,.10);
-      --border-mid:   rgba(255,255,255,.07);
-      --border-focus: rgba(94,159,232,.55);
-      --accent:       #0072A9;
-      --accent-hi:    #008AD2;
-      --accent-tint:  rgba(94,159,232,.10);
-      --accent-text:  #93C4F5;
-      --green:        #72BC8F;
-      --green-tint:   rgba(114,188,143,.10);
-      --red:          #E97366;
-      --red-tint:     rgba(233,115,102,.10);
-      --radius:       8px;
-      --radius-lg:    12px;
+      --bg-main: #191919;
+      --bg-card: #202020;
+      --border-color: #2d2d2d;
+      --text-main: #ffffff;
+      --text-muted: #94a3b8;
+      --accent: #0072A9;
+      --accent-hover: #005885;
+      --danger: #ef4444;
+      --warning: #f59e0b;
+      --success: #10b981;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', system-ui, sans-serif; }
-    body {
-      background-color: var(--canvas);
-      color: var(--text-1);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 32px 16px;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+    body { background-color: var(--bg-main); color: var(--text-main); min-height: 100vh; padding: 20px; display: flex; flex-direction: column; align-items: center; }
+    .container { width: 100%; max-width: 540px; display: flex; flex-direction: column; gap: 20px; }
+    .header { text-align: center; margin-top: 10px; margin-bottom: 10px; }
+    .header h1 { font-size: 24px; font-weight: 700; color: #fff; margin-bottom: 6px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .header p { font-size: 14px; color: var(--text-muted); }
 
-    .shell {
-      width: 100%;
-      max-width: 520px;
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
+    .card { background-color: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; padding: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
+    .card-title { font-size: 16px; font-weight: 600; margin-bottom: 14px; display: flex; align-items: center; justify-content: space-between; }
+    
+    .status-badge { font-size: 12px; padding: 4px 10px; border-radius: 12px; font-weight: 600; text-transform: uppercase; }
+    .status-active { background: rgba(16, 185, 129, 0.15); color: var(--success); border: 1px solid rgba(16, 185, 129, 0.3); }
+    .status-inactive { background: rgba(239, 68, 68, 0.15); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.3); }
 
-    /* Brand Header */
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 8px;
-    }
-    .brand-icon {
-      width: 36px;
-      height: 36px;
-      background: var(--raised);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #fff;
-    }
-    .brand-name {
-      font-size: 18px;
-      font-weight: 700;
-      color: var(--text-1);
-    }
-    .brand-sub {
-      font-size: 12px;
-      color: var(--text-3);
-    }
+    .input-group { margin-bottom: 16px; }
+    .input-group label { display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 6px; }
+    .input-group input { width: 100%; background: #141414; border: 1px solid var(--border-color); border-radius: 8px; padding: 12px 14px; color: #fff; font-size: 14px; font-family: monospace; outline: none; }
+    .input-group input:focus { border-color: var(--accent); }
 
-    /* Status Row */
-    .status-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: var(--surface);
-      border: 1px solid var(--border-mid);
-      border-radius: var(--radius);
-      padding: 12px 14px;
-    }
-    .status-left {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: var(--text-3);
-    }
-    .dot-active {
-      background: var(--green);
-      box-shadow: 0 0 8px var(--green);
-    }
-    .status-copy b {
-      display: block;
-      font-size: 13.5px;
-      font-weight: 600;
-      color: var(--text-1);
-    }
-    .status-copy small {
-      font-size: 11.5px;
-      color: var(--text-3);
-    }
+    .btn { width: 100%; background: var(--accent); color: #fff; border: none; border-radius: 8px; padding: 12px; font-size: 14px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: background 0.2s; }
+    .btn:hover { background: var(--accent-hover); }
 
-    /* Settings Box */
-    .settings {
-      background: var(--surface);
-      border: 1px solid var(--border-mid);
-      border-radius: var(--radius);
-      padding: 14px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-    .settings-head {
-      font-size: 11px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: .06em;
-      color: var(--text-3);
-    }
+    .log-list { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; max-height: 380px; overflow-y: auto; }
+    .log-item { background: #181818; border: 1px solid #282828; border-radius: 8px; padding: 12px 14px; font-size: 13px; border-left: 4px solid #3b82f6; }
+    .log-item.danger { border-left-color: var(--danger); }
+    .log-item.warning { border-left-color: var(--warning); }
+    .log-header { display: flex; justify-content: space-between; margin-bottom: 4px; font-size: 12px; color: var(--text-muted); }
 
-    /* Form Rows */
-    .row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-    }
-    .row-label b {
-      display: block;
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--text-1);
-    }
-    .row-label span {
-      font-size: 11.5px;
-      color: var(--text-3);
-    }
-
-    /* iOS Banner */
-    .ios-card {
-      display: none;
-      background: rgba(222,146,85,.08);
-      border: 1px solid rgba(222,146,85,.25);
-      border-radius: var(--radius);
-      padding: 14px;
-      font-size: 12.5px;
-      color: #fed7aa;
-      line-height: 1.5;
-    }
-    .ios-card ol {
-      margin-left: 18px;
-      margin-top: 6px;
-    }
-
-    /* Buttons & Inputs */
-    .input-field {
-      width: 100%;
-      background: var(--canvas);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 10px 12px;
-      color: var(--text-1);
-      font-size: 13px;
-      outline: none;
-    }
-    .input-field:focus {
-      border-color: var(--border-focus);
-    }
-
-    .btn-primary {
-      width: 100%;
-      height: 38px;
-      background: var(--accent);
-      color: #fff;
-      border: none;
-      border-radius: var(--radius);
-      font-size: 13.5px;
-      font-weight: 600;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      transition: background 0.15s ease;
-    }
-    .btn-primary:hover {
-      background: var(--accent-hi);
-    }
-
-    /* Log Items */
-    .log-list {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      max-height: 320px;
-      overflow-y: auto;
-    }
-    .log-item {
-      background: var(--canvas);
-      border: 1px solid var(--border-mid);
-      padding: 10px 12px;
-      border-radius: var(--radius);
-      font-size: 12px;
-    }
-    .log-item.danger {
-      border-left: 3px solid var(--red);
-    }
-    .log-item.warning {
-      border-left: 3px solid var(--amber);
-    }
-    .log-header {
-      display: flex;
-      justify-content: space-between;
-      color: var(--text-2);
-      font-size: 11px;
-      font-weight: 600;
-      margin-bottom: 3px;
-    }
+    .ios-banner { background: rgba(0, 114, 169, 0.12); border: 1px solid rgba(0, 114, 169, 0.3); border-radius: 10px; padding: 14px; font-size: 13px; line-height: 1.5; color: #e2e8f0; display: none; }
+    .ios-banner ol { margin-left: 18px; margin-top: 8px; }
   </style>
 </head>
 <body>
-  <div class="shell">
-    <header class="brand">
-      <div class="brand-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
-          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-        </svg>
-      </div>
-      <div>
-        <div class="brand-name">LinkedInTools</div>
-        <div class="brand-sub">Security & Realtime Push Hub</div>
-      </div>
-    </header>
+  <div class="container">
+    <div class="header">
+      <h1>🛡️ LiT Security Hub</h1>
+      <p>LinkedIn Session Protection & Instant Web Push Telemetry</p>
+    </div>
 
-    <!-- iOS Banner -->
-    <div id="iosBanner" class="ios-card">
-      <strong>📱 Note for iOS / Safari Users:</strong>
-      <p>Apple requires Web Push apps to be added to Home Screen:</p>
+    <!-- iOS Setup Callout -->
+    <div id="iosBanner" class="ios-banner">
+      <strong>📱 Important for iOS / Safari Users:</strong>
+      <p>To receive instant Web Push notifications on Apple devices, add this application to your Home Screen:</p>
       <ol>
-        <li>Tap the <strong>Share</strong> button in Safari.</li>
+        <li>Tap the <strong>Share</strong> icon in the Safari bottom toolbar.</li>
         <li>Select <strong>"Add to Home Screen"</strong>.</li>
-        <li>Open the icon on your Home Screen to enable notifications.</li>
+        <li>Launch LiT Security from your Home Screen and enable push notifications.</li>
       </ol>
     </div>
 
-    <!-- Status -->
-    <div class="status-row">
-      <div class="status-left">
-        <span id="pushDot" class="dot"></span>
-        <div class="status-copy">
-          <b id="pushStateText">Push Notifications Inactive</b>
-          <small id="pushStateSub">Pair your Account ID to activate</small>
-        </div>
+    <!-- Live Notification Status Card -->
+    <div class="card">
+      <div class="card-title">
+        <span>🔔 Live Alert Status</span>
+        <span id="pushStatusBadge" class="status-badge status-inactive">Inactive</span>
       </div>
-    </div>
+      <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 16px;">
+        Instant Web Push alerts are dispatched to this device upon extension removal or unauthorized access attempts.
+      </p>
 
-    <!-- Pairing Settings -->
-    <div class="settings">
-      <div class="settings-head">Device Pairing</div>
-      <div class="row" style="flex-direction: column; align-items: stretch; gap: 6px;">
-        <span class="row-label">
-          <b>Account ID / Pairing Code</b>
-          <span>Found in your extension side panel</span>
-        </span>
-        <input type="text" id="accountIdInput" class="input-field" placeholder="e.g. aid_xxxxxxxxxxxx">
+      <div class="input-group">
+        <label for="accountIdInput">Pairing Key / Account ID:</label>
+        <input type="text" id="accountIdInput" placeholder="e.g. aid_0b122689a89f46c1">
       </div>
-      <button type="button" id="enablePushBtn" class="btn-primary">
-        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
-        Enable Web Push Alerts
+
+      <button id="enablePushBtn" class="btn">
+        <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+        Enable Web Push Notifications
       </button>
     </div>
 
-    <!-- Forensic Logs -->
-    <div class="settings">
-      <div class="settings-head" style="display: flex; justify-content: space-between; align-items: center;">
-        <span>Forensic Audit Logs</span>
-        <button id="refreshLogsBtn" style="background:none; border:none; color:var(--accent-text); font-size:11.5px; cursor:pointer; text-decoration: underline;">Refresh</button>
+    <!-- Forensic Audit Log Card -->
+    <div class="card">
+      <div class="card-title">
+        <span>📜 Real-Time Security Audit Trail</span>
+        <button id="refreshLogsBtn" style="background:none; border:none; color:var(--accent); font-size:12px; cursor:pointer; margin-left:auto; font-weight:600;">Refresh</button>
       </div>
       <div id="logList" class="log-list">
-        <div style="text-align: center; color: var(--text-3); padding: 20px; font-size: 12px;">
-          No security events loaded. Pair with your Account ID to view logs.
+        <div style="text-align: center; color: var(--text-muted); padding: 20px; font-size: 13px;">
+          No security events loaded. Connect your Account ID to view telemetry.
         </div>
       </div>
     </div>
@@ -304,12 +113,14 @@
     const WORKER_URL = 'https://lit-security-worker.linkedintools1.workers.dev';
     const VAPID_PUBLIC_KEY = 'BM_Z4N5hKv0p5wXNXDLS5obSflu5keOi_eIeZvFDQb8eorMuD7qxMKH7VcxBYE2xTmTUPxNcR0JJO_CNgHNo090';
 
+    // iOS Device Detection
     const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
     const isStandalone = window.navigator.standalone || window.matchMedia('(display-mode: standalone)').matches;
     if (isIOS && !isStandalone) {
       document.getElementById('iosBanner').style.display = 'block';
     }
 
+    // Read Account ID from URL query or localStorage
     const urlParams = new URLSearchParams(window.location.search);
     const initialAid = urlParams.get('aid') || localStorage.getItem('lit_aid') || '';
     if (initialAid) {
@@ -318,11 +129,10 @@
       loadLogs(initialAid);
     }
 
+    // Convert Base64 URL to Uint8Array for VAPID key
     function urlBase64ToUint8Array(base64String) {
       const padding = '='.repeat((4 - base64String.length % 4) % 4);
-      const base64 = (base64String + padding)
-        .replace(/\-/g, '+')
-        .replace(/_/g, '/');
+      const base64 = (base64String + padding).replace(/\-/g, '+').replace(/_/g, '/');
       const rawData = window.atob(base64);
       const outputArray = new Uint8Array(rawData.length);
       for (let i = 0; i < rawData.length; ++i) {
@@ -334,7 +144,7 @@
     async function registerPush() {
       const aid = document.getElementById('accountIdInput').value.trim();
       if (!aid) {
-        alert('Please enter your Account ID.');
+        alert('Please enter your Account ID from the extension security panel.');
         return;
       }
       localStorage.setItem('lit_aid', aid);
@@ -347,26 +157,22 @@
       try {
         const permission = await Notification.requestPermission();
         if (permission !== 'granted') {
-          alert('Notification permission was denied. Please allow notifications in your browser settings.');
+          alert('Notification permission was not granted.');
           return;
         }
 
         const registration = await navigator.serviceWorker.register('sw.js');
         await navigator.serviceWorker.ready;
 
-        let subscription = await registration.pushManager.getSubscription();
-        
-        // Eğer eski/geçersiz abonelik varsa önce temizle
-        if (subscription) {
-          try {
-            await subscription.unsubscribe();
-          } catch(e) {}
+        // Unsubscribe existing stale subscriptions to prevent VAPID mismatch
+        let existingSub = await registration.pushManager.getSubscription();
+        if (existingSub) {
+          try { await existingSub.unsubscribe(); } catch(e) {}
         }
 
-        const convertedKey = urlBase64ToUint8Array(VAPID_PUBLIC_KEY);
-        subscription = await registration.pushManager.subscribe({
+        const subscription = await registration.pushManager.subscribe({
           userVisibleOnly: true,
-          applicationServerKey: convertedKey
+          applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY)
         });
 
         const subJson = subscription.toJSON();
@@ -378,19 +184,15 @@
 
         const result = await res.json();
         if (result.success) {
-          updatePushState(true);
-          alert('✅ Web Push alerts have been successfully activated!');
+          updateBadge(true);
+          alert('✅ Web Push alerts have been successfully activated for this device!');
           loadLogs(aid);
         } else {
-          alert('Registration error: ' + (result.error || 'Server error'));
+          alert('Error: ' + (result.error || 'Failed to register subscription'));
         }
       } catch (err) {
-        console.error('Push registration error:', err);
-        if (navigator.userAgent.includes('Brave') || navigator.brave) {
-          alert('Brave Browser Note:\nIf you see "push service error", please ensure "Use Google services for push messaging" is enabled in Brave Settings (brave://settings/privacy).');
-        } else {
-          alert('Push activation error: ' + err.message);
-        }
+        console.error('Push error:', err);
+        alert('Failed to activate push notifications: ' + err.message);
       }
     }
 
@@ -401,7 +203,7 @@
         const data = await res.json();
         const listEl = document.getElementById('logList');
         if (!data.logs || data.logs.length === 0) {
-          listEl.innerHTML = '<div style="text-align: center; color: var(--text-3); padding: 20px; font-size: 12px;">No security events recorded yet.</div>';
+          listEl.innerHTML = '<div style="text-align: center; color: var(--text-muted); padding: 20px; font-size: 13px;">No security events recorded for this account.</div>';
           return;
         }
 
@@ -409,16 +211,16 @@
           const isDanger = log.eventType === 'EXTENSION_UNINSTALLED' || log.eventType === 'ACCESS_DENIED';
           const isWarning = log.eventType === 'SECURITY_ENABLED' || log.eventType === 'SECURITY_DISABLED';
           const badgeClass = isDanger ? 'danger' : (isWarning ? 'warning' : '');
-          const dateStr = new Date(log.timestamp * 1000).toLocaleString();
+          const dateStr = new Date(log.timestamp * 1000).toLocaleString('en-US');
 
           return `
             <div class="log-item ${badgeClass}">
               <div class="log-header">
-                <span style="color: var(--text-1);">${log.eventType}</span>
-                <span style="color: var(--text-3);">${dateStr}</span>
+                <strong>${log.eventType}</strong>
+                <span>${dateStr}</span>
               </div>
-              <div style="color: var(--text-2); margin-top: 2px;">${log.details || 'No details provided'}</div>
-              <div style="font-size: 10.5px; color: var(--text-3); margin-top: 4px;">IP: ${log.ipAddress || 'Unknown'}</div>
+              <div style="color: #cbd5e1;">${log.details || 'No details recorded'}</div>
+              <div style="font-size: 11px; color: #64748b; margin-top: 4px;">IP: ${log.ipAddress || 'Unknown'}</div>
             </div>
           `;
         }).join('');
@@ -427,18 +229,14 @@
       }
     }
 
-    function updatePushState(isActive) {
-      const dot = document.getElementById('pushDot');
-      const title = document.getElementById('pushStateText');
-      const sub = document.getElementById('pushStateSub');
+    function updateBadge(isActive) {
+      const badge = document.getElementById('pushStatusBadge');
       if (isActive) {
-        dot.className = 'dot dot-active';
-        title.textContent = 'Push Notifications Active';
-        sub.textContent = 'Receiving real-time security events';
+        badge.className = 'status-badge status-active';
+        badge.textContent = 'Active';
       } else {
-        dot.className = 'dot';
-        title.textContent = 'Push Notifications Inactive';
-        sub.textContent = 'Pair your Account ID to activate';
+        badge.className = 'status-badge status-inactive';
+        badge.textContent = 'Inactive';
       }
     }
 
@@ -451,11 +249,10 @@
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.ready.then(reg => {
         reg.pushManager.getSubscription().then(sub => {
-          if (sub) updatePushState(true);
+          if (sub) updateBadge(true);
         });
       });
     }
   </script>
 </body>
 </html>
-
