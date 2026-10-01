@@ -188,7 +188,8 @@
         .then(res => res.json())
         .then(data => {
           if (data && data.success) {
-            telemetryStatus.textContent = 'Recorded & Dispatched';
+            const count = typeof data.dispatchedCount === 'number' ? data.dispatchedCount : 0;
+            telemetryStatus.textContent = count > 0 ? ('Dispatched to ' + count + ' device(s)') : 'Recorded (No devices paired)';
           }
         })
         .catch(err => {
