@@ -253,7 +253,7 @@
         <img src="icons/logo.svg" alt="Logo" style="width: 30px; height: 30px; object-fit: contain;" />
         Security Hub
       </h1>
-      <p>You can track unauthorized access to LinkedIn.com and requests to remove the "LinkedInTools" extension without authorization.</p>
+      
     </div>
 
     <!-- iOS Setup Callout -->
@@ -276,9 +276,7 @@
           Inactive
         </span>
       </div>
-      <p id="alertDesc" style="font-size: 13px; color: rgba(255,255,255,.65); margin-bottom: 16px; line-height: 1.5;">
-        Instant browser notifications are dispatched to this device upon extension removal or unauthorized access attempts.
-      </p>
+      <p id="alertDesc" style="font-size: 13px; color: rgba(255,255,255,.65); margin-bottom: 16px; line-height: 1.5;">If you <strong>enable notifications</strong> below, instant browser notifications will be sent to this device if the "<strong>LinkedInTools</strong>" extension is removed without authorization.</p>
 
       <div class="input-group">
         <label for="accountIdInput">Pairing Key / Account ID:</label>
@@ -502,7 +500,7 @@
           badge.innerHTML = `${activeBell} Active`;
         }
         if (alertDesc) {
-          alertDesc.innerHTML = '<strong>Protected:</strong> Real-time browser notifications are actively monitoring this device. You will receive instant notifications upon extension removal or unauthorized access.';
+          alertDesc.innerHTML = '<strong>Protected</strong> ✓ : Real-time browser notifications are actively monitoring this device. You will receive an instant notification if the extension is removed or unauthorized access occurs.';
           alertDesc.style.color = 'rgba(255,255,255,.65)';
         }
         if (enablePushBtn) enablePushBtn.style.display = 'none';
@@ -513,7 +511,7 @@
           badge.innerHTML = `${inactiveBell} Inactive`;
         }
         if (alertDesc) {
-          alertDesc.innerHTML = 'Instant browser notifications are dispatched to this device upon extension removal or unauthorized access attempts.';
+          alertDesc.innerHTML = "If you <strong>enable notifications</strong> below, instant browser notifications will be sent to this device if the \"<strong>LinkedInTools</strong>\" extension is removed without authorization.";
           alertDesc.style.color = 'rgba(255,255,255,.65)';
         }
         if (enablePushBtn) enablePushBtn.style.display = 'flex';
