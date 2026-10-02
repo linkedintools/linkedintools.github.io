@@ -29,11 +29,11 @@ self.addEventListener('push', event => {
 
 self.addEventListener('notificationclick', event => {
   event.notification.close();
-  const urlToOpen = '/index.html';
+  const urlToOpen = '/hub.html';
   event.waitUntil(
     clients.matchAll({ type: 'window', includeUncontrolled: true }).then(windowClients => {
       for (let client of windowClients) {
-        if (client.url.includes('index.html') && 'focus' in client) {
+        if (client.url.includes('hub.html') && 'focus' in client) {
           return client.focus();
         }
       }

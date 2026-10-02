@@ -2,7 +2,7 @@
   "name": "LinkedIn Tools Security & Notification Hub",
   "short_name": "LiT Security",
   "description": "Real-time Security Logs and Web Push Alerts for LinkedIn Automation",
-  "start_url": "/index.html",
+  "start_url": "/hub.html",
   "display": "standalone",
   "background_color": "#191919",
   "theme_color": "#0072A9",

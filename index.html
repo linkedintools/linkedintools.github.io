@@ -2,600 +2,405 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>LinkedInTools - LinkedIn.com view protection</title>
-  <link rel="manifest" href="manifest.json">
-  <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
-  <link rel="icon" type="image/x-icon" href="favicon.ico">
-  <link rel="icon" type="image/png" sizes="128x128" href="icons/icon128.png">
-  <link rel="icon" type="image/svg+xml" href="icons/logo.svg">
-  <link rel="apple-touch-icon" href="icons/icon128.png">
-  <meta name="theme-color" content="#0072A9">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="LiT Security">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LinkedInTools - Official Support & Security Portal</title>
+  <link rel="icon" type="image/png" href="icons/icon128.png">
   <style>
     :root {
-      --bg-main: #191919;
+      --bg-main: #121212;
+      --bg-surface: #191919;
       --bg-card: #202020;
       --border-color: #2d2d2d;
+      --border-hover: rgba(255, 255, 255, 0.2);
       --text-main: #ffffff;
-      --text-muted: #94a3b8;
+      --text-sub: rgba(255, 255, 255, 0.65);
+      --text-muted: rgba(255, 255, 255, 0.4);
       --accent: #0072A9;
-      --accent-hover: #005885;
-      --danger: #ef4444;
-      --warning: #f59e0b;
-      --success: #10b981;
+      --accent-hover: #008AD2;
+      --accent-glow: rgba(0, 138, 210, 0.15);
+      --green: #10b981;
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
-    body { background-color: var(--bg-main); color: var(--text-main); min-height: 100vh; padding: 20px; display: flex; flex-direction: column; align-items: center; }
-    .container { width: 100%; max-width: 540px; display: flex; flex-direction: column; gap: 20px; }
-    .header { text-align: center; margin-top: 10px; margin-bottom: 10px; }
-    .header h1 { font-size: 24px; font-weight: 700; color: #fff; margin-bottom: 8px; display: flex; align-items: center; justify-content: center; gap: 10px; }
-    .header p { font-size: 13.5px; color: rgba(255,255,255,.65); line-height: 1.5; max-width: 480px; margin: 0 auto; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-    .card { background-color: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; padding: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
-    .card-title { font-size: 16px; font-weight: 600; margin-bottom: 14px; display: flex; align-items: center; justify-content: space-between; }
-    
-    .status-badge { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; padding: 4px 10px; border-radius: 12px; font-weight: 600; text-transform: uppercase; }
-    .status-badge svg { width: 16px; height: 16px; flex-shrink: 0; }
-    .status-active { background: rgba(16, 185, 129, 0.15); color: var(--success); border: 1px solid rgba(16, 185, 129, 0.3); }
-    .status-inactive { background: rgba(239, 68, 68, 0.15); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.3); }
+    body {
+      background-color: var(--bg-main);
+      color: var(--text-main);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
 
-    .input-group { margin-bottom: 16px; }
-    .input-group label { display: block; font-size: 13px; color: rgba(255,255,255,.65); margin-bottom: 6px; }
-    .input-group input { width: 100%; background: #141414; border: 1px solid var(--border-color); border-radius: 8px; padding: 12px 14px; color: #fff; font-size: 14px; font-family: monospace; outline: none; }
-    .input-group input:focus { border-color: var(--accent); }
+    /* Header */
+    header {
+      background: rgba(25, 25, 25, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border-color);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
 
-    .btn { width: 100%; background: var(--accent); color: #fff; border: none; border-radius: 8px; padding: 12px; font-size: 14px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: background 0.2s; }
-    .btn:hover { background: var(--accent-hover); }
-
-    /* Active Protection Card */
-    .active-shield-card {
-      background: rgba(16, 185, 129, 0.08);
-      border: 1px solid rgba(16, 185, 129, 0.25);
-      border-radius: 10px;
-      padding: 14px 16px;
+    .nav-container {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 16px 24px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 10px;
     }
-    .active-shield-header {
+
+    .brand {
       display: flex;
       align-items: center;
       gap: 12px;
-      width: 60%;
+      text-decoration: none;
+      color: var(--text-main);
     }
-    .pulse-indicator {
-      position: relative;
-      width: 12px;
-      height: 12px;
+
+    .brand img {
+      width: 32px;
+      height: 32px;
+      border-radius: 6px;
+    }
+
+    .brand-title {
+      font-size: 17px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .nav-link {
+      color: var(--text-sub);
+      text-decoration: none;
+      font-size: 13.5px;
+      font-weight: 500;
+      transition: color 0.2s ease;
+    }
+
+    .nav-link:hover {
+      color: var(--text-main);
+    }
+
+    .nav-btn {
+      background: var(--accent);
+      color: #ffffff;
+      padding: 8px 16px;
+      border-radius: var(--radius-sm);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 600;
+      transition: background 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .nav-btn:hover {
+      background: var(--accent-hover);
+    }
+
+    /* Main Container */
+    main {
+      flex: 1;
+      max-width: 1080px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 48px 24px 64px;
+    }
+
+    /* Hero Section */
+    .hero {
+      text-align: center;
+      max-width: 720px;
+      margin: 0 auto 56px;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      background: var(--accent-glow);
+      border: 1px solid rgba(0, 138, 210, 0.3);
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #93C4F5;
+      margin-bottom: 20px;
+    }
+
+    .hero h1 {
+      font-size: 38px;
+      font-weight: 750;
+      letter-spacing: -0.03em;
+      line-height: 1.2;
+      margin-bottom: 16px;
+      background: linear-gradient(180deg, #ffffff 0%, rgba(255, 255, 255, 0.75) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero p {
+      font-size: 16px;
+      color: var(--text-sub);
+      line-height: 1.5;
+      margin-bottom: 28px;
+    }
+
+    .hero-actions {
       display: flex;
       align-items: center;
       justify-content: center;
-      flex-shrink: 0;
+      gap: 14px;
+      flex-wrap: wrap;
     }
-    .pulse-dot {
-      width: 8px;
-      height: 8px;
-      background-color: var(--success);
-      border-radius: 50%;
-    }
-    .pulse-ring {
-      position: absolute;
-      width: 20px;
-      height: 20px;
-      border: 2px solid var(--success);
-      border-radius: 50%;
-      animation: pulse-ring 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
-    }
-    @keyframes pulse-ring {
-      0% { transform: scale(0.5); opacity: 0.9; }
-      50% { transform: scale(1.3); opacity: 0; }
-      100% { transform: scale(1.3); opacity: 0; }
-    }
-    .active-shield-title strong {
-      display: block;
-      font-size: 13.5px;
+
+    .btn-primary {
+      background: var(--accent);
       color: #ffffff;
+      padding: 12px 24px;
+      border-radius: var(--radius-sm);
+      text-decoration: none;
+      font-size: 14.5px;
       font-weight: 600;
-    }
-    .active-shield-title span {
-      display: block;
-      font-size: 11.5px;
-      color: rgba(255, 255, 255, 0.65);
-      margin-top: 2px;
-    }
-    .active-shield-actions {
-      display: flex;
-      justify-content: flex-end;
+      display: inline-flex;
       align-items: center;
-      width: 40%;
+      gap: 8px;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 14px var(--accent-glow);
     }
-    .link-btn { background: none; border: none; color: rgba(255,255,255,.65); font-size: 11.5px; cursor: pointer; display: inline-flex; align-items: center; gap: 5px; transition: color 0.15s; }
-    .link-btn:hover {
-      color: #ffffff;
+
+    .btn-primary:hover {
+      background: var(--accent-hover);
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      background: var(--bg-card);
+      color: var(--text-main);
+      border: 1px solid var(--border-color);
+      padding: 12px 24px;
+      border-radius: var(--radius-sm);
+      text-decoration: none;
+      font-size: 14.5px;
+      font-weight: 550;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--border-hover);
+      background: #282828;
+    }
+
+    /* Cards Grid */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+      margin-bottom: 56px;
+    }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 24px;
+      transition: border-color 0.2s ease, transform 0.2s ease;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .card:hover {
+      border-color: var(--border-hover);
+      transform: translateY(-2px);
+    }
+
+    .card-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 10px;
+      background: rgba(0, 114, 169, 0.12);
+      border: 1px solid rgba(0, 114, 169, 0.25);
+      color: #008AD2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 16px;
+    }
+
+    .card h3 {
+      font-size: 17px;
+      font-weight: 650;
+      margin-bottom: 8px;
+      color: var(--text-main);
+    }
+
+    .card p {
+      font-size: 13.5px;
+      color: var(--text-sub);
+      line-height: 1.5;
+      margin-bottom: 16px;
+      flex: 1;
+    }
+
+    .card-link {
+      color: var(--accent-hover);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .card-link:hover {
       text-decoration: underline;
     }
 
-    .refresh-icon-btn {
-      background: rgba(255, 255, 255, 0.05);
+    /* Support Section */
+    .support-box {
+      background: var(--bg-surface);
       border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      text-align: center;
+    }
+
+    .support-box h2 {
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .support-box p {
+      color: var(--text-sub);
+      font-size: 14px;
+      max-width: 560px;
+      margin: 0 auto 20px;
+    }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid var(--border-color);
+      padding: 24px;
+      text-align: center;
+      font-size: 12.5px;
       color: var(--text-muted);
-      width: 30px;
-      height: 30px;
-      border-radius: 6px;
-      cursor: pointer;
-      margin-left: auto;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.2s ease;
-    }
-    .refresh-icon-btn:hover {
-      background: rgba(255, 255, 255, 0.12);
-      color: #ffffff;
-      border-color: rgba(255, 255, 255, 0.22);
-    }
-    .refresh-icon-btn.spinning svg {
-      animation: spin 0.6s linear infinite;
-    }
-    @keyframes spin {
-      100% { transform: rotate(360deg); }
     }
 
-    .log-list {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      margin-top: 10px;
-      max-height: 380px;
-      overflow-y: auto;
-      padding-right: 4px;
-      scrollbar-width: thin;
-      scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
-    }
-    .log-list::-webkit-scrollbar {
-      width: 6px;
-    }
-    .log-list::-webkit-scrollbar-track {
-      background: transparent;
-    }
-    .log-list::-webkit-scrollbar-thumb {
-      background: rgba(255, 255, 255, 0.18);
-      border-radius: 4px;
-    }
-    .log-list::-webkit-scrollbar-thumb:hover {
-      background: rgba(255, 255, 255, 0.35);
+    footer a {
+      color: var(--text-sub);
+      text-decoration: none;
+      margin: 0 8px;
     }
 
-    /* Log Item 2x2 Table Grid Layout */
-    .log-item {
-      background: #181818;
-      border: 1px solid #282828;
-      border-radius: 8px;
-      padding: 12px 14px;
-      font-size: 13px;
-      border-left: 4px solid #3b82f6;
-      width: 100%;
-      word-break: break-word;
-      overflow-wrap: anywhere;
+    footer a:hover {
+      color: var(--text-main);
     }
-    .log-item.danger { border-left-color: var(--danger); }
-    .log-item.warning { border-left-color: var(--warning); }
-
-    .log-grid {
-      display: grid;
-      grid-template-columns: 60% 40%;
-      row-gap: 4px;
-      align-items: start;
-    }
-    .log-col-left {
-      grid-column: 1;
-      text-align: left;
-    }
-    .log-col-right {
-      grid-column: 2;
-      text-align: right;
-    }
-
-    .log-title {
-      color: rgba(255,255,255,.65);
-      font-weight: 600;
-      font-size: 13px;
-    }
-    .log-date {
-      color: rgba(255,255,255,.50);
-      font-size: 11.5px;
-    }
-    .log-desc {
-      color: rgba(255,255,255,.50);
-      font-size: 12px;
-      line-height: 1.4;
-    }
-    .log-ip {
-      color: rgba(255,255,255,.50);
-      font-size: 11px;
-    }
-
-    @media (max-width: 580px) {
-      .active-shield-card {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 10px;
-      }
-      .active-shield-header {
-        width: 100%;
-      }
-      .active-shield-actions {
-        width: 100%;
-        justify-content: flex-end;
-        border-top: 1px solid rgba(255, 255, 255, 0.06);
-        padding-top: 8px;
-      }
-      .log-grid {
-        grid-template-columns: 1fr;
-        row-gap: 4px;
-      }
-      .log-col-left,
-      .log-col-right {
-        grid-column: 1 / -1;
-        text-align: left;
-      }
-    }
-
-    .ios-banner { background: rgba(0, 114, 169, 0.12); border: 1px solid rgba(0, 114, 169, 0.3); border-radius: 10px; padding: 14px; font-size: 13px; line-height: 1.5; color: #e2e8f0; display: none; }
-    .ios-banner ol { margin-left: 18px; margin-top: 8px; }
   </style>
 </head>
 <body>
-  <div class="container">
-    <div class="header">
-      <h1>
-        <img src="icons/logo.svg" alt="Logo" style="width: 30px; height: 30px; object-fit: contain;" />
-        Security Hub
-      </h1>
-    </div>
 
-    <!-- iOS Setup Callout -->
-    <div id="iosBanner" class="ios-banner">
-      <strong>Important for iOS / Safari Users:</strong>
-      <p>To receive instant browser notifications on Apple devices, add this application to your Home Screen:</p>
-      <ol>
-        <li>Tap the <strong>Share</strong> icon in the Safari bottom toolbar.</li>
-        <li>Select <strong>"Add to Home Screen"</strong>.</li>
-        <li>Launch LiT Security from your Home Screen and enable browser notifications.</li>
-      </ol>
-    </div>
-
-    <!-- Live Notification Status Card -->
-    <div class="card">
-      <div class="card-title">
-        <span>Live Alert Status</span>
-        <span id="pushStatusBadge" class="status-badge status-inactive">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bell-off"><path d="M10.268 21a2 2 0 0 0 3.464 0"/><path d="M17 17H4a1 1 0 0 1-.74-1.673C4.59 13.956 6 12.499 6 8a6 6 0 0 1 .258-1.742"/><path d="m2 2 20 20"/><path d="M8.668 3.01A6 6 0 0 1 18 8c0 2.687.77 4.653 1.707 6.05"/></svg>
-          Inactive
-        </span>
+  <header>
+    <div class="nav-container">
+      <a href="/index.html" class="brand">
+        <img src="icons/icon128.png" alt="LinkedInTools Logo">
+        <span class="brand-title">LinkedInTools</span>
+      </a>
+      <div class="nav-links">
+        <a href="#features" class="nav-link">Features</a>
+        <a href="#support" class="nav-link">Support & FAQ</a>
+        <a href="/hub.html" class="nav-btn">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+          Security Hub
+        </a>
       </div>
-      <p id="alertDesc" style="font-size: 13px; color: rgba(255,255,255,.65); margin-bottom: 16px; line-height: 1.5;">
-        If you <strong>enable notifications</strong> below, instant browser notifications will be sent to this device if the "<strong>LinkedInTools</strong>" extension is removed without authorization.
-      </p>
+    </div>
+  </header>
 
-      <div class="input-group">
-        <label for="accountIdInput">Pairing Key / Account ID:</label>
-        <input type="text" id="accountIdInput" placeholder="e.g. aid_0b122689a89f46c1">
+  <main>
+    <!-- Hero -->
+    <section class="hero">
+      <div class="hero-badge">🛡️ Intelligent Automation & Security Suite</div>
+      <h1>LinkedInTools Support & Security Portal</h1>
+      <p>Seamless inbound invitation automation, multi-layer page protection, and real-time mobile push security notifications.</p>
+      <div class="hero-actions">
+        <a href="/hub.html" class="btn-primary">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+          Open Mobile Security Hub
+        </a>
+        <a href="#features" class="btn-secondary">Explore Documentation</a>
       </div>
+    </section>
 
-      <!-- Inactive State Button -->
-      <button id="enablePushBtn" class="btn">
-        <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
-        Enable Browser Notifications
-      </button>
-
-      <!-- Active State Shield Card (Hidden until Active) -->
-      <div id="activeShieldWrap" class="active-shield-card" style="display: none;">
-        <div class="active-shield-header">
-          <div class="pulse-indicator">
-            <span class="pulse-dot"></span>
-            <span class="pulse-ring"></span>
-          </div>
-          <div class="active-shield-title">
-            <strong>Device Protected & Paired</strong>
-            <span>Listening for real-time security alerts</span>
-          </div>
+    <!-- Features & Services Grid -->
+    <section id="features" class="grid">
+      <div class="card">
+        <div class="card-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
         </div>
-        <div class="active-shield-actions">
-          <button id="reSyncPushBtn" class="link-btn" title="Click to refresh or re-pair device push subscription">
-            <svg width="13" height="13" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
-            Re-sync / Re-pair Device
-          </button>
+        <h3>Mobile Security & Push Hub</h3>
+        <p>Pair your mobile device with your extension account identity. Receive instant push notifications whenever LinkedIn view protection is triggered or unlocked.</p>
+        <a href="/hub.html" class="card-link">Launch Security Hub &rarr;</a>
+      </div>
+
+      <div class="card">
+        <div class="card-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
         </div>
+        <h3>Dual Protection Modes</h3>
+        <p>Choose between standard Security Gate or authentic LinkedIn Sign In camouflage with Windows Hello biometric verification and secret footer unlock triggers.</p>
+        <a href="#support" class="card-link">Learn about Protection &rarr;</a>
       </div>
-    </div>
 
-    <!-- Forensic Audit Log Card -->
-    <div class="card">
-      <div class="card-title">
-        <span style="display: flex; align-items: center; gap: 8px;">
-          <span style="display: inline-flex; align-items: center; color: #ffffff;">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-summary preview-icon"><path d="M15 4H7"/><path d="m18 16 3 3-3 3"/><path d="M3 4v13a2 2 0 0 0 2 2h16"/><path d="M7 14h7"/><path d="M7 9h12"/></svg>
-          </span>
-          Real-Time Security Audit Trail
-        </span>
-        <button id="refreshLogsBtn" title="Refresh Security Logs" class="refresh-icon-btn">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-refresh-cw preview-icon"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></svg>
-        </button>
-      </div>
-      <div id="logList" class="log-list">
-        <div style="text-align: center; color: var(--text-muted); padding: 20px; font-size: 13px;">
-          No security events loaded. Connect your Account ID to view security logs.
+      <div class="card">
+        <div class="card-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
         </div>
+        <h3>Inbound Invitation Automation</h3>
+        <p>Automatically accept or ignore incoming invitations across People, Pages, Events, Newsletters, and Groups with human-like randomized delays and safeguards.</p>
+        <a href="#support" class="card-link">Automation Guidelines &rarr;</a>
       </div>
-    </div>
-  </div>
+    </section>
 
-  <script>
-    const WORKER_URL = 'https://lit-security-worker.linkedintools1.workers.dev';
-    const VAPID_PUBLIC_KEY = 'BM_Z4N5hKv0p5wXNXDLS5obSflu5keOi_eIeZvFDQb8eorMuD7qxMKH7VcxBYE2xTmTUPxNcR0JJO_CNgHNo090';
+    <!-- Support / FAQ Section -->
+    <section id="support" class="support-box">
+      <h2>Need Help or Have Questions?</h2>
+      <p>This official portal provides documentation, device pairing, and customer support resources for LinkedInTools extension users.</p>
+      <a href="mailto:linkedintools1@gmail.com" class="btn-primary">
+        Contact Support via Email
+      </a>
+    </section>
+  </main>
 
-    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-    const isStandalone = window.navigator.standalone || window.matchMedia('(display-mode: standalone)').matches;
-    if (isIOS && !isStandalone) {
-      document.getElementById('iosBanner').style.display = 'block';
-    }
+  <footer>
+    <p>LinkedInTools &copy; 2026. All rights reserved.</p>
+    <p style="margin-top: 6px;">
+      <a href="/index.html">Support Home</a> &bull;
+      <a href="/hub.html">Mobile Security Hub</a> &bull;
+      <a href="mailto:linkedintools1@gmail.com">Contact</a>
+    </p>
+  </footer>
 
-    const urlParams = new URLSearchParams(window.location.search);
-    const initialAid = urlParams.get('aid') || localStorage.getItem('lit_aid') || '';
-    if (initialAid) {
-      document.getElementById('accountIdInput').value = initialAid;
-      localStorage.setItem('lit_aid', initialAid);
-      loadLogs(initialAid);
-    }
-
-    function urlBase64ToUint8Array(base64String) {
-      const padding = '='.repeat((4 - base64String.length % 4) % 4);
-      const base64 = (base64String + padding)
-        .replace(/\-/g, '+')
-        .replace(/_/g, '/');
-      const rawData = window.atob(base64);
-      const outputArray = new Uint8Array(rawData.length);
-      for (let i = 0; i < rawData.length; ++i) {
-        outputArray[i] = rawData.charCodeAt(i);
-      }
-      return outputArray;
-    }
-
-    async function registerPush() {
-      const aid = document.getElementById('accountIdInput').value.trim();
-      if (!aid) {
-        alert('Please enter your Account ID.');
-        return;
-      }
-      localStorage.setItem('lit_aid', aid);
-
-      if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
-        alert('Your browser does not support browser notifications.');
-        return;
-      }
-
-      try {
-        const permission = await Notification.requestPermission();
-        if (permission !== 'granted') {
-          alert('Notification permission was denied. Please allow notifications in your browser settings.');
-          return;
-        }
-
-        const registration = await navigator.serviceWorker.register('sw.js');
-        await navigator.serviceWorker.ready;
-
-        let subscription = await registration.pushManager.getSubscription();
-        
-        if (subscription) {
-          try {
-            await subscription.unsubscribe();
-          } catch(e) {}
-        }
-
-        const convertedKey = urlBase64ToUint8Array(VAPID_PUBLIC_KEY);
-        subscription = await registration.pushManager.subscribe({
-          userVisibleOnly: true,
-          applicationServerKey: convertedKey
-        });
-
-        const subJson = subscription.toJSON();
-        const res = await fetch(`${WORKER_URL}/api/subscribe`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ accountId: aid, subscription: subJson, sendWelcome: true })
-        });
-
-        const result = await res.json();
-        if (result.success) {
-          updatePushState(true);
-          try {
-            await fetch(`${WORKER_URL}/api/log`, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                accountId: aid,
-                eventType: 'PUSH_SUBSCRIBED',
-                details: 'Browser notifications enabled on device'
-              })
-            });
-          } catch (_) {}
-          alert('Browser notifications have been successfully activated!');
-          loadLogs(aid);
-        } else {
-          alert('Registration error: ' + (result.error || 'Server error'));
-        }
-      } catch (err) {
-        console.error('Push registration error:', err);
-        if (navigator.userAgent.includes('Brave') || navigator.brave) {
-          alert('Brave Browser Note:\nIf you see "push service error", please ensure "Use Google services for push messaging" is enabled in Brave Settings (brave://settings/privacy).');
-        } else {
-          alert('Browser notification error: ' + err.message);
-        }
-      }
-    }
-
-    let lastLogsPayload = '';
-
-    async function loadLogs(aid, isAuto = false) {
-      if (!aid) return;
-      const refreshBtn = document.getElementById('refreshLogsBtn');
-      if (refreshBtn && !isAuto) refreshBtn.classList.add('spinning');
-
-      try {
-        const res = await fetch(`${WORKER_URL}/api/logs?accountId=${encodeURIComponent(aid)}`);
-        const data = await res.json();
-        const listEl = document.getElementById('logList');
-        
-        const payloadStr = JSON.stringify(data.logs || []);
-        if (payloadStr === lastLogsPayload && listEl.innerHTML !== '') {
-          // No changes detected, skip re-rendering to preserve scroll position
-          return;
-        }
-        lastLogsPayload = payloadStr;
-
-        if (!data.logs || data.logs.length === 0) {
-          listEl.innerHTML = '<div style="text-align: center; color: var(--text-muted); padding: 20px; font-size: 13px;">No security events recorded yet.</div>';
-          return;
-        }
-
-        listEl.innerHTML = data.logs.map(log => {
-          const isDanger = log.eventType === 'EXTENSION_UNINSTALLED' || log.eventType === 'ACCESS_DENIED';
-          const isWarning = log.eventType === 'SECURITY_ENABLED' || log.eventType === 'SECURITY_DISABLED';
-          const badgeClass = isDanger ? 'danger' : (isWarning ? 'warning' : '');
-          const dateStr = new Date(log.timestamp * 1000).toLocaleString('en-US');
-
-          return `
-            <div class="log-item ${badgeClass}">
-              <div class="log-grid">
-                <div class="log-col-left log-title">${log.eventType}</div>
-                <div class="log-col-right log-date">${dateStr}</div>
-                <div class="log-col-left log-desc">${log.details || 'No details provided'}</div>
-                <div class="log-col-right log-ip">${log.ipAddress || 'Unknown'}</div>
-              </div>
-            </div>
-          `;
-        }).join('');
-      } catch (e) {
-        console.error('Log fetch error:', e);
-      } finally {
-        if (refreshBtn && !isAuto) {
-          setTimeout(() => refreshBtn.classList.remove('spinning'), 500);
-        }
-      }
-    }
-
-    function updatePushState(isActive) {
-      const badge = document.getElementById('pushStatusBadge');
-      const alertDesc = document.getElementById('alertDesc');
-      const enablePushBtn = document.getElementById('enablePushBtn');
-      const activeShieldWrap = document.getElementById('activeShieldWrap');
-
-      const activeBell = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bell-ring"><path d="M10.268 21a2 2 0 0 0 3.464 0"/><path d="M22 8c0-2.3-.8-4.3-2-6"/><path d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"/><path d="M4 2C2.8 3.7 2 5.7 2 8"/></svg>';
-      const inactiveBell = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bell-off"><path d="M10.268 21a2 2 0 0 0 3.464 0"/><path d="M17 17H4a1 1 0 0 1-.74-1.673C4.59 13.956 6 12.499 6 8a6 6 0 0 1 .258-1.742"/><path d="m2 2 20 20"/><path d="M8.668 3.01A6 6 0 0 1 18 8c0 2.687.77 4.653 1.707 6.05"/></svg>';
-
-      if (isActive) {
-        if (badge) {
-          badge.className = 'status-badge status-active';
-          badge.innerHTML = `${activeBell} Active`;
-        }
-        if (alertDesc) {
-          alertDesc.innerHTML = '<strong>Protected</strong> ✓ : Real-time browser notifications are actively monitoring this device. You will receive an instant notification if the extension is removed or unauthorized access occurs.';
-          alertDesc.style.color = 'rgba(255,255,255,.65)';
-        }
-        if (enablePushBtn) enablePushBtn.style.display = 'none';
-        if (activeShieldWrap) activeShieldWrap.style.display = 'flex';
-      } else {
-        if (badge) {
-          badge.className = 'status-badge status-inactive';
-          badge.innerHTML = `${inactiveBell} Inactive`;
-        }
-        if (alertDesc) {
-          alertDesc.innerHTML = 'If you <strong>enable notifications</strong> below, instant browser notifications will be sent to this device if the "<strong>LinkedInTools</strong>" extension is removed without authorization.';
-          alertDesc.style.color = 'rgba(255,255,255,.65)';
-        }
-        if (enablePushBtn) enablePushBtn.style.display = 'flex';
-        if (activeShieldWrap) activeShieldWrap.style.display = 'none';
-      }
-    }
-
-    async function checkSubscriptionState() {
-      const aid = document.getElementById('accountIdInput')?.value.trim() || initialAid;
-      if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
-        updatePushState(false);
-        return;
-      }
-      if (Notification.permission !== 'granted') {
-        updatePushState(false);
-        return;
-      }
-      try {
-        const reg = await navigator.serviceWorker.ready;
-        const sub = await reg.pushManager.getSubscription();
-        if (sub) {
-          updatePushState(true);
-          // Auto-sync existing subscription with current Account ID in Cloudflare D1
-          if (aid) {
-            fetch(`${WORKER_URL}/api/subscribe`, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ accountId: aid, subscription: sub.toJSON(), sendWelcome: false })
-            }).catch(() => {});
-          }
-        } else {
-          updatePushState(false);
-        }
-      } catch (_) {
-        updatePushState(false);
-      }
-    }
-
-    document.getElementById('enablePushBtn')?.addEventListener('click', registerPush);
-    document.getElementById('reSyncPushBtn')?.addEventListener('click', registerPush);
-    document.getElementById('refreshLogsBtn')?.addEventListener('click', () => {
-      const aid = document.getElementById('accountIdInput').value.trim();
-      loadLogs(aid, false);
-    });
-
-    document.getElementById('accountIdInput')?.addEventListener('change', () => {
-      const aid = document.getElementById('accountIdInput').value.trim();
-      if (aid) {
-        localStorage.setItem('lit_aid', aid);
-        loadLogs(aid, false);
-      }
-    });
-
-    // Auto-refresh audit trail in background
-    setInterval(() => {
-      const aid = document.getElementById('accountIdInput')?.value.trim() || initialAid;
-      if (aid && !document.hidden) {
-        loadLogs(aid, true);
-      }
-    }, 600000);
-
-    checkSubscriptionState();
-    window.addEventListener('focus', () => {
-      checkSubscriptionState();
-      const aid = document.getElementById('accountIdInput')?.value.trim() || initialAid;
-      if (aid) loadLogs(aid, true);
-    });
-    window.addEventListener('visibilitychange', () => {
-      if (!document.hidden) {
-        checkSubscriptionState();
-        const aid = document.getElementById('accountIdInput')?.value.trim() || initialAid;
-        if (aid) loadLogs(aid, true);
-      }
-    });
-    if (navigator.permissions && navigator.permissions.query) {
-      navigator.permissions.query({ name: 'notifications' }).then(status => {
-        status.onchange = checkSubscriptionState;
-      }).catch(() => {});
-    }
-  </script>
 </body>
 </html>
