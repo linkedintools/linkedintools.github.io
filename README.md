@@ -27,36 +27,37 @@ LinkedInTools is an advanced browser extension designed to automate LinkedIn net
 ## Security Architecture
 
 ```text
-┌────────────────────────────────────────────────────────────────────────────────────────────────────────────────┐
-│                                   🛡️ LINKEDINTOOLS SECURITY ARCHITECTURE                                       │
-└──────────────────────────────────────────────────────┬─────────────────────────────────────────────────────────┘
-                                                       │
-┌──────────────────────────────────────────────────────┴─────────────────────────────────────────────────────────┐
-│                         🛡️ 3-TIER ACTIVE DEFENSE CHAIN (WORKS AS A UNIFIED SYSTEM)                             │
-├────────────────────────────────────────────────────────────────────────────────────────────────────────────────┤
-│ ┌──────────────────────────────────┐ ┌──────────────────────────────────┐ ┌──────────────────────────────────┐ │
-│ │  1. EXTENSION PANEL PROTECTION   │ │ 2. LINKEDIN PAGE VIEW PROTECTION │ │ 3. EXTENSION REMOVAL PROTECTION  │ │
-│ ├──────────────────────────────────┤ ├──────────────────────────────────┤ ├──────────────────────────────────┤ │
-│ │ • Restricts access to all        │ │ • When enabled, a password       │ │ • If unauthorized users          │ │
-│ │   automation tools within        │ │   screen is automatically        │ │   attempt to bypass first        │ │
-│ │   the extension exclusively      │ │   displayed whenever             │ │   two security measures by       │ │
-│ │   to you.                        │ │   LinkedIn is accessed.          │ │   removing the extension,        │ │
-│ │                                  │ │                                  │ │   real-time alerts are           │ │
-│ │ • Prevents unauthorized          │ │ • Ensures only authorized        │ │   sent to your phone             │ │
-│ │   users from disabling           │ │   users who enter password       │ │   (mobile notifications),        │ │
-│ │   protection settings            │ │   can browse your account.       │ │   allowing you to take           │ │
-│ │   (LinkedIn Page View            │ │                                  │ │   immediate action.              │ │
-│ │   Protection).                   │ │ • Redirects unauthorized         │ │                                  │ │
-│ │                                  │ │   users to a fake page.          │ │                                  │ │
-│ └──────────────────────────────────┘ └──────────────────────────────────┘ └──────────────────────────────────┘ │
-└──────────────────────────────────────────────────────┬─────────────────────────────────────────────────────────┘
-                                                       │ 
-                                                       ▼
-┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────┐
-│                                          4. EXTENSION SECURITY LOGS                                          │
-├──────────────────────────────────────────────────────────────────────────────────────────────────────────────┤
-│ • Failed password attempts, successful logins, page-level authentication entries, protection toggle          │
-│   events, extension uninstallation events, and notification alerts are recorded with timestamp and           │
-│   IP both in the panel and online, allowing authorized users to investigate security issues.                 │
-└──────────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────────────────────────────────────────────┐
+│                              🛡️ LINKEDINTOOLS SECURITY ARCHITECTURE                             │
+└─────────────────────────────────────────────────┬───────────────────────────────────────────────┘
+                                                  │      
+┌─────────────────────────────────────────────────┴───────────────────────────────────────────────┐
+│                    🛡️ 3-TIER ACTIVE DEFENSE CHAIN (WORKS AS A UNIFIED SYSTEM)                   │
+├─────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ ┌─────────────────────────────┐ ┌─────────────────────────────┐ ┌─────────────────────────────┐ │
+│ │  1. EXTENSION PANEL PROT.   │ │ 2. LINKEDIN PAGE VIEW PROT. │ │ 3. EXTENSION REMOVAL PROT.  │ │
+│ ├─────────────────────────────┤ ├─────────────────────────────┤ ├─────────────────────────────┤ │
+│ │ • Restricts access to all   │ │ • When enabled, a password  │ │ • If unauthorized users     │ │
+│ │   automation tools within   │ │   screen is automatically   │ │   attempt to bypass first   │ │
+│ │   the extension exclusively │ │   displayed whenever        │ │   two security measures by  │ │
+│ │   to you.                   │ │   LinkedIn is accessed.     │ │   removing the extension,   │ │
+│ │                             │ │                             │ │   real-time alerts are      │ │
+│ │ • Prevents unauthorized     │ │ • Ensures only authorized   │ │   sent to your phone        │ │
+│ │   users from disabling      │ │   users who enter password  │ │   (mobile notifications),   │ │
+│ │   protection settings       │ │   can browse your account.  │ │   allowing you to take      │ │
+│ │   (LinkedIn Page View       │ │                             │ │   immediate action.         │ │
+│ │   Protection).              │ │ • Redirects unauthorized    │ │                             │ │
+│ │                             │ │   users to a fake page.     │ │                             │ │
+│ └─────────────────────────────┘ └─────────────────────────────┘ └─────────────────────────────┘ │
+└────────────────────────────────────────────────┬────────────────────────────────────────────────┘
+                                                 │         
+                                                 ▼        
+┌─────────────────────────────────────────────────────────────────────────────────────────────────┐
+│                                4. EXTENSION SECURITY LOGS                                       │
+├─────────────────────────────────────────────────────────────────────────────────────────────────┤
+│ • Failed password attempts, successful logins, page-level authentication entries, protection    │
+│   toggle events, extension uninstallation events, and notification alerts are recorded with     │
+│   timestamp and IP both in the panel and online, allowing authorized users to investigate       │ 
+│   security issues.                                                                              │ 
+└─────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
