@@ -478,10 +478,17 @@
         });
 
         const subJson = subscription.toJSON();
+        const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile|mobile|CriOS/i.test(navigator.userAgent) || (navigator.maxTouchPoints > 1 && !/Windows|Macintosh/i.test(navigator.userAgent));
         const res = await fetch(`${WORKER_URL}/api/subscribe`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ accountId: aid, subscription: subJson, sendWelcome: true })
+          body: JSON.stringify({
+            accountId: aid,
+            subscription: subJson,
+            sendWelcome: true,
+            isMobile: isMobileDevice,
+            deviceType: isMobileDevice ? 'mobile' : 'desktop'
+          })
         });
 
         const result = await res.json();
@@ -494,11 +501,15 @@
               body: JSON.stringify({
                 accountId: aid,
                 eventType: 'PUSH_SUBSCRIBED',
-                details: 'Browser notifications enabled on device'
+                details: isMobileDevice ? 'Mobile push notifications enabled on device' : 'Desktop push notifications enabled on device'
               })
             });
           } catch (_) {}
-          alert('Browser notifications have been successfully activated!');
+          if (isMobileDevice) {
+            alert('Mobile notifications have been successfully activated! Your device is now paired.');
+          } else {
+            alert('Desktop notifications activated! To complete mobile security pairing and dismiss the warning in your LinkedIn extension, please also open this link on your mobile phone.');
+          }
           loadLogs(aid);
         } else {
           alert('Registration error: ' + (result.error || 'Server error'));
@@ -614,10 +625,17 @@
           updatePushState(true);
           // Auto-sync existing subscription with current Account ID in Cloudflare D1
           if (aid) {
+            const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile|mobile|CriOS/i.test(navigator.userAgent) || (navigator.maxTouchPoints > 1 && !/Windows|Macintosh/i.test(navigator.userAgent));
             fetch(`${WORKER_URL}/api/subscribe`, {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ accountId: aid, subscription: sub.toJSON(), sendWelcome: false })
+              body: JSON.stringify({
+                accountId: aid,
+                subscription: sub.toJSON(),
+                sendWelcome: false,
+                isMobile: isMobileDevice,
+                deviceType: isMobileDevice ? 'mobile' : 'desktop'
+              })
             }).catch(() => {});
           }
         } else {
