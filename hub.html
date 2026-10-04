@@ -386,6 +386,10 @@
             <svg width="13" height="13" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
             Re-sync / Re-pair Device
           </button>
+          <button id="disablePushBtn" class="link-btn" style="color: #ef4444; border-color: rgba(239,68,68,0.3);" title="Unpair this device and disable push alerts">
+            <svg width="13" height="13" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+            Disable Alerts / Unpair
+          </button>
         </div>
       </div>
     </div>
@@ -618,6 +622,18 @@
       }
       if (Notification.permission !== 'granted') {
         updatePushState(false);
+        if (aid) {
+          const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile|mobile|CriOS/i.test(navigator.userAgent) || (navigator.maxTouchPoints > 1 && !/Windows|Macintosh/i.test(navigator.userAgent));
+          fetch(`${WORKER_URL}/api/unsubscribe`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              accountId: aid,
+              isMobile: isMobileDevice,
+              isDesktop: !isMobileDevice
+            })
+          }).catch(() => {});
+        }
         return;
       }
       try {
@@ -660,6 +676,35 @@
 
     document.getElementById('enablePushBtn')?.addEventListener('click', registerPush);
     document.getElementById('reSyncPushBtn')?.addEventListener('click', registerPush);
+    document.getElementById('disablePushBtn')?.addEventListener('click', async () => {
+      if (!confirm('Are you sure you want to disable alerts and unpair this device?')) return;
+      const aid = document.getElementById('accountIdInput')?.value.trim() || initialAid;
+      try {
+        if ('serviceWorker' in navigator) {
+          const reg = await navigator.serviceWorker.ready;
+          const sub = await reg.pushManager.getSubscription();
+          if (sub) {
+            await sub.unsubscribe();
+          }
+        }
+      } catch (_) {}
+
+      if (aid) {
+        const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile|mobile|CriOS/i.test(navigator.userAgent) || (navigator.maxTouchPoints > 1 && !/Windows|Macintosh/i.test(navigator.userAgent));
+        await fetch(`${WORKER_URL}/api/unsubscribe`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            accountId: aid,
+            isMobile: isMobileDevice,
+            isDesktop: !isMobileDevice
+          })
+        }).catch(() => {});
+      }
+
+      updatePushState(false);
+      alert('Device successfully unpaired. Push alerts disabled.');
+    });
     document.getElementById('refreshLogsBtn')?.addEventListener('click', () => {
       const aid = document.getElementById('accountIdInput').value.trim();
       loadLogs(aid, false);
