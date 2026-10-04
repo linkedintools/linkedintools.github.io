@@ -28,11 +28,12 @@
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
-    body { background-color: var(--bg-main); color: var(--text-main); min-height: 100vh; padding: 20px; display: flex; flex-direction: column; align-items: center; }
-    .container { width: 100%; max-width: 540px; display: flex; flex-direction: column; gap: 20px; }
-    .header { text-align: center; margin-top: 10px; margin-bottom: 10px; }
-    .header h1 { font-size: 24px; font-weight: 700; color: #fff; margin-bottom: 8px; display: flex; align-items: center; justify-content: center; gap: 10px; }
-    .header p { font-size: 13.5px; color: rgba(255,255,255,.65); line-height: 1.5; max-width: 480px; margin: 0 auto; }
+    body { background-color: var(--bg-main); color: var(--text-main); min-height: 100vh; padding: 8px 16px 24px; display: flex; flex-direction: column; align-items: center; }
+    .container { width: 100%; max-width: 540px; display: flex; flex-direction: column; gap: 16px; }
+    .header { width: 100%; display: flex; align-items: center; justify-content: flex-start; text-align: left; margin: 0 0 -8px 0; }
+    .header h1 { font-size: 20px; font-weight: 700; color: #fff; margin: 0; padding: 0; line-height: 24px; display: flex; align-items: center; justify-content: flex-start; gap: 10px; text-align: left; }
+    .header-logo-link { display: inline-flex; align-items: center; justify-content: center; text-decoration: none; transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s; }
+    .header-logo-link:hover { transform: scale(1.08); opacity: 0.9; }
 
     .card { background-color: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; padding: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
     .card-title { font-size: 16px; font-weight: 600; margin-bottom: 14px; display: flex; align-items: center; justify-content: space-between; }
@@ -317,10 +318,11 @@
   <div class="container">
     <div class="header">
       <h1>
-        <img src="icons/logo.svg" alt="Logo" style="width: 30px; height: 30px; object-fit: contain;" />
-        Security Hub
+        <a href="https://linkedintools.github.io/" class="header-logo-link" title="LinkedInTools Home">
+          <img src="icons/logo.svg" alt="Logo" style="width: 24px; height: 24px; object-fit: contain; cursor: pointer; display: block;" />
+        </a>
+        <span>Security Hub</span>
       </h1>
-      
     </div>
 
     <!-- iOS Setup Callout -->
