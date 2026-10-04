@@ -247,6 +247,70 @@
 
     .ios-banner { background: rgba(0, 114, 169, 0.12); border: 1px solid rgba(0, 114, 169, 0.3); border-radius: 10px; padding: 14px; font-size: 13px; line-height: 1.5; color: #e2e8f0; display: none; }
     .ios-banner ol { margin-left: 18px; margin-top: 8px; }
+  
+    .desktop-switch-row {
+      margin-top: 14px;
+      padding: 12px 14px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+    .desktop-switch-info strong {
+      font-size: 13px;
+      color: #ffffff;
+      display: block;
+      margin-bottom: 2px;
+    }
+    .desktop-switch-info span {
+      font-size: 11px;
+      color: rgba(255, 255, 255, 0.55);
+      display: block;
+      line-height: 1.3;
+    }
+    .toggle-switch-hub {
+      position: relative;
+      display: inline-block;
+      width: 38px;
+      height: 22px;
+      flex-shrink: 0;
+    }
+    .toggle-switch-hub input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    .slider-hub {
+      position: absolute;
+      cursor: pointer;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: #333333;
+      transition: .25s;
+      border-radius: 22px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+    }
+    .slider-hub:before {
+      position: absolute;
+      content: "";
+      height: 16px;
+      width: 16px;
+      left: 2px;
+      bottom: 2px;
+      background-color: #ffffff;
+      transition: .25s;
+      border-radius: 50%;
+    }
+    .toggle-switch-hub input:checked + .slider-hub {
+      background-color: #0072A9;
+      border-color: #008AD2;
+    }
+    .toggle-switch-hub input:checked + .slider-hub:before {
+      transform: translateX(16px);
+    }
+
   </style>
 </head>
 <body>
@@ -304,6 +368,17 @@
             <span>Listening for real-time security alerts</span>
           </div>
         </div>
+        <div id="desktopAlertSettingsRow" class="desktop-switch-row" style="display: none;">
+          <div class="desktop-switch-info">
+            <strong>Show Windows Desktop Alerts</strong>
+            <span>Pop up Windows notifications on this PC (Default: OFF / Silent)</span>
+          </div>
+          <label class="toggle-switch-hub" aria-label="Toggle Windows Notifications">
+            <input type="checkbox" id="toggleDesktopAlerts">
+            <span class="slider-hub"></span>
+          </label>
+        </div>
+
         <div class="active-shield-actions">
           <button id="reSyncPushBtn" class="link-btn" title="Click to refresh or re-pair device push subscription">
             <svg width="13" height="13" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
@@ -552,6 +627,16 @@
         updatePushState(false);
       }
     }
+
+    document.getElementById('toggleDesktopAlerts')?.addEventListener('change', async (e) => {
+      const isChecked = e.target.checked;
+      await setDesktopNotifSetting(isChecked);
+      if (isChecked) {
+        alert('Windows desktop notifications enabled for this PC.');
+      } else {
+        alert('Windows desktop notifications muted. Alerts will only be sent to your phone/mobile.');
+      }
+    });
 
     document.getElementById('enablePushBtn')?.addEventListener('click', registerPush);
     document.getElementById('reSyncPushBtn')?.addEventListener('click', registerPush);
