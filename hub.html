@@ -375,6 +375,41 @@
       transform: translateX(16px);
     }
 
+  
+    /* Sleek Loading Spinner & Button States */
+    .shield-action-btn.is-loading, .btn.is-loading {
+      opacity: 0.85 !important;
+      cursor: wait !important;
+      pointer-events: none !important;
+    }
+
+    .spinner-icon {
+      width: 14px;
+      height: 14px;
+      border: 2px solid rgba(255, 255, 255, 0.35);
+      border-top-color: #ffffff;
+      border-radius: 50%;
+      animation: hubSpinnerSpin 0.7s linear infinite;
+      display: inline-block;
+      vertical-align: middle;
+      flex-shrink: 0;
+      margin-right: 6px;
+    }
+
+    .btn-resync .spinner-icon {
+      border: 2px solid rgba(10, 102, 194, 0.25);
+      border-top-color: #0a66c2;
+    }
+
+    @keyframes hubSpinnerSpin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .refresh-icon-btn.spinning svg {
+      animation: hubSpinnerSpin 0.7s linear infinite;
+    }
+
   </style>
 </head>
 <body>
@@ -483,6 +518,24 @@
   </div>
 
   <script>
+    
+    function setButtonLoading(btn, isLoading, loadingText = 'Processing...') {
+      if (!btn) return;
+      if (isLoading) {
+        if (!btn._origHtml) btn._origHtml = btn.innerHTML;
+        btn.disabled = true;
+        btn.classList.add('is-loading');
+        btn.innerHTML = `<span class="spinner-icon"></span><span>${loadingText}</span>`;
+      } else {
+        btn.disabled = false;
+        btn.classList.remove('is-loading');
+        if (btn._origHtml) {
+          btn.innerHTML = btn._origHtml;
+          btn._origHtml = null;
+        }
+      }
+    }
+
     const WORKER_URL = 'https://lit-security-worker.linkedintools1.workers.dev';
     const VAPID_PUBLIC_KEY = 'BM_Z4N5hKv0p5wXNXDLS5obSflu5keOi_eIeZvFDQb8eorMuD7qxMKH7VcxBYE2xTmTUPxNcR0JJO_CNgHNo090';
 
@@ -513,7 +566,10 @@
       return outputArray;
     }
 
-    async function registerPush() {
+        async function registerPush(e) {
+      const targetBtn = (e && e.currentTarget) || (e && e.target ? e.target.closest('button') : null) || document.getElementById('reSyncPushBtn') || document.getElementById('enablePushBtn');
+      const isResync = targetBtn && targetBtn.id === 'reSyncPushBtn';
+
       const aid = document.getElementById('accountIdInput').value.trim();
       if (!aid) {
         alert('Please enter your Account ID.');
@@ -525,6 +581,8 @@
         alert('Your browser does not support browser notifications.');
         return;
       }
+
+      setButtonLoading(targetBtn, true, isResync ? 'Syncing...' : 'Connecting...');
 
       try {
         const permission = await Notification.requestPermission();
@@ -594,6 +652,8 @@
         } else {
           alert('Browser notification error: ' + err.message);
         }
+      } finally {
+        setButtonLoading(targetBtn, false);
       }
     }
 
@@ -743,8 +803,11 @@
 
     document.getElementById('enablePushBtn')?.addEventListener('click', registerPush);
     document.getElementById('reSyncPushBtn')?.addEventListener('click', registerPush);
-    document.getElementById('disablePushBtn')?.addEventListener('click', async () => {
+    document.getElementById('disablePushBtn')?.addEventListener('click', async (e) => {
+      const btn = e.currentTarget || document.getElementById('disablePushBtn');
       if (!confirm('Are you sure you want to disable alerts and unpair this device?')) return;
+      setButtonLoading(btn, true, 'Unpairing...');
+      try {
       const aid = document.getElementById('accountIdInput')?.value.trim() || initialAid;
       try {
         if ('serviceWorker' in navigator) {
@@ -771,10 +834,19 @@
 
       updatePushState(false);
       alert('Device successfully unpaired. Push alerts disabled.');
+      } finally {
+        setButtonLoading(btn, false);
+      }
     });
-    document.getElementById('refreshLogsBtn')?.addEventListener('click', () => {
+    document.getElementById('refreshLogsBtn')?.addEventListener('click', async () => {
+      const btn = document.getElementById('refreshLogsBtn');
       const aid = document.getElementById('accountIdInput').value.trim();
-      loadLogs(aid, false);
+      if (btn) btn.classList.add('spinning');
+      try {
+        await loadLogs(aid, false);
+      } finally {
+        if (btn) btn.classList.remove('spinning');
+      }
     });
 
     document.getElementById('accountIdInput')?.addEventListener('change', () => {
