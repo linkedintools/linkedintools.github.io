@@ -410,6 +410,120 @@
       animation: hubSpinnerSpin 0.7s linear infinite;
     }
 
+  
+    /* Push Notification Mode Selector Cards */
+    .push-modes-wrapper {
+      margin: 16px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .push-modes-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.75);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .mode-status-badge {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 12px;
+      background: rgba(56, 189, 248, 0.15);
+      color: #38bdf8;
+      border: 1px solid rgba(56, 189, 248, 0.3);
+    }
+    .push-modes-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    @media (max-width: 600px) {
+      .push-modes-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    .push-mode-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      padding: 14px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      user-select: none;
+      text-align: left;
+    }
+    .push-mode-card:hover {
+      background: rgba(255, 255, 255, 0.06);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+    .push-mode-card.active {
+      background: rgba(0, 114, 169, 0.18);
+      border-color: #0072A9;
+      box-shadow: 0 0 14px rgba(0, 114, 169, 0.3);
+    }
+    .push-mode-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .push-mode-title-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .push-mode-radio {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      border: 2px solid rgba(255, 255, 255, 0.4);
+      display: inline-block;
+      position: relative;
+      transition: all 0.2s;
+    }
+    .push-mode-card.active .push-mode-radio {
+      border-color: #38bdf8;
+      background: #38bdf8;
+      box-shadow: 0 0 6px rgba(56, 189, 248, 0.6);
+    }
+    .push-mode-title {
+      font-size: 13.5px;
+      font-weight: 700;
+      color: #ffffff;
+    }
+    .push-mode-badge {
+      font-size: 10px;
+      font-weight: 600;
+      padding: 2px 7px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.1);
+      color: rgba(255, 255, 255, 0.7);
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+    .push-mode-card.active .push-mode-badge {
+      background: rgba(56, 189, 248, 0.2);
+      color: #38bdf8;
+    }
+    .push-mode-desc {
+      font-size: 11.5px;
+      color: rgba(255, 255, 255, 0.65);
+      line-height: 1.45;
+    }
+    .push-mode-list {
+      margin-top: 6px;
+      padding-left: 14px;
+      list-style-type: disc;
+    }
+    .push-mode-list li {
+      margin-bottom: 3px;
+    }
+
   </style>
 </head>
 <body>
