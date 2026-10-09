@@ -1,6 +1,6 @@
 # LinkedInTools
 
-LinkedInTools is an advanced browser extension designed to automate LinkedIn networking, streamline connection management, and provide enterprise-grade multi-tier account security.
+[LinkedInTools](https://linkedintools.github.io/) is an advanced browser extension designed to automate LinkedIn networking, streamline connection management, and provide enterprise-grade multi-tier account security.
 
 ## Core Automations
 
