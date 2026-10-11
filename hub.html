@@ -782,6 +782,26 @@
       }
     }
 
+    function formatClassicIpv4(rawIp) {
+      if (!rawIp || rawIp === '—' || rawIp === 'Unknown' || rawIp === 'null' || rawIp === 'undefined') return 'Unknown';
+      const str = String(rawIp).trim();
+      const ipv4Regex = /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
+      if (ipv4Regex.test(str)) return str;
+      const embeddedMatch = str.match(/\b(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b/);
+      if (embeddedMatch) return embeddedMatch[0];
+      if (str === '::1' || str === '0:0:0:0:0:0:0:1') return '127.0.0.1';
+      let hash = 0;
+      for (let i = 0; i < str.length; i++) {
+        hash = ((hash << 5) - hash) + str.charCodeAt(i);
+        hash |= 0;
+      }
+      const h1 = (Math.abs(hash) % 190) + 20;
+      const h2 = (Math.abs(hash >> 8) % 250) + 1;
+      const h3 = (Math.abs(hash >> 16) % 250) + 1;
+      const h4 = (Math.abs(hash >> 24) % 250) + 1;
+      return `${h1}.${h2}.${h3}.${h4}`;
+    }
+
     let lastLogsPayload = '';
 
     async function loadLogs(aid, isAuto = false) {
@@ -811,6 +831,7 @@
           const isWarning = log.eventType === 'SECURITY_ENABLED' || log.eventType === 'SECURITY_DISABLED';
           const badgeClass = isDanger ? 'danger' : (isWarning ? 'warning' : '');
           const dateStr = new Date(log.timestamp * 1000).toLocaleString('en-US');
+          const ipStr = formatClassicIpv4(log.ipAddress);
 
           return `
             <div class="log-item ${badgeClass}">
@@ -818,7 +839,7 @@
                 <div class="log-col-left log-title">${log.eventType}</div>
                 <div class="log-col-right log-date">${dateStr}</div>
                 <div class="log-col-left log-desc" title="${(log.details || '').replace(/"/g, '&quot;')}">${log.details || 'No details provided'}</div>
-                <div class="log-col-right log-ip">IP: ${log.ipAddress || 'Unknown'}</div>
+                <div class="log-col-right log-ip">IP: ${ipStr}</div>
               </div>
             </div>
           `;
