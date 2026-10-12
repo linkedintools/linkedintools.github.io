@@ -28,7 +28,7 @@
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
-    body { background-color: var(--bg-main); color: var(--text-main); min-height: 100vh; padding: 0 16px 24px; display: flex; flex-direction: column; align-items: center; }
+    body { background-color: var(--bg-main); color: var(--text-main); min-height: 100vh; padding: 0 16px 24px; display: flex; flex-direction: column; align-items: center;  overflow-x: hidden; }
     .container { width: 100%; max-width: 540px; display: flex; flex-direction: column; gap: 16px; }
     .header {
       width: 100%;
@@ -43,19 +43,28 @@
       background: transparent;
     }
 
-    .header > *:not(.card-shine):not(.card-bg) {
+    .header > *:not(.header-effect-wrap) {
       position: relative;
       z-index: 10;
     }
 
-    /* Aaron Iker - Header Background & Glow */
-    .header .card-shine {
+    /* Aaron Iker - Header Background & Glow Wrap (Extended 100px Left/Right with Fade) */
+    .header-effect-wrap {
       position: absolute;
       top: 0;
-      left: 0;
-      right: 0;
+      left: -100px;
+      right: -100px;
       height: 180px;
       z-index: 1;
+      pointer-events: none;
+      overflow: hidden;
+      -webkit-mask-image: linear-gradient(to right, transparent 0px, black 100px, black calc(100% - 100px), transparent 100%);
+      mask-image: linear-gradient(to right, transparent 0px, black 100px, black calc(100% - 100px), transparent 100%);
+    }
+
+    .header-effect-wrap .card-shine {
+      position: absolute;
+      inset: 0;
       overflow: hidden;
       opacity: 1;
       pointer-events: none;
@@ -63,7 +72,7 @@
       mask-image: linear-gradient(to bottom, black 0px, black 90px, transparent 180px);
     }
 
-    .header .card-shine::before {
+    .header-effect-wrap .card-shine::before {
       content: "";
       width: 150%;
       padding-bottom: 150%;
@@ -77,24 +86,20 @@
       background-image: conic-gradient(from 205deg at 50% 50%, rgba(0, 138, 210, 0) 0deg, #008AD2 25deg, rgba(147, 196, 245, 0.25) 295deg, rgba(0, 138, 210, 0) 360deg);
     }
 
-    .header .card-bg {
+    .header-effect-wrap .card-bg {
       position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 180px;
-      z-index: 1;
+      inset: 0;
       overflow: hidden;
       pointer-events: none;
       -webkit-mask-image: linear-gradient(to bottom, black 0px, black 90px, transparent 180px);
       mask-image: linear-gradient(to bottom, black 0px, black 90px, transparent 180px);
     }
 
-    .header .card-bg .tiles {
+    .header-effect-wrap .card-bg .tiles {
       opacity: 1;
     }
 
-    .header .card-bg .tiles .tile {
+    .header-effect-wrap .card-bg .tiles .tile {
       position: absolute;
       background-color: rgba(0, 138, 210, 0.09);
       animation-name: tilePulse;
@@ -103,70 +108,70 @@
       opacity: 0;
     }
 
-    .header .card-bg .tiles .tile.tile-4,
-    .header .card-bg .tiles .tile.tile-6,
-    .header .card-bg .tiles .tile.tile-10 {
+    .header-effect-wrap .card-bg .tiles .tile.tile-4,
+    .header-effect-wrap .card-bg .tiles .tile.tile-6,
+    .header-effect-wrap .card-bg .tiles .tile.tile-10 {
       animation-delay: -2s;
     }
 
-    .header .card-bg .tiles .tile.tile-3,
-    .header .card-bg .tiles .tile.tile-5,
-    .header .card-bg .tiles .tile.tile-8 {
+    .header-effect-wrap .card-bg .tiles .tile.tile-3,
+    .header-effect-wrap .card-bg .tiles .tile.tile-5,
+    .header-effect-wrap .card-bg .tiles .tile.tile-8 {
       animation-delay: -4s;
     }
 
-    .header .card-bg .tiles .tile.tile-2,
-    .header .card-bg .tiles .tile.tile-9 {
+    .header-effect-wrap .card-bg .tiles .tile.tile-2,
+    .header-effect-wrap .card-bg .tiles .tile.tile-9 {
       animation-delay: -6s;
     }
 
-    .header .card-bg .tiles .tile.tile-1 { top: 0; left: 0; height: 32px; width: 22.5%; }
-    .header .card-bg .tiles .tile.tile-2 { top: 0; left: 22.5%; height: 32px; width: 27.5%; }
-    .header .card-bg .tiles .tile.tile-3 { top: 0; left: 50%; height: 32px; width: 27.5%; }
-    .header .card-bg .tiles .tile.tile-4 { top: 0; left: 77.5%; height: 32px; width: 22.5%; }
-    .header .card-bg .tiles .tile.tile-5 { top: 32px; left: 0; height: 72px; width: 22.5%; }
-    .header .card-bg .tiles .tile.tile-6 { top: 32px; left: 22.5%; height: 72px; width: 27.5%; }
-    .header .card-bg .tiles .tile.tile-7 { top: 32px; left: 50%; height: 72px; width: 27.5%; }
-    .header .card-bg .tiles .tile.tile-8 { top: 32px; left: 77.5%; height: 72px; width: 22.5%; }
-    .header .card-bg .tiles .tile.tile-9 { top: 104px; left: 50%; height: 72px; width: 27.5%; }
-    .header .card-bg .tiles .tile.tile-10 { top: 104px; left: 77.5%; height: 72px; width: 22.5%; }
+    .header-effect-wrap .card-bg .tiles .tile.tile-1 { top: 0; left: 0; height: 32px; width: 22.5%; }
+    .header-effect-wrap .card-bg .tiles .tile.tile-2 { top: 0; left: 22.5%; height: 32px; width: 27.5%; }
+    .header-effect-wrap .card-bg .tiles .tile.tile-3 { top: 0; left: 50%; height: 32px; width: 27.5%; }
+    .header-effect-wrap .card-bg .tiles .tile.tile-4 { top: 0; left: 77.5%; height: 32px; width: 22.5%; }
+    .header-effect-wrap .card-bg .tiles .tile.tile-5 { top: 32px; left: 0; height: 72px; width: 22.5%; }
+    .header-effect-wrap .card-bg .tiles .tile.tile-6 { top: 32px; left: 22.5%; height: 72px; width: 27.5%; }
+    .header-effect-wrap .card-bg .tiles .tile.tile-7 { top: 32px; left: 50%; height: 72px; width: 27.5%; }
+    .header-effect-wrap .card-bg .tiles .tile.tile-8 { top: 32px; left: 77.5%; height: 72px; width: 22.5%; }
+    .header-effect-wrap .card-bg .tiles .tile.tile-9 { top: 104px; left: 50%; height: 72px; width: 27.5%; }
+    .header-effect-wrap .card-bg .tiles .tile.tile-10 { top: 104px; left: 77.5%; height: 72px; width: 22.5%; }
 
-    .header .card-bg .line {
+    .header-effect-wrap .card-bg .line {
       position: absolute;
       inset: 0;
       opacity: 1;
     }
 
-    .header .card-bg .line::before,
-    .header .card-bg .line::after {
+    .header-effect-wrap .card-bg .line::before,
+    .header-effect-wrap .card-bg .line::after {
       content: "";
       position: absolute;
       background-color: rgba(255, 255, 255, 0.08);
       transition: transform 0.35s ease;
     }
 
-    .header .card-bg .line::before {
+    .header-effect-wrap .card-bg .line::before {
       left: 0;
       right: 0;
       height: 1px;
       transform: scaleX(1);
     }
 
-    .header .card-bg .line::after {
+    .header-effect-wrap .card-bg .line::after {
       top: 0;
       bottom: 0;
       width: 1px;
       transform: scaleY(1);
     }
 
-    .header .card-bg .line.line-1::before { top: 32px; }
-    .header .card-bg .line.line-1::after { left: 22.5%; }
+    .header-effect-wrap .card-bg .line.line-1::before { top: 32px; }
+    .header-effect-wrap .card-bg .line.line-1::after { left: 22.5%; }
 
-    .header .card-bg .line.line-2::before { top: 104px; }
-    .header .card-bg .line.line-2::after { left: 50%; }
+    .header-effect-wrap .card-bg .line.line-2::before { top: 104px; }
+    .header-effect-wrap .card-bg .line.line-2::after { left: 50%; }
 
-    .header .card-bg .line.line-3::before { top: 176px; }
-    .header .card-bg .line.line-3::after { right: 22.5%; }
+    .header-effect-wrap .card-bg .line.line-3::before { top: 176px; }
+    .header-effect-wrap .card-bg .line.line-3::after { right: 22.5%; }
 
     @keyframes tilePulse {
       0%, 12.5%, 100% { opacity: 1; }
@@ -681,23 +686,25 @@
 <body>
   <div class="container">
     <div class="header">
-      <div class="card-shine"></div>
-      <div class="card-bg">
-        <div class="tiles">
-          <div class="tile tile-1"></div>
-          <div class="tile tile-2"></div>
-          <div class="tile tile-3"></div>
-          <div class="tile tile-4"></div>
-          <div class="tile tile-5"></div>
-          <div class="tile tile-6"></div>
-          <div class="tile tile-7"></div>
-          <div class="tile tile-8"></div>
-          <div class="tile tile-9"></div>
-          <div class="tile tile-10"></div>
+      <div class="header-effect-wrap">
+        <div class="card-shine"></div>
+        <div class="card-bg">
+          <div class="tiles">
+            <div class="tile tile-1"></div>
+            <div class="tile tile-2"></div>
+            <div class="tile tile-3"></div>
+            <div class="tile tile-4"></div>
+            <div class="tile tile-5"></div>
+            <div class="tile tile-6"></div>
+            <div class="tile tile-7"></div>
+            <div class="tile tile-8"></div>
+            <div class="tile tile-9"></div>
+            <div class="tile tile-10"></div>
+          </div>
+          <div class="line line-1"></div>
+          <div class="line line-2"></div>
+          <div class="line line-3"></div>
         </div>
-        <div class="line line-1"></div>
-        <div class="line line-2"></div>
-        <div class="line line-3"></div>
       </div>
       <h1>
         <a href="https://linkedintools.github.io/" class="header-logo-link" title="LinkedInTools Home">
