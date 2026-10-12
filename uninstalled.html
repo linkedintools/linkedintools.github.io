@@ -37,6 +37,133 @@
       width: 100%;
       box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
       text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card > *:not(.card-shine):not(.card-bg) {
+      position: relative;
+      z-index: 2;
+    }
+
+    /* Aaron Iker - Card Shine Glow (Always Active) */
+    .card-shine {
+      border-radius: inherit;
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      overflow: hidden;
+      opacity: 1;
+      pointer-events: none;
+    }
+
+    .card-shine::before {
+      content: "";
+      width: 150%;
+      padding-bottom: 150%;
+      border-radius: 50%;
+      position: absolute;
+      left: 50%;
+      bottom: 55%;
+      filter: blur(35px);
+      opacity: 0.22;
+      transform: translateX(-50%);
+      background-image: conic-gradient(from 205deg at 50% 50%, rgba(0, 138, 210, 0) 0deg, #008AD2 25deg, rgba(147, 196, 245, 0.25) 295deg, rgba(0, 138, 210, 0) 360deg);
+    }
+
+    /* Aaron Iker - Background Grid Tiles & Lines (Always Active) */
+    .card-bg {
+      border-radius: inherit;
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      overflow: hidden;
+      pointer-events: none;
+      -webkit-mask-image: radial-gradient(circle at 60% 5%, black 0%, black 15%, transparent 65%);
+      mask-image: radial-gradient(circle at 60% 5%, black 0%, black 15%, transparent 65%);
+    }
+
+    .card-bg .tiles {
+      opacity: 1;
+    }
+
+    .card-bg .tiles .tile {
+      position: absolute;
+      background-color: rgba(0, 138, 210, 0.09);
+      animation-name: tilePulse;
+      animation-duration: 8s;
+      animation-iteration-count: infinite;
+      opacity: 0;
+    }
+
+    .card-bg .tiles .tile.tile-4,
+    .card-bg .tiles .tile.tile-6,
+    .card-bg .tiles .tile.tile-10 {
+      animation-delay: -2s;
+    }
+
+    .card-bg .tiles .tile.tile-3,
+    .card-bg .tiles .tile.tile-5,
+    .card-bg .tiles .tile.tile-8 {
+      animation-delay: -4s;
+    }
+
+    .card-bg .tiles .tile.tile-2,
+    .card-bg .tiles .tile.tile-9 {
+      animation-delay: -6s;
+    }
+
+    .card-bg .tiles .tile.tile-1 { top: 0; left: 0; height: 10%; width: 22.5%; }
+    .card-bg .tiles .tile.tile-2 { top: 0; left: 22.5%; height: 10%; width: 27.5%; }
+    .card-bg .tiles .tile.tile-3 { top: 0; left: 50%; height: 10%; width: 27.5%; }
+    .card-bg .tiles .tile.tile-4 { top: 0; left: 77.5%; height: 10%; width: 22.5%; }
+    .card-bg .tiles .tile.tile-5 { top: 10%; left: 0; height: 22.5%; width: 22.5%; }
+    .card-bg .tiles .tile.tile-6 { top: 10%; left: 22.5%; height: 22.5%; width: 27.5%; }
+    .card-bg .tiles .tile.tile-7 { top: 10%; left: 50%; height: 22.5%; width: 27.5%; }
+    .card-bg .tiles .tile.tile-8 { top: 10%; left: 77.5%; height: 22.5%; width: 22.5%; }
+    .card-bg .tiles .tile.tile-9 { top: 32.5%; left: 50%; height: 22.5%; width: 27.5%; }
+    .card-bg .tiles .tile.tile-10 { top: 32.5%; left: 77.5%; height: 22.5%; width: 22.5%; }
+
+    .card-bg .line {
+      position: absolute;
+      inset: 0;
+      opacity: 1;
+    }
+
+    .card-bg .line::before,
+    .card-bg .line::after {
+      content: "";
+      position: absolute;
+      background-color: rgba(255, 255, 255, 0.08);
+      transition: transform 0.35s ease;
+    }
+
+    .card-bg .line::before {
+      left: 0;
+      right: 0;
+      height: 1px;
+      transform: scaleX(1);
+    }
+
+    .card-bg .line::after {
+      top: 0;
+      bottom: 0;
+      width: 1px;
+      transform: scaleY(1);
+    }
+
+    .card-bg .line.line-1::before { top: 10%; }
+    .card-bg .line.line-1::after { left: 22.5%; }
+
+    .card-bg .line.line-2::before { top: 32.5%; }
+    .card-bg .line.line-2::after { left: 50%; }
+
+    .card-bg .line.line-3::before { top: 55%; }
+    .card-bg .line.line-3::after { right: 22.5%; }
+
+    @keyframes tilePulse {
+      0%, 12.5%, 100% { opacity: 1; }
+      25%, 82.5% { opacity: 0; }
     }
 
     .logo-container {
@@ -138,6 +265,24 @@
 </head>
 <body>
   <div class="card">
+    <div class="card-shine"></div>
+    <div class="card-bg">
+      <div class="tiles">
+        <div class="tile tile-1"></div>
+        <div class="tile tile-2"></div>
+        <div class="tile tile-3"></div>
+        <div class="tile tile-4"></div>
+        <div class="tile tile-5"></div>
+        <div class="tile tile-6"></div>
+        <div class="tile tile-7"></div>
+        <div class="tile tile-8"></div>
+        <div class="tile tile-9"></div>
+        <div class="tile tile-10"></div>
+      </div>
+      <div class="line line-1"></div>
+      <div class="line line-2"></div>
+      <div class="line line-3"></div>
+    </div>
     <div class="logo-container">
       <img src="icons/logo.svg" alt="LiT Logo">
     </div>
