@@ -404,7 +404,7 @@
     /* Log Item Stepper Timeline (Border & Dot Structure) */
     .log-item {
       position: relative;
-      border-left: 2px dashed rgba(255, 255, 255, 0.40);
+      border-left: 2px dashed rgba(255, 255, 255, 065);
       padding-left: 1.5rem;
       padding-bottom: 1.5rem;
       width: 100%;
@@ -416,12 +416,7 @@
       border-left-color: transparent;
       padding-bottom: 0.25rem;
     }
-    .log-item.danger {
-      border-left-color: var(--danger);
-    }
-    .log-item.warning {
-      border-left-color: var(--warning);
-    }
+   
 
     .log-item-dot {
       position: absolute;
@@ -431,7 +426,7 @@
       height: 10px;
       border-radius: 50%;
       background: #3b82f6;
-      border: 2px solid #ffffff;
+      border: 2px solid #3b82f6;
       transition: transform 0.2s ease, box-shadow 0.2s ease;
       box-sizing: border-box;
       display: inline-block;
@@ -449,15 +444,15 @@
     .log-item:hover .log-item-dot,
     .log-item-item:hover .log-item-dot {
       transform: scale(1.4);
-      box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.25);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
     }
     .log-item.danger:hover .log-item-dot,
     .log-item:hover .log-item-dot.danger {
-      box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.25);
+      box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.25);
     }
     .log-item.warning:hover .log-item-dot,
     .log-item:hover .log-item-dot.warning {
-      box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.25);
+      box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.25);
     }
 .log-grid {
       display: grid;
