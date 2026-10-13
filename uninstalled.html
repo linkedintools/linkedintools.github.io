@@ -66,7 +66,7 @@
       filter: blur(35px);
       opacity: 0.22;
       transform: translateX(-50%);
-      background-image: conic-gradient(from 205deg at 50% 50%, rgba(0, 138, 210, 0) 0deg, #008AD2 25deg, rgba(147, 196, 245, 0.25) 295deg, rgba(0, 138, 210, 0) 360deg);
+      background-image: conic-gradient(from 205deg at 50% 50%, rgba(255, 255, 255, 0) 0deg, rgba(255, 255, 255, 0.65) 25deg, rgba(255, 255, 255, 0.25) 295deg, rgba(255, 255, 255, 0) 360deg);
     }
 
     /* Aaron Iker - Background Grid Tiles & Lines (Always Active) */
@@ -87,9 +87,10 @@
 
     .card-bg .tiles .tile {
       position: absolute;
-      background-color: rgba(0, 138, 210, 0.09);
+      background-color: rgba(255, 255, 255, 0.08);
       animation-name: tilePulse;
-      animation-duration: 8s;
+      animation-duration: 12s;
+      animation-timing-function: ease-in-out;
       animation-iteration-count: infinite;
       opacity: 0;
     }
@@ -97,18 +98,18 @@
     .card-bg .tiles .tile.tile-4,
     .card-bg .tiles .tile.tile-6,
     .card-bg .tiles .tile.tile-10 {
-      animation-delay: -2s;
+      animation-delay: -3s;
     }
 
     .card-bg .tiles .tile.tile-3,
     .card-bg .tiles .tile.tile-5,
     .card-bg .tiles .tile.tile-8 {
-      animation-delay: -4s;
+      animation-delay: -6s;
     }
 
     .card-bg .tiles .tile.tile-2,
     .card-bg .tiles .tile.tile-9 {
-      animation-delay: -6s;
+      animation-delay: -9s;
     }
 
     .card-bg .tiles .tile.tile-1 { top: 0; left: 0; height: 10%; width: 22.5%; }
@@ -160,8 +161,8 @@
     .card-bg .line.line-3::after { right: 22.5%; }
 
     @keyframes tilePulse {
-      0%, 12.5%, 100% { opacity: 1; }
-      25%, 82.5% { opacity: 0; }
+      0%, 14%, 100% { opacity: 1; }
+      22%, 92% { opacity: 0; }
     }
 
     .logo-container {
