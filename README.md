@@ -46,8 +46,9 @@
 │ │   users from disabling      │ │   users who enter password  │ │   (mobile notifications),   │ │
 │ │   protection settings       │ │   can browse your account.  │ │   allowing you to take      │ │
 │ │   (LinkedIn Page View       │ │                             │ │   immediate action.         │ │
-│ │   Protection).              │ │ • Redirects unauthorized    │ │                             │ │
-│ │                             │ │   users to a fake page.     │ │                             │ │
+│ │   Protection).              │ │ • There is also an option   │ │                             │ │
+│ │                             │ │   to redirect unauthorized  │ │                             │ │  
+│ │                             │ │   users to a fake page.     │ │                             │ │  
 │ └─────────────────────────────┘ └─────────────────────────────┘ └─────────────────────────────┘ │
 └────────────────────────────────────────────────┬────────────────────────────────────────────────┘
                                                  │         
