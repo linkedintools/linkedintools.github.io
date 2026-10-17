@@ -3,35 +3,35 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>LinkedInTools - Extension Support </title>
+  <title>LinkedIn Tools & Automations - Extension Support</title>
   <link rel="icon" type="image/x-icon" href="favicon.ico">
   <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
   <link rel="icon" type="image/svg+xml" href="icons/logo.svg">
   <link rel="icon" type="image/png" href="icons/icon128.png">
   <style>
     :root {
-      --bg-main: #121212;
-      --bg-surface: #181818;
+      --bg-main: #141414;
+      --bg-surface: #191919;
       --bg-card: #202020;
       --bg-card-hover: #262626;
       --border: rgba(255, 255, 255, 0.08);
-      --border-hover: rgba(255, 255, 255, 0.22);
+      --border-hover: rgba(0, 138, 210, 0.45);
       --text-1: #ffffff;
-      --text-2: rgba(255, 255, 255, 0.70);
-      --text-3: rgba(255, 255, 255, 0.40);
+      --text-2: rgba(255, 255, 255, 0.68);
+      --text-3: rgba(255, 255, 255, 0.38);
       --accent: #0072A9;
       --accent-hi: #008AD2;
       --accent-glow: rgba(0, 138, 210, 0.16);
-      --accent-tint: rgba(0, 138, 210, 0.10);
+      --accent-tint: rgba(0, 138, 210, 0.12);
       --green: #10b981;
       --green-tint: rgba(16, 185, 129, 0.12);
       --amber: #f59e0b;
       --amber-tint: rgba(245, 158, 11, 0.12);
       --purple: #8b5cf6;
       --purple-tint: rgba(139, 92, 246, 0.12);
-      --radius-sm: 6px;
-      --radius-md: 6px;
-      --radius-lg: 6px;
+      --cyan: #06b6d4;
+      --cyan-tint: rgba(6, 182, 212, 0.12);
+      --radius: 6px;
     }
 
     * {
@@ -44,7 +44,7 @@
       background-color: var(--bg-main);
       color: var(--text-1);
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-      line-height: 1.6;
+      line-height: 1.55;
       -webkit-font-smoothing: antialiased;
       min-height: 100vh;
       display: flex;
@@ -53,8 +53,9 @@
 
     /* Header */
     header {
-      background: rgba(18, 18, 18, 0.85);
+      background: rgba(20, 20, 20, 0.88);
       backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
       border-bottom: 1px solid var(--border);
       position: sticky;
       top: 0;
@@ -62,9 +63,9 @@
     }
 
     .nav-container {
-      max-width: 1120px;
+      max-width: 1140px;
       margin: 0 auto;
-      padding: 14px 24px;
+      padding: 13px 24px;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -79,13 +80,13 @@
     }
 
     .brand img {
-      width: 32px;
-      height: 32px;
+      width: 30px;
+      height: 30px;
       display: block;
     }
 
     .brand-title {
-      font-size: 17px;
+      font-size: 16px;
       font-weight: 700;
       letter-spacing: -0.01em;
     }
@@ -93,15 +94,15 @@
     .nav-links {
       display: flex;
       align-items: center;
-      gap: 24px;
+      gap: 20px;
     }
 
     .nav-link {
       color: var(--text-2);
       text-decoration: none;
-      font-size: 13.5px;
+      font-size: 13px;
       font-weight: 500;
-      transition: color 0.2s ease;
+      transition: color 0.15s ease;
     }
 
     .nav-link:hover {
@@ -111,12 +112,12 @@
     .nav-btn {
       background: var(--accent);
       color: #ffffff;
-      padding: 8px 16px;
-      border-radius: var(--radius-sm);
+      padding: 7px 15px;
+      border-radius: var(--radius);
       text-decoration: none;
-      font-size: 13px;
+      font-size: 12.5px;
       font-weight: 600;
-      transition: background 0.2s ease, transform 0.15s ease;
+      transition: background 0.15s ease, transform 0.15s ease;
       display: inline-flex;
       align-items: center;
       gap: 6px;
@@ -130,72 +131,72 @@
     /* Main Container */
     main {
       flex: 1;
-      max-width: 1120px;
+      max-width: 1140px;
       width: 100%;
       margin: 0 auto;
-      padding: 48px 24px 64px;
+      padding: 44px 24px 60px;
     }
 
     /* Hero Section */
     .hero {
       text-align: center;
-      max-width: 780px;
-      margin: 0 auto 64px;
+      max-width: 760px;
+      margin: 0 auto 52px;
     }
 
     .hero-badge {
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      padding: 5px 14px;
+      padding: 4px 13px;
       background: var(--accent-glow);
       border: 1px solid rgba(0, 138, 210, 0.35);
       border-radius: 20px;
-      font-size: 12.5px;
+      font-size: 12px;
       font-weight: 600;
       color: #93C4F5;
-      margin-bottom: 22px;
+      margin-bottom: 20px;
     }
 
     .hero h1 {
-      font-size: 40px;
+      font-size: 38px;
       font-weight: 750;
       letter-spacing: -0.03em;
-      line-height: 1.22;
-      margin-bottom: 18px;
-      background: linear-gradient(180deg, #ffffff 0%, rgba(255, 255, 255, 0.78) 100%);
+      line-height: 1.2;
+      margin-bottom: 16px;
+      background: linear-gradient(180deg, #ffffff 0%, rgba(255, 255, 255, 0.82) 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
 
     .hero p {
-      font-size: 16.5px;
+      font-size: 15.5px;
       color: var(--text-2);
       line-height: 1.55;
-      margin-bottom: 30px;
+      margin-bottom: 26px;
     }
 
     .hero-actions {
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 14px;
+      gap: 12px;
       flex-wrap: wrap;
     }
 
     .btn-primary {
       background: var(--accent);
       color: #ffffff;
-      padding: 12px 24px;
-      border-radius: var(--radius-sm);
+      padding: 10px 20px;
+      border-radius: var(--radius);
       text-decoration: none;
-      font-size: 14px;
+      font-size: 13.5px;
       font-weight: 600;
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      transition: all 0.2s ease;
-      box-shadow: 0 4px 14px var(--accent-glow);
+      transition: all 0.15s ease;
+      box-shadow: 0 4px 12px var(--accent-glow);
     }
 
     .btn-primary:hover {
@@ -207,25 +208,25 @@
       background: var(--bg-card);
       color: var(--text-1);
       border: 1px solid var(--border);
-      padding: 12px 24px;
-      border-radius: var(--radius-sm);
+      padding: 10px 20px;
+      border-radius: var(--radius);
       text-decoration: none;
-      font-size: 14px;
+      font-size: 13.5px;
       font-weight: 550;
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      transition: all 0.2s ease;
+      transition: all 0.15s ease;
     }
 
     .btn-secondary:hover {
-      border-color: var(--border-hover);
+      border-color: rgba(255, 255, 255, 0.22);
       background: var(--bg-card-hover);
     }
 
     /* Section Headings */
     .section-head {
-      margin-bottom: 28px;
+      margin-bottom: 24px;
     }
 
     .section-tag {
@@ -234,12 +235,12 @@
       text-transform: uppercase;
       letter-spacing: 0.08em;
       color: var(--accent-hi);
-      margin-bottom: 6px;
+      margin-bottom: 5px;
       display: block;
     }
 
     .section-title {
-      font-size: 24px;
+      font-size: 22px;
       font-weight: 700;
       letter-spacing: -0.02em;
       color: var(--text-1);
@@ -247,46 +248,48 @@
     }
 
     .section-desc {
-      font-size: 14px;
+      font-size: 13.5px;
       color: var(--text-2);
-      max-width: 680px;
+      max-width: 660px;
     }
 
-    /* 4 Automations Grid */
+    /* 6 Automations Grid: 3 columns x 2 rows */
     .grid-automations {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 20px;
-      margin-bottom: 64px;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 54px;
     }
 
     .card-auto {
       background: var(--bg-card);
       border: 1px solid var(--border);
-      border-radius: var(--radius-md);
-      padding: 24px;
+      border-radius: var(--radius);
+      padding: 22px;
       display: flex;
       flex-direction: column;
       transition: all 0.2s ease;
+      position: relative;
     }
 
     .card-auto:hover {
       border-color: var(--border-hover);
       background: var(--bg-card-hover);
       transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
     }
 
     .card-header-row {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 16px;
+      margin-bottom: 14px;
     }
 
     .card-icon-box {
-      width: 40px;
-      height: 40px;
-      border-radius: 6px;
+      width: 38px;
+      height: 38px;
+      border-radius: var(--radius);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -316,84 +319,52 @@
       border: 1px solid rgba(139, 92, 246, 0.25);
     }
 
+    .card-icon-box.cyan {
+      background: var(--cyan-tint);
+      color: var(--cyan);
+      border: 1px solid rgba(6, 182, 212, 0.25);
+    }
+
     .card-tag {
       font-size: 10.5px;
       font-weight: 600;
       padding: 2px 8px;
       border-radius: 4px;
-      background: rgba(255, 255, 255, 0.06);
+      background: rgba(255, 255, 255, 0.05);
       color: var(--text-2);
       border: 1px solid var(--border);
     }
 
     .card-auto h3 {
-      font-size: 17px;
+      font-size: 16px;
       font-weight: 650;
       color: var(--text-1);
-      margin-bottom: 10px;
+      margin-bottom: 8px;
+      letter-spacing: -0.01em;
     }
 
     .card-auto p {
-      font-size: 13.5px;
+      font-size: 13px;
       color: var(--text-2);
-      line-height: 1.5;
-      margin-bottom: 18px;
+      line-height: 1.48;
       flex: 1;
     }
 
-    .feature-list {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 7px;
-      border-top: 1px solid var(--border);
-      padding-top: 14px;
+    /* Protection Section (Linkedin.com Page View Protection) */
+    .section-protection {
+      margin-bottom: 54px;
     }
 
-    .feature-item {
-      font-size: 12px;
-      color: var(--text-2);
-      display: flex;
-      align-items: flex-start;
-      gap: 7px;
-      line-height: 1.4;
-    }
-
-    .feature-item svg {
-      width: 14px;
-      height: 14px;
-      color: var(--green);
-      flex-shrink: 0;
-      margin-top: 2px;
-    }
-
-    /* Security 2-Card Featured Grid */
-    .grid-security {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-      gap: 22px;
-      margin-bottom: 64px;
-    }
-
-    .card-sec {
-      background: linear-gradient(180deg, #222222 0%, #1a1a1a 100%);
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      border-radius: var(--radius-lg);
-      padding: 28px;
-      display: flex;
-      flex-direction: column;
+    .protection-card {
+      background: linear-gradient(180deg, #1e1e1e 0%, #171717 100%);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 30px 28px;
       position: relative;
       overflow: hidden;
-      transition: all 0.22s ease;
     }
 
-    .card-sec:hover {
-      border-color: rgba(0, 138, 210, 0.45);
-      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.45);
-      transform: translateY(-2px);
-    }
-
-    .card-sec-badge {
+    .protection-badge {
       display: inline-flex;
       align-items: center;
       gap: 5px;
@@ -404,112 +375,166 @@
       background: var(--accent-glow);
       border: 1px solid rgba(0, 138, 210, 0.3);
       color: #93C4F5;
-      align-self: flex-start;
-      margin-bottom: 16px;
+      margin-bottom: 14px;
     }
 
-    .card-sec h3 {
+    .protection-card h3 {
       font-size: 20px;
       font-weight: 700;
       color: var(--text-1);
-      margin-bottom: 12px;
+      margin-bottom: 8px;
       letter-spacing: -0.01em;
     }
 
-    .card-sec p {
-      font-size: 14px;
+    .protection-card > p {
+      font-size: 13.5px;
       color: var(--text-2);
-      line-height: 1.55;
-      margin-bottom: 20px;
+      line-height: 1.5;
+      margin-bottom: 24px;
+      max-width: 760px;
     }
 
-    .sec-sub-block {
-      background: rgba(0, 0, 0, 0.25);
+    .protection-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .protection-col {
+      background: rgba(0, 0, 0, 0.28);
       border: 1px solid var(--border);
-      border-radius: var(--radius-md);
-      padding: 14px 16px;
-      margin-bottom: 12px;
+      border-radius: var(--radius);
+      padding: 18px 16px;
+      display: flex;
+      flex-direction: column;
     }
 
-    .sec-sub-title {
-      font-size: 13px;
+    .protection-col-title {
+      font-size: 13.5px;
       font-weight: 650;
       color: var(--text-1);
       display: flex;
       align-items: center;
-      gap: 7px;
-      margin-bottom: 4px;
+      gap: 8px;
+      margin-bottom: 8px;
     }
 
-    .sec-sub-desc {
-      font-size: 12px;
+    .protection-col-title svg {
+      color: var(--accent-hi);
+      flex-shrink: 0;
+    }
+
+    .protection-col-desc {
+      font-size: 12.5px;
       color: var(--text-2);
       line-height: 1.45;
+      flex: 1;
     }
 
-    .card-sec-btn {
-      margin-top: auto;
+    .protection-action-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding-top: 18px;
+      border-top: 1px solid var(--border);
+      flex-wrap: wrap;
+    }
+
+    .protection-action-info {
+      font-size: 12.5px;
+      color: var(--text-2);
+    }
+
+    .protection-action-info b {
+      color: var(--text-1);
+    }
+
+    .btn-hub {
       background: var(--accent);
       color: #ffffff;
-      padding: 10px 20px;
-      border-radius: var(--radius-sm);
+      padding: 9px 18px;
+      border-radius: var(--radius);
       text-decoration: none;
-      font-size: 13.5px;
+      font-size: 13px;
       font-weight: 600;
       display: inline-flex;
       align-items: center;
-      justify-content: center;
-      gap: 8px;
-      transition: background 0.2s ease;
-      width: 100%;
+      gap: 7px;
+      transition: background 0.15s ease, transform 0.15s ease;
+      white-space: nowrap;
     }
 
-    .card-sec-btn:hover {
+    .btn-hub:hover {
       background: var(--accent-hi);
+      transform: translateY(-1px);
     }
 
     /* Support Box */
     .support-box {
       background: var(--bg-surface);
       border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: 36px 28px;
+      border-radius: var(--radius);
+      padding: 30px 24px;
       text-align: center;
-      margin-bottom: 48px;
+      margin-bottom: 40px;
     }
 
     .support-box h2 {
-      font-size: 24px;
+      font-size: 20px;
       font-weight: 700;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
       letter-spacing: -0.01em;
     }
 
     .support-box p {
       color: var(--text-2);
-      font-size: 14.5px;
-      max-width: 580px;
-      margin: 0 auto 22px;
+      font-size: 13.5px;
+      max-width: 540px;
+      margin: 0 auto 18px;
     }
 
     /* Footer */
     footer {
       border-top: 1px solid var(--border);
-      padding: 28px 24px;
+      padding: 24px;
       text-align: center;
-      font-size: 13px;
+      font-size: 12.5px;
       color: var(--text-3);
     }
 
     footer a {
       color: var(--text-2);
       text-decoration: none;
-      margin: 0 10px;
+      margin: 0 8px;
       transition: color 0.15s ease;
     }
 
     footer a:hover {
       color: var(--text-1);
+    }
+
+    /* Responsive Queries */
+    @media (max-width: 960px) {
+      .grid-automations {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .protection-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .grid-automations {
+        grid-template-columns: 1fr;
+      }
+      .hero h1 {
+        font-size: 30px;
+      }
+      .nav-links {
+        display: none;
+      }
     }
   </style>
 </head>
@@ -522,33 +547,41 @@
         <img src="icons/logo.svg" alt="LinkedInTools Logo">
         <span class="brand-title">LinkedInTools</span>
       </a>
+      <nav class="nav-links">
+        <a href="#automations" class="nav-link">Automations</a>
+        <a href="#protection" class="nav-link">Protection</a>
+        <a href="/hub.html" class="nav-btn">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+          Mobile Hub
+        </a>
+      </nav>
     </div>
   </header>
 
   <main>
     <!-- Hero Section -->
     <section class="hero">
-      <div class="hero-badge">⚡ Advanced Automation & Intelligent Session Protection</div>
-      <h1>LinkedIn Growth Automations & Tools</h1>
-      <p>Automate connection outreach, batch-manage inbound invitations, clean pending requests, and safeguard active sessions with dual-layer camouflage and instant mobile alerts.</p>
+      <div class="hero-badge">⚡ Official Extension Support & Documentation</div>
+      <h1>LinkedIn Tools & Automations</h1>
+      <p>A minimalist, high-performance automation suite for LinkedIn outreach, engagement, and intelligent tab protection.</p>
       <div class="hero-actions">
         <a href="/hub.html" class="btn-primary">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
-          Open Mobile Security Hub
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+          Open Mobile Security Hub (hub.html)
         </a>
         <a href="#automations" class="btn-secondary">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polyline></svg>
-          Explore All 4 Automations
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polyline></svg>
+          Explore 6 Automations
         </a>
       </div>
     </section>
 
-    <!-- SECTION 1: 4 AUTOMATIONS -->
+    <!-- SECTION 1: 6 AUTOMATIONS (3 columns x 2 rows) -->
     <section id="automations">
       <div class="section-head">
-        <span class="section-tag">High-Performance Modules</span>
-        <h2 class="section-title">4 Core Growth Automations</h2>
-        <p class="section-desc">Each automation is built with randomized human delays, daily safety caps, and zero-detection safeguards to keep your LinkedIn account 100% compliant.</p>
+        <span class="section-tag">Core Modules</span>
+        <h2 class="section-title">6 Growth Automations</h2>
+        <p class="section-desc">Engineered with randomized human pacing, strict daily safety caps, and zero-detection safeguards.</p>
       </div>
 
       <div class="grid-automations">
@@ -563,27 +596,30 @@
                 <polyline points="20 8 23 11 20 14"></polyline>
               </svg>
             </div>
-            <span class="card-tag">Outbound Growth</span>
+            <span class="card-tag">Outbound</span>
           </div>
-          <h3>Auto Connect</h3>
-          <p>Target search queries, profile lists, and industry keywords. Automatically dispatches connection requests with custom personalized invitation notes.</p>
-          <ul class="feature-list">
-            <li class="feature-item">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
-              Dynamic note placeholders ({firstName})
-            </li>
-            <li class="feature-item">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
-              Randomized human typing & click delays
-            </li>
-            <li class="feature-item">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
-              Customizable daily invitation limits
-            </li>
-          </ul>
+          <h3>Connection Request Automation</h3>
+          <p>Sends personalized connection requests to targeted professionals with customized note placeholders and humanized pacing.</p>
         </div>
 
-        <!-- 2. Inbound Connection Management -->
+        <!-- 2. New Connections Post Like -->
+        <div class="card-auto">
+          <div class="card-header-row">
+            <div class="card-icon-box amber">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+                <circle cx="9" cy="7" r="4"/>
+                <path d="M15.3 9.4v3.6" stroke-width="1.3"/>
+                <path d="M17.1 9.4 L18.4 6.0 A 1.1 1.1 0 0 1 20.1 6.5 L19.4 8.9 H22.3 A 1.2 1.2 0 0 1 23.5 10.1 V11.8 A 1.2 1.2 0 0 1 22.3 13.0 H17.1 Z" stroke-width="1.3"/>
+              </svg>
+            </div>
+            <span class="card-tag">Engagement</span>
+          </div>
+          <h3>New Connections Post Like</h3>
+          <p>Likes recent posts of newly added connections to boost engagement, warm up relationships, and increase network visibility.</p>
+        </div>
+
+        <!-- 3. Inbound Connection Automation -->
         <div class="card-auto">
           <div class="card-header-row">
             <div class="card-icon-box green">
@@ -594,58 +630,30 @@
                 <polyline points="20 8 17 11 20 14"></polyline>
               </svg>
             </div>
-            <span class="card-tag">Inbound Control</span>
+            <span class="card-tag">Inbound</span>
           </div>
-          <h3>Inbound Automation</h3>
-          <p>Effortlessly process incoming invitations across 5 distinct categories with one-click batch confirmations and safety verification modals.</p>
-          <ul class="feature-list">
-            <li class="feature-item">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
-              5 Target Types: People, Pages, Events, Newsletters, Groups
-            </li>
-            <li class="feature-item">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
-              Dual Actions: Batch Accept or Ignore
-            </li>
-            <li class="feature-item">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
-              Safety confirmation with active count
-            </li>
-          </ul>
+          <h3>Inbound Connection Automation</h3>
+          <p>Batch-processes received invitations across people, pages, events, and newsletters with one-click bulk accept or ignore actions.</p>
         </div>
 
-        <!-- 3. Auto Withdraw -->
+        <!-- 4. Withdraw Automation -->
         <div class="card-auto">
           <div class="card-header-row">
             <div class="card-icon-box amber">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
-                <circle cx="9" cy="7" r="4"></circle>
-                <line x1="17" x2="22" y1="8" y2="13"></line>
-                <line x1="22" x2="17" y1="8" y2="13"></line>
+                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+                <circle cx="9" cy="7" r="4"/>
+                <line x1="17" x2="22" y1="8" y2="13"/>
+                <line x1="22" x2="17" y1="8" y2="13"/>
               </svg>
             </div>
             <span class="card-tag">Clean-up</span>
           </div>
-          <h3>Auto Withdraw</h3>
-          <p>Protect your invitation acceptance ratio and account standing by automatically cancelling sent connection requests that haven't been answered.</p>
-          <ul class="feature-list">
-            <li class="feature-item">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
-              Age-based filtering (older than 14 or 30 days)
-            </li>
-            <li class="feature-item">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
-              Prevents reaching LinkedIn's pending cap
-            </li>
-            <li class="feature-item">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
-              Staggered batch execution safeguards
-            </li>
-          </ul>
+          <h3>Withdraw Automation</h3>
+          <p>Cancels unanswered pending connection requests older than 14 or 30 days to protect your invitation ratio.</p>
         </div>
 
-        <!-- 4. Unfollow Automation -->
+        <!-- 5. Unfollow Automation -->
         <div class="card-auto">
           <div class="card-header-row">
             <div class="card-icon-box purple">
@@ -655,102 +663,85 @@
                 <line x1="23" y1="11" x2="17" y2="11"></line>
               </svg>
             </div>
-            <span class="card-tag">Feed Optimization</span>
+            <span class="card-tag">Feed Control</span>
           </div>
           <h3>Unfollow Automation</h3>
-          <p>Declutter your feed and optimize algorithm reach by automatically unfollowing inactive or noisy connections while keeping them securely in your network.</p>
-          <ul class="feature-list">
-            <li class="feature-item">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
-              Customizable batch caps (up to 200 per run)
-            </li>
-            <li class="feature-item">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
-              Schedule modes: Manual, Daily, Weekly, Monthly
-            </li>
-            <li class="feature-item">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
-              Generates downloadable HTML audit report
-            </li>
-          </ul>
+          <p>Cleans your feed by unfollowing non-connections you follow, keeping your network while filtering out low-value noise.</p>
+        </div>
+
+        <!-- 6. Network Catch-Up Automation -->
+        <div class="card-auto">
+          <div class="card-header-row">
+            <div class="card-icon-box cyan">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+                <circle cx="9" cy="7" r="4"/>
+                <path d="M19.5 6.5 L20.7 9.3 L23.5 10.5 L20.7 11.7 L19.5 14.5 L18.3 11.7 L15.5 10.5 L18.3 9.3 Z" stroke-width="1.3"/>
+              </svg>
+            </div>
+            <span class="card-tag">Milestones</span>
+          </div>
+          <h3>Network Catch-Up Automation</h3>
+          <p>Celebrates job changes, work anniversaries, and milestones across your network with timely, automated congratulatory engagement.</p>
         </div>
       </div>
     </section>
 
-    <!-- SECTION 2: SECURITY & PROTECTION SUITE -->
-    <section id="security">
-      <div class="section-head">
-        <span class="section-tag">Enterprise Security Architecture</span>
-        <h2 class="section-title">Dual Protection & Real-Time Mobile Hub</h2>
-        <p class="section-desc">Protect your active LinkedIn session from physical snoopers, secure extension controls, and stay notified instantly anywhere via Web Push alerts.</p>
-      </div>
+    <!-- SECTION 2: LINKEDIN.COM PAGE VIEW PROTECTION -->
+    <section id="protection" class="section-protection">
+      <div class="protection-card">
+        <div class="protection-badge">🛡️ Intelligent Tab Defense</div>
+        <h3>Linkedin.com Page View Protection</h3>
+        <p>A zero-compromise security layer that conceals and secures your active LinkedIn browsing session from unauthorized eyes, physical access, and extension tampering.</p>
 
-      <div class="grid-security">
-        <!-- Security Card 1: Dual Protection -->
-        <div class="card-sec">
-          <div class="card-sec-badge">🛡️ Local Session Defense</div>
-          <h3>LinkedIn.com & Panel Dual Protection</h3>
-          <p>A multi-layer security shield that protects your browser session and extension controls from unauthorized eyes and physical access.</p>
-
-          <div class="sec-sub-block">
-            <div class="sec-sub-title">
-              <span>👤</span>
-              <span>1. LinkedIn.com Camouflage & Security Gate</span>
+        <div class="protection-grid">
+          <!-- Column 1: Two Unlock Options -->
+          <div class="protection-col">
+            <div class="protection-col-title">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+              </svg>
+              Two Unlock Modes
             </div>
-            <div class="sec-sub-desc">
-              When enabled, navigating to LinkedIn displays an authentic replica of the official LinkedIn Sign In page or a Security Gate. Unlocks via Master Password, secret double-click on <b>"LinkedIn © 2026"</b>, or Windows Hello / Touch ID.
+            <div class="protection-col-desc">
+              Unlock via Master Password / Platform Biometrics (Windows Hello & Touch ID), or enable Camouflage Gate mode presenting an authentic LinkedIn login replica with a discreet unlock hotspot.
             </div>
           </div>
 
-          <div class="sec-sub-block">
-            <div class="sec-sub-title">
-              <span>🔒</span>
-              <span>2. Side Panel & Settings Lockdown</span>
+          <!-- Column 2: Extension Uninstall Protection -->
+          <div class="protection-col">
+            <div class="protection-col-title">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+              </svg>
+              Uninstall Protection
             </div>
-            <div class="sec-sub-desc">
-              Secures your extension configuration, target lists, and account identity behind master credentials, preventing unauthorized tampering on shared workstations.
+            <div class="protection-col-desc">
+              Protects against unauthorized extension removal or disabling on shared and workplace devices. Triggers tamper telemetry and routes removal attempts through a security verification gate.
             </div>
           </div>
 
-          <ul class="feature-list" style="margin-top: 10px; margin-bottom: 20px;">
-            <li class="feature-item">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
-              Windows Hello, Touch ID & Platform Biometrics
-            </li>
-            <li class="feature-item">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
-              Zero password exposure — verified securely
-            </li>
-          </ul>
+          <!-- Column 3: Hub.html & Telemetry -->
+          <div class="protection-col">
+            <div class="protection-col-title">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
+                <line x1="12" y1="18" x2="12.01" y2="18"></line>
+              </svg>
+              Mobile Hub (hub.html)
+            </div>
+            <div class="protection-col-desc">
+              Pair mobile devices with your unique Account ID (AID). Access hub.html for real-time W3C Web Push alerts on unlock events and inspect an encrypted Cloudflare D1 audit log.
+            </div>
+          </div>
         </div>
 
-        <!-- Security Card 2: Mobile Push Hub -->
-        <div class="card-sec">
-          <div class="card-sec-badge">📱 Cloud & PWA Telemetry</div>
-          <h3>Mobile Security Hub & Web Push (hub.html)</h3>
-          <p>Pair your mobile device with your unique extension account identity. Receive instant push notifications whenever LinkedIn protection is triggered or unlocked.</p>
-
-          <div class="sec-sub-block">
-            <div class="sec-sub-title">
-              <span>🔔</span>
-              <span>1. Real-Time W3C Web Push Alerts</span>
-            </div>
-            <div class="sec-sub-desc">
-              Powered by Cloudflare Workers & VAPID cryptographic standards. Sends instant alerts directly to your phone lock screen on iOS and Android.
-            </div>
+        <div class="protection-action-bar">
+          <div class="protection-action-info">
+            Paired with <b>Cloudflare D1 & VAPID Push</b> for real-time mobile security telemetry.
           </div>
-
-          <div class="sec-sub-block">
-            <div class="sec-sub-title">
-              <span>📋</span>
-              <span>2. Encrypted Forensic Audit Trail</span>
-            </div>
-            <div class="sec-sub-desc">
-              All lock/unlock events, device pairings, and security state changes are securely logged in Cloudflare D1 with instant cloud sync.
-            </div>
-          </div>
-
-          <a href="/hub.html" class="card-sec-btn">
+          <a href="/hub.html" class="btn-hub">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
             Open Mobile Security Hub (hub.html)
           </a>
@@ -758,10 +749,10 @@
       </div>
     </section>
 
-    <!-- SECTION 3: SUPPORT & FAQ -->
+    <!-- SECTION 3: EXTENSION SUPPORT & CONTACT -->
     <section id="support" class="support-box">
-      <h2>Need Assistance or Have Questions?</h2>
-      <p>This official portal provides documentation, device pairing, and customer support for all LinkedInTools extension users.</p>
+      <h2>Extension Support & Assistance</h2>
+      <p>This official portal provides documentation, mobile device pairing, and support for all LinkedInTools users.</p>
       <a href="mailto:linkedintools1@gmail.com" class="btn-primary">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
         Contact Support via Email
@@ -775,8 +766,8 @@
     <p style="margin-top: 8px;">
       <a href="/index.html">Support Home</a> &bull;
       <a href="/hub.html">Mobile Security Hub</a> &bull;
-      <a href="#automations">Automations</a> &bull;
-      <a href="#security">Security Suite</a> &bull;
+      <a href="#automations">6 Automations</a> &bull;
+      <a href="#protection">Page Protection</a> &bull;
       <a href="mailto:linkedintools1@gmail.com">Contact</a>
     </p>
   </footer>
