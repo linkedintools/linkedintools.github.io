@@ -753,9 +753,9 @@
     <section id="support" class="support-box">
       <h2>Extension Support & Assistance</h2>
       <p>This official portal provides documentation, mobile device pairing, and support for all LinkedInTools users.</p>
-      <a href="mailto:linkedintools1@gmail.com" class="btn-primary">
+      <a href="#" class="btn-primary secure-mail-btn" data-user="linkedintools1" data-domain="gmail.com" role="button">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
-        Contact Support via Email
+        <span class="secure-mail-label">Contact Support via Email</span>
       </a>
     </section>
   </main>
@@ -768,9 +768,45 @@
       <a href="/hub.html">Mobile Security Hub</a> &bull;
       <a href="#automations">6 Automations</a> &bull;
       <a href="#protection">Page Protection</a> &bull;
-      <a href="mailto:linkedintools1@gmail.com">Contact</a>
+      <a href="#" class="secure-mail-link" data-user="linkedintools1" data-domain="gmail.com" role="button">Contact</a>
     </p>
   </footer>
+
+  <script>
+    (function() {
+      // Decode and bind contact actions securely to prevent scrapers from reading raw mailto attributes
+      function resolveMail(el) {
+        const u = el.getAttribute('data-user');
+        const d = el.getAttribute('data-domain');
+        if (u && d) {
+          return `${u}@${d}`;
+        }
+        return '';
+      }
+
+      function handleMailClick(e) {
+        const mail = resolveMail(this);
+        if (mail) {
+          e.preventDefault();
+          window.location.href = `mailto:${mail}?subject=${encodeURIComponent('LinkedInTools Support Request')}`;
+        }
+      }
+
+      function handleMailHover() {
+        const mail = resolveMail(this);
+        if (mail && !this.getAttribute('data-decrypted')) {
+          this.setAttribute('data-decrypted', 'true');
+          this.setAttribute('href', `mailto:${mail}`);
+        }
+      }
+
+      document.querySelectorAll('.secure-mail-btn, .secure-mail-link').forEach(function(el) {
+        el.addEventListener('click', handleMailClick);
+        el.addEventListener('pointerenter', handleMailHover, { once: true });
+        el.addEventListener('focus', handleMailHover, { once: true });
+      });
+    })();
+  </script>
 
 </body>
 </html>
