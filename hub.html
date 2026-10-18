@@ -318,12 +318,14 @@
       color: #ffffff;
       font-weight: 600;
       letter-spacing: -0.01em;
+      white-space: nowrap;
     }
     .active-shield-title span {
       display: block;
       font-size: 12px;
       color: rgba(255, 255, 255, 0.65);
       margin-top: 2px;
+      white-space: nowrap;
     }
     .shield-badge-live {
       display: inline-flex;
@@ -606,6 +608,26 @@
       .active-shield-card {
         padding: 14px;
         gap: 12px;
+      }
+      .active-shield-header {
+        gap: 8px;
+      }
+      .active-shield-header > div:first-child {
+        gap: 8px !important;
+        min-width: 0;
+      }
+      .active-shield-title {
+        min-width: 0;
+      }
+      .active-shield-title strong {
+        font-size: 13px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .active-shield-title span {
+        font-size: 11.5px;
+        white-space: nowrap;
       }
       .active-shield-actions {
         display: grid;
@@ -1106,7 +1128,7 @@
             </div>
             <div class="active-shield-title">
               <strong>Device Protected & Paired</strong>
-              <span>Listening for real-time security alerts</span>
+              <span>Real-time alerts active</span>
             </div>
           </div>
           <!-- Active / Inactive Badge replaces the old Live badge inside the green card -->
