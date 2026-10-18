@@ -210,16 +210,17 @@
     .status-active { background: rgba(16, 185, 129, 0.15); color: var(--success); border: 1px solid rgba(16, 185, 129, 0.3); }
     .status-inactive { background: rgba(239, 68, 68, 0.15); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.3); }
 
-    /* Compact Account ID Bar */
+    /* Compact Account ID Bar with color-separated prefix */
     .account-id-row {
-      display: flex;
+      display: inline-flex;
       align-items: center;
-      gap: 10px;
       background: #141414;
       border: 1px solid var(--border-color);
       border-radius: 6px;
-      padding: 4px 10px;
-      margin-bottom: 14px;
+      overflow: hidden;
+      width: 100%;
+      max-width: 320px;
+      margin-bottom: 16px;
       transition: border-color 0.2s ease, box-shadow 0.2s ease;
     }
     .account-id-row:focus-within {
@@ -229,10 +230,13 @@
     .account-id-badge {
       display: inline-flex;
       align-items: center;
-      gap: 5px;
+      gap: 6px;
       font-size: 11px;
       font-weight: 700;
-      color: rgba(255, 255, 255, 0.6);
+      color: rgba(255, 255, 255, 0.9);
+      background: #272727;
+      border-right: 1px solid var(--border-color);
+      padding: 7px 12px;
       text-transform: uppercase;
       letter-spacing: 0.5px;
       white-space: nowrap;
@@ -249,9 +253,9 @@
       border: none;
       outline: none;
       color: #ffffff;
-      font-size: 13.5px;
+      font-size: 13px;
       font-family: monospace;
-      padding: 6px 0;
+      padding: 7px 10px;
     }
     .account-id-input::placeholder {
       color: rgba(255, 255, 255, 0.35);
@@ -1065,21 +1069,21 @@
 
     <!-- Live Notification Status Card -->
     <div class="card">
-      <!-- Compact Account ID Bar at the Very Top -->
+      <div class="card-title">
+        <span>Live Alert Status</span>
+        <span id="pushStatusBadgeInactive" class="status-badge status-inactive" style="display: none;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bell-off"><path d="M10.268 21a2 2 0 0 0 3.464 0"/><path d="M17 17H4a1 1 0 0 1-.74-1.673C4.59 13.956 6 12.499 6 8a6 6 0 0 1 .258-1.742"/><path d="m2 2 20 20"/><path d="M8.668 3.01A6 6 0 0 1 18 8c0 2.687.77 4.653 1.707 6.05"/></svg>
+          Inactive
+        </span>
+      </div>
+
+      <!-- Compact Account ID Bar -->
       <div class="account-id-row">
         <span class="account-id-badge">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
           Account ID
         </span>
         <input type="text" id="accountIdInput" class="account-id-input" placeholder="e.g. aid_85077979" autocomplete="off" spellcheck="false">
-      </div>
-
-      <div class="card-title">
-        <span>Live Alert Status</span>
-        <span id="pushStatusBadge" class="status-badge status-inactive">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bell-off"><path d="M10.268 21a2 2 0 0 0 3.464 0"/><path d="M17 17H4a1 1 0 0 1-.74-1.673C4.59 13.956 6 12.499 6 8a6 6 0 0 1 .258-1.742"/><path d="m2 2 20 20"/><path d="M8.668 3.01A6 6 0 0 1 18 8c0 2.687.77 4.653 1.707 6.05"/></svg>
-          Inactive
-        </span>
       </div>
 
       <!-- Inactive State Button -->
@@ -1101,7 +1105,11 @@
               <span>Listening for real-time security alerts</span>
             </div>
           </div>
-          <span class="shield-badge-live">Live</span>
+          <!-- Active / Inactive Badge replaces the old Live badge inside the green card -->
+          <span id="pushStatusBadge" class="status-badge status-active">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bell-ring"><path d="M10.268 21a2 2 0 0 0 3.464 0"/><path d="M22 8c0-2.3-.8-4.3-2-6"/><path d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"/><path d="M4 2C2.8 3.7 2 5.7 2 8"/></svg>
+            Active
+          </span>
         </div>
 
         <!-- Mode Selector Row inside Green Card -->
@@ -1501,6 +1509,7 @@ const urlParams = new URLSearchParams(window.location.search);
 
     function updatePushState(isActive) {
       const badge = document.getElementById('pushStatusBadge');
+      const badgeInactive = document.getElementById('pushStatusBadgeInactive');
       const tipTitle = document.getElementById('tipTitle');
       const tipText = document.getElementById('tipText');
       const enablePushBtn = document.getElementById('enablePushBtn');
@@ -1514,11 +1523,16 @@ const urlParams = new URLSearchParams(window.location.search);
           badge.className = 'status-badge status-active';
           badge.innerHTML = `${activeBell} Active`;
         }
+        if (badgeInactive) badgeInactive.style.display = 'none';
         if (tipTitle) tipTitle.textContent = 'Device Protected & Live';
         if (tipText) tipText.innerHTML = 'Real-time browser notifications are actively monitoring this device. You will receive an instant notification according to your chosen alert mode.';
         if (enablePushBtn) enablePushBtn.style.display = 'none';
         if (activeShieldWrap) activeShieldWrap.style.display = 'flex';
       } else {
+        if (badgeInactive) {
+          badgeInactive.style.display = 'inline-flex';
+          badgeInactive.innerHTML = `${inactiveBell} Inactive`;
+        }
         if (badge) {
           badge.className = 'status-badge status-inactive';
           badge.innerHTML = `${inactiveBell} Inactive`;
