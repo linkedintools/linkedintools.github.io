@@ -4,27 +4,27 @@
 
 ## Core Automations
 
-### 1. Connection Request Automation (Auto Connect)
+### 1. Connection Request Automation
 - Sends personalized connection requests to targeted professionals with customized note placeholders and humanized pacing.
 - Enforces safe daily quotas and strict throttle pacing to maintain full compliance and account safety.
 - Automatically tracks sent connection requests and prevents sending duplicate invitations across campaigns.
 
-### 2. New Connections Post Like
+### 2. New Connections Post Like Automation
 - Automatically likes recent posts of newly added connections to boost early engagement, warm up relationships, and maximize profile visibility.
 - Configurable likes per profile (1-5 posts), connection recency timeframes, and customizable daily safety limits.
 - Supports scheduled background execution (Manual, Daily, Weekly, Monthly) with randomized delays.
 
-### 3. Inbound Connection Automation (Auto Inbound)
+### 3. Inbound Connection Automation 
 - Automates incoming invitation management by systematically accepting or ignoring pending connection requests.
 - Batch-processes received invitations across people, pages, events, and newsletters with one-click bulk accept or ignore actions.
 - Generates transparent real-time session logs, HTML report files, and comprehensive historical records.
 
-### 4. Withdraw Automation (Auto Withdraw)
+### 4. Withdraw Automation
 - Automatically cancels unanswered pending sent invitations that have not been accepted within your specified threshold (older than 14-365 days).
 - Reclaims your pending invitation limits to ensure continuous and uninterrupted networking capabilities.
 - Supports flexible scheduling, run limits, HTML export reports, and community repost unlocking.
 
-### 5. Unfollow Automation (Auto Unfollow)
+### 5. Unfollow Automation
 - Performs bulk unfollowing of connections or followed members to clean up your feed while keeping your 1st-degree connections intact.
 - Eliminates feed clutter from inactive profiles or low-relevance content creators without losing direct messaging access.
 - Provides batch processing with intelligent rate limiting, safety pauses, and real-time execution statistics.
