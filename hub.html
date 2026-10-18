@@ -1103,6 +1103,15 @@
         </span>
       </div>
 
+      <!-- Decommissioned Account Warning Banner -->
+      <div id="decommissionedNotice" style="display: none; background: rgba(239, 68, 68, 0.12); border: 1px solid rgba(239, 68, 68, 0.35); border-radius: 6px; padding: 12px 14px; margin-bottom: 14px; color: #fca5a5; font-size: 13px; line-height: 1.5;">
+        <div style="color: #ef4444; font-weight: 700; display: flex; align-items: center; gap: 6px; margin-bottom: 4px;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          Account ID Decommissioned
+        </div>
+        This Account ID was permanently retired when the extension was uninstalled from the browser. It cannot be reactivated or subscribed to. Past forensic logs are displayed below for reference.
+      </div>
+
       <!-- Compact Account ID Bar -->
       <div class="account-id-row">
         <span class="account-id-badge">
@@ -1347,13 +1356,97 @@
       document.getElementById('optionModeDetailed')?.classList.toggle('selected', mode === 'detailed');
     }
 
-const urlParams = new URLSearchParams(window.location.search);
+    let isAccountDecommissioned = false;
+
+    async function checkAccountLifecycle(aid) {
+      if (!aid) {
+        setDecommissionedUI(false);
+        return;
+      }
+      try {
+        const res = await fetch(`${WORKER_URL}/api/status?accountId=${encodeURIComponent(aid)}`);
+        const data = await res.json();
+        if (data && (data.isUninstalled || data.accountStatus === 'uninstalled')) {
+          isAccountDecommissioned = true;
+          localStorage.removeItem('lit_aid');
+          setDecommissionedUI(true, aid);
+          loadLogs(aid);
+          return;
+        }
+      } catch (err) {
+        console.warn('Account status check error:', err);
+      }
+
+      isAccountDecommissioned = false;
+      setDecommissionedUI(false);
+      localStorage.setItem('lit_aid', aid);
+      loadLogs(aid);
+      fetchDeviceMode(aid);
+    }
+
+    function setDecommissionedUI(isDecommissioned, aid = '') {
+      const notice = document.getElementById('decommissionedNotice');
+      const enablePushBtn = document.getElementById('enablePushBtn');
+      const badge = document.getElementById('pushStatusBadge');
+      const badgeInactive = document.getElementById('pushStatusBadgeInactive');
+      const activeShieldWrap = document.getElementById('activeShieldWrap');
+      const tipTitle = document.getElementById('tipTitle');
+      const tipText = document.getElementById('tipText');
+
+      const decommissionedIcon = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>';
+
+      if (isDecommissioned) {
+        if (notice) notice.style.display = 'block';
+        if (activeShieldWrap) activeShieldWrap.style.display = 'none';
+        if (badgeInactive) {
+          badgeInactive.style.display = 'inline-flex';
+          badgeInactive.style.background = 'rgba(239, 68, 68, 0.2)';
+          badgeInactive.style.color = '#ef4444';
+          badgeInactive.style.borderColor = 'rgba(239, 68, 68, 0.4)';
+          badgeInactive.innerHTML = `${decommissionedIcon} Decommissioned`;
+        }
+        if (badge) {
+          badge.className = 'status-badge status-inactive';
+          badge.style.background = 'rgba(239, 68, 68, 0.2)';
+          badge.style.color = '#ef4444';
+          badge.style.borderColor = 'rgba(239, 68, 68, 0.4)';
+          badge.innerHTML = `${decommissionedIcon} Decommissioned`;
+        }
+        if (enablePushBtn) {
+          enablePushBtn.style.display = 'flex';
+          enablePushBtn.disabled = true;
+          enablePushBtn.style.opacity = '0.55';
+          enablePushBtn.style.cursor = 'not-allowed';
+          enablePushBtn.innerHTML = `${decommissionedIcon} Account Decommissioned`;
+        }
+        if (tipTitle) tipTitle.textContent = 'Account Decommissioned';
+        if (tipText) tipText.innerHTML = 'This Account ID was permanently decommissioned when the extension was uninstalled. It cannot be reactivated. To resume real-time security alerts, reinstall the extension to receive a new Account ID.';
+      } else {
+        if (notice) notice.style.display = 'none';
+        if (badgeInactive) {
+          badgeInactive.style.background = '';
+          badgeInactive.style.color = '';
+          badgeInactive.style.borderColor = '';
+        }
+        if (badge) {
+          badge.style.background = '';
+          badge.style.color = '';
+          badge.style.borderColor = '';
+        }
+        if (enablePushBtn) {
+          enablePushBtn.disabled = false;
+          enablePushBtn.style.opacity = '';
+          enablePushBtn.style.cursor = '';
+          enablePushBtn.innerHTML = '<svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg> Enable Browser Notifications';
+        }
+      }
+    }
+
+    const urlParams = new URLSearchParams(window.location.search);
     const initialAid = urlParams.get('aid') || localStorage.getItem('lit_aid') || '';
     if (initialAid) {
       document.getElementById('accountIdInput').value = initialAid;
-      localStorage.setItem('lit_aid', initialAid);
-      loadLogs(initialAid);
-      fetchDeviceMode(initialAid);
+      checkAccountLifecycle(initialAid);
     }
 
     function urlBase64ToUint8Array(base64String) {
@@ -1369,7 +1462,7 @@ const urlParams = new URLSearchParams(window.location.search);
       return outputArray;
     }
 
-        async function registerPush(e) {
+    async function registerPush(e) {
       const targetBtn = (e && e.currentTarget) || (e && e.target ? e.target.closest('button') : null) || document.getElementById('reSyncPushBtn') || document.getElementById('enablePushBtn');
       const isResync = targetBtn && targetBtn.id === 'reSyncPushBtn';
 
@@ -1378,7 +1471,11 @@ const urlParams = new URLSearchParams(window.location.search);
         alert('Please enter your Account ID.');
         return;
       }
-      localStorage.setItem('lit_aid', aid);
+
+      if (isAccountDecommissioned) {
+        alert('This Account ID has been decommissioned because the extension was uninstalled. It cannot be reactivated. Please reinstall the extension to generate a new Account ID.');
+        return;
+      }
 
       if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
         alert('Your browser does not support browser notifications.');
@@ -1428,6 +1525,7 @@ const urlParams = new URLSearchParams(window.location.search);
 
         const result = await res.json();
         if (result.success) {
+          localStorage.setItem('lit_aid', aid);
           updatePushState(true);
           try {
             await fetch(`${WORKER_URL}/api/log`, {
@@ -1446,6 +1544,11 @@ const urlParams = new URLSearchParams(window.location.search);
             alert('Desktop notifications activated! To complete mobile security pairing and dismiss the warning in your LinkedIn extension, please also open this link on your mobile phone.');
           }
           loadLogs(aid);
+        } else if (result.error === 'ACCOUNT_DECOMMISSIONED') {
+          isAccountDecommissioned = true;
+          localStorage.removeItem('lit_aid');
+          setDecommissionedUI(true, aid);
+          alert('This Account ID has been decommissioned because the extension was uninstalled. It cannot be reactivated.');
         } else {
           alert('Registration error: ' + (result.error || 'Server error'));
         }
@@ -1572,6 +1675,11 @@ const urlParams = new URLSearchParams(window.location.search);
 
     async function checkSubscriptionState() {
       const aid = document.getElementById('accountIdInput')?.value.trim() || initialAid;
+      if (isAccountDecommissioned) {
+        updatePushState(false);
+        setDecommissionedUI(true, aid);
+        return;
+      }
       if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
         updatePushState(false);
         return;
@@ -1726,9 +1834,12 @@ const urlParams = new URLSearchParams(window.location.search);
     document.getElementById('accountIdInput')?.addEventListener('change', () => {
       const aid = document.getElementById('accountIdInput').value.trim();
       if (aid) {
-        localStorage.setItem('lit_aid', aid);
-        loadLogs(aid, false);
-        fetchDeviceMode(aid);
+        checkAccountLifecycle(aid);
+      } else {
+        localStorage.removeItem('lit_aid');
+        isAccountDecommissioned = false;
+        setDecommissionedUI(false);
+        updatePushState(false);
       }
     });
 
