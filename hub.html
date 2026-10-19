@@ -1150,7 +1150,18 @@
             <span class="shield-mode-label">Notification Mode</span>
             <span id="currentModeDisplay" class="shield-mode-val">
               <span class="mode-dot"></span>
-              <span id="currentModeText">Detailed Mode</span>
+              <span id="currentModeText"><script>
+                (function(){
+                  try {
+                    var p = new URLSearchParams(window.location.search);
+                    var a = p.get('aid') || localStorage.getItem('lit_aid') || '';
+                    var m = (a ? localStorage.getItem('lit_push_mode_' + a) : null) || localStorage.getItem('lit_push_mode') || 'basic';
+                    document.currentScript.parentElement.textContent = m === 'detailed' ? 'Detailed Mode' : 'Basic Mode';
+                  } catch(e) {
+                    document.currentScript.parentElement.textContent = 'Basic Mode';
+                  }
+                })();
+              </script></span>
             </span>
           </div>
           <button type="button" id="openModeModalBtn" class="shield-mode-btn" title="Change notification mode">
@@ -1238,7 +1249,7 @@
 
         <div class="mode-options-grid">
           <!-- Basic Mode Option -->
-          <div class="mode-option-card" id="optionModeBasic" data-mode="basic" role="button" tabindex="0">
+          <div class="mode-option-card selected" id="optionModeBasic" data-mode="basic" role="button" tabindex="0">
             <div class="mode-option-top">
               <div class="mode-option-title-group">
                 <span class="mode-option-name">Basic Mode</span>
@@ -1253,7 +1264,7 @@
           </div>
 
           <!-- Detailed Mode Option -->
-          <div class="mode-option-card selected" id="optionModeDetailed" data-mode="detailed" role="button" tabindex="0">
+          <div class="mode-option-card" id="optionModeDetailed" data-mode="detailed" role="button" tabindex="0">
             <div class="mode-option-top">
               <div class="mode-option-title-group">
                 <span class="mode-option-name">Detailed Mode</span>
@@ -1307,11 +1318,60 @@
       document.getElementById('iosBanner').style.display = 'block';
     }
 
-        let currentPushMode = 'detailed';
-    let tempSelectedMode = 'detailed';
+    const urlParams = new URLSearchParams(window.location.search);
+    const initialAid = urlParams.get('aid') || localStorage.getItem('lit_aid') || '';
+    const cachedPushMode = (initialAid ? localStorage.getItem('lit_push_mode_' + initialAid) : null) || localStorage.getItem('lit_push_mode') || 'basic';
+
+    let currentPushMode = cachedPushMode;
+    let tempSelectedMode = cachedPushMode;
+
+    // Web Audio: Subtle, tactile mechanical switch selection sound
+    let audioCtx = null;
+    function playMechanicalClick() {
+      try {
+        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+        if (!AudioContextClass) return;
+        if (!audioCtx) audioCtx = new AudioContextClass();
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+
+        const now = audioCtx.currentTime;
+
+        // Snap pulse (crisp tactile micro-click)
+        const osc1 = audioCtx.createOscillator();
+        const gain1 = audioCtx.createGain();
+        osc1.type = 'sine';
+        osc1.frequency.setValueAtTime(2200, now);
+        osc1.frequency.exponentialRampToValueAtTime(350, now + 0.012);
+        gain1.gain.setValueAtTime(0.045, now);
+        gain1.gain.exponentialRampToValueAtTime(0.0001, now + 0.015);
+        osc1.connect(gain1);
+        gain1.connect(audioCtx.destination);
+        osc1.start(now);
+        osc1.stop(now + 0.016);
+
+        // Latch pulse (mechanical switch body bottoming out)
+        const osc2 = audioCtx.createOscillator();
+        const gain2 = audioCtx.createGain();
+        osc2.type = 'triangle';
+        osc2.frequency.setValueAtTime(650, now + 0.004);
+        osc2.frequency.exponentialRampToValueAtTime(110, now + 0.022);
+        gain2.gain.setValueAtTime(0.035, now + 0.004);
+        gain2.gain.exponentialRampToValueAtTime(0.0001, now + 0.024);
+        osc2.connect(gain2);
+        gain2.connect(audioCtx.destination);
+        osc2.start(now + 0.004);
+        osc2.stop(now + 0.025);
+      } catch (_) {}
+    }
 
     function updateModeUI(mode) {
-      currentPushMode = mode === 'basic' ? 'basic' : 'detailed';
+      currentPushMode = mode === 'detailed' ? 'detailed' : 'basic';
+      const aid = document.getElementById('accountIdInput')?.value.trim() || initialAid;
+      if (aid) {
+        try { localStorage.setItem('lit_push_mode_' + aid, currentPushMode); } catch (_) {}
+      }
+      try { localStorage.setItem('lit_push_mode', currentPushMode); } catch (_) {}
+
       const textEl = document.getElementById('currentModeText');
       if (textEl) {
         textEl.textContent = currentPushMode === 'basic' ? 'Basic Mode' : 'Detailed Mode';
@@ -1337,7 +1397,7 @@
 
     function openModeModal() {
       tempSelectedMode = currentPushMode;
-      updateModalSelection(tempSelectedMode);
+      updateModalSelection(tempSelectedMode, false);
       const modal = document.getElementById('modeModal');
       if (modal) modal.style.display = 'flex';
     }
@@ -1347,7 +1407,10 @@
       if (modal) modal.style.display = 'none';
     }
 
-    function updateModalSelection(mode) {
+    function updateModalSelection(mode, isUserAction = false) {
+      if (isUserAction && tempSelectedMode !== mode) {
+        playMechanicalClick();
+      }
       tempSelectedMode = mode;
       document.getElementById('optionModeBasic')?.classList.toggle('selected', mode === 'basic');
       document.getElementById('optionModeDetailed')?.classList.toggle('selected', mode === 'detailed');
@@ -1377,6 +1440,8 @@
       isAccountDecommissioned = false;
       setDecommissionedUI(false);
       localStorage.setItem('lit_aid', aid);
+      const cached = localStorage.getItem('lit_push_mode_' + aid);
+      if (cached) updateModeUI(cached);
       loadLogs(aid);
       fetchDeviceMode(aid);
     }
@@ -1439,8 +1504,6 @@
       }
     }
 
-    const urlParams = new URLSearchParams(window.location.search);
-    const initialAid = urlParams.get('aid') || localStorage.getItem('lit_aid') || '';
     if (initialAid) {
       document.getElementById('accountIdInput').value = initialAid;
       checkAccountLifecycle(initialAid);
@@ -1741,8 +1804,8 @@
     document.getElementById('cancelModeModalBtn')?.addEventListener('click', closeModeModal);
     document.getElementById('modeModalBackdrop')?.addEventListener('click', closeModeModal);
 
-    document.getElementById('optionModeBasic')?.addEventListener('click', () => updateModalSelection('basic'));
-    document.getElementById('optionModeDetailed')?.addEventListener('click', () => updateModalSelection('detailed'));
+    document.getElementById('optionModeBasic')?.addEventListener('click', () => updateModalSelection('basic', true));
+    document.getElementById('optionModeDetailed')?.addEventListener('click', () => updateModalSelection('detailed', true));
 
     document.getElementById('saveModeModalBtn')?.addEventListener('click', async () => {
       const saveBtn = document.getElementById('saveModeModalBtn');
