@@ -1105,7 +1105,7 @@
       <div id="decommissionedNotice" style="display: none; background: rgba(239, 68, 68, 0.12); border: 1px solid rgba(239, 68, 68, 0.35); border-radius: 6px; padding: 14px 16px; margin-bottom: 14px; color: #fca5a5; font-size: 13px; line-height: 1.5;">
         <div id="decommissionedNoticeTitle" style="color: #ef4444; font-weight: 700; display: flex; align-items: center; gap: 6px; margin-bottom: 6px;">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-          <span id="decommissionedNoticeTitleText">Account ID Decommissioned / Extension Uninstalled</span>
+          <span id="decommissionedNoticeTitleText">Account ID Decommissioned</span>
         </div>
         <p id="decommissionedNoticeDesc" style="margin-bottom: 12px; color: rgba(255, 255, 255, 0.85);">
           This Account ID was permanently retired when the extension was uninstalled. It cannot be re-synced or reactivated. Please enter the new Account ID from your installed extension to pair this device.
@@ -1550,7 +1550,7 @@
           if (tipTitle) tipTitle.textContent = 'Extension Not Found';
           if (tipText) tipText.innerHTML = 'This Account ID is not active in the system. Make sure the extension is installed in your browser and enter its active Account ID above.';
         } else {
-          if (titleText) titleText.textContent = 'Account ID Decommissioned / Extension Uninstalled';
+          if (titleText) titleText.textContent = 'Account ID Decommissioned';
           if (noticeDesc) {
             noticeDesc.innerHTML = `Account ID <strong style="color:#ffffff; font-family:monospace;">${aid || ''}</strong> was permanently retired when the extension was uninstalled. It cannot be re-synced or reactivated. Please enter the new Account ID from your installed extension to pair this device.`;
           }
