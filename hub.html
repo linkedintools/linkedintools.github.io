@@ -1074,6 +1074,11 @@
       line-height: 1.5;
       display: block;
     }
+    @media (max-width: 768px) {
+      .desktop-notice-card {
+        display: none !important;
+      }
+    }
 </style>
 </head>
 <body>
@@ -1495,11 +1500,13 @@
     async function checkAccountLifecycle(aid) {
       if (!aid) {
         setDecommissionedUI(false);
+        updateDesktopNotice(null);
         return false;
       }
+      let data = null;
       try {
         const res = await fetch(`${WORKER_URL}/api/status?accountId=${encodeURIComponent(aid)}`);
-        const data = await res.json();
+        data = await res.json();
         
         // Decommissioned account
         if (data && (data.isUninstalled || data.accountStatus === 'uninstalled')) {
