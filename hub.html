@@ -1102,12 +1102,18 @@
       </div>
 
       <!-- Decommissioned Account Warning Banner -->
-      <div id="decommissionedNotice" style="display: none; background: rgba(239, 68, 68, 0.12); border: 1px solid rgba(239, 68, 68, 0.35); border-radius: 6px; padding: 12px 14px; margin-bottom: 14px; color: #fca5a5; font-size: 13px; line-height: 1.5;">
-        <div style="color: #ef4444; font-weight: 700; display: flex; align-items: center; gap: 6px; margin-bottom: 4px;">
+      <div id="decommissionedNotice" style="display: none; background: rgba(239, 68, 68, 0.12); border: 1px solid rgba(239, 68, 68, 0.35); border-radius: 6px; padding: 14px 16px; margin-bottom: 14px; color: #fca5a5; font-size: 13px; line-height: 1.5;">
+        <div style="color: #ef4444; font-weight: 700; display: flex; align-items: center; gap: 6px; margin-bottom: 6px;">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-          Account ID Decommissioned
+          Account ID Decommissioned / Extension Uninstalled
         </div>
-        This Account ID was permanently retired when the extension was uninstalled from the browser. It cannot be reactivated or subscribed to. Past forensic logs are displayed below for reference.
+        <p id="decommissionedNoticeDesc" style="margin-bottom: 12px; color: rgba(255, 255, 255, 0.85);">
+          This Account ID was permanently retired when the extension was uninstalled. It cannot be re-synced or reactivated. Please enter the new Account ID from your installed extension to pair this device.
+        </p>
+        <button type="button" id="switchToNewAidBtn" class="btn" style="background: var(--accent); padding: 8px 14px; font-size: 13px; font-weight: 600; width: auto; display: inline-flex; align-items: center; gap: 6px;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
+          <span>Enter New Extension ID</span>
+        </button>
       </div>
 
       <!-- Compact Account ID Bar -->
@@ -1418,10 +1424,31 @@
 
     let isAccountDecommissioned = false;
 
+    function switchToNewAidEntry() {
+      isAccountDecommissioned = false;
+      localStorage.removeItem('lit_aid');
+      try {
+        if (window.history && window.history.replaceState) {
+          window.history.replaceState(null, '', window.location.pathname);
+        }
+      } catch (_) {}
+      const input = document.getElementById('accountIdInput');
+      if (input) {
+        input.value = '';
+        input.focus();
+      }
+      setDecommissionedUI(false);
+      updatePushState(false);
+      const tipTitle = document.getElementById('tipTitle');
+      const tipText = document.getElementById('tipText');
+      if (tipTitle) tipTitle.textContent = 'Pairing New Extension';
+      if (tipText) tipText.innerHTML = 'Enter the Account ID shown in your newly installed LinkedIn extension, then tap Enable Browser Notifications.';
+    }
+
     async function checkAccountLifecycle(aid) {
       if (!aid) {
         setDecommissionedUI(false);
-        return;
+        return false;
       }
       try {
         const res = await fetch(`${WORKER_URL}/api/status?accountId=${encodeURIComponent(aid)}`);
@@ -1429,9 +1456,18 @@
         if (data && (data.isUninstalled || data.accountStatus === 'uninstalled')) {
           isAccountDecommissioned = true;
           localStorage.removeItem('lit_aid');
+          // Purge push subscription on browser so mobile device stops pretending it is paired to dead ID
+          if ('serviceWorker' in navigator && 'PushManager' in window) {
+            try {
+              const reg = await navigator.serviceWorker.ready;
+              const sub = await reg.pushManager.getSubscription();
+              if (sub) await sub.unsubscribe();
+            } catch (_) {}
+          }
           setDecommissionedUI(true, aid);
+          updatePushState(false);
           loadLogs(aid);
-          return;
+          return true;
         }
       } catch (err) {
         console.warn('Account status check error:', err);
@@ -1444,6 +1480,7 @@
       if (cached) updateModeUI(cached);
       loadLogs(aid);
       fetchDeviceMode(aid);
+      return false;
     }
 
     function setDecommissionedUI(isDecommissioned, aid = '') {
@@ -1454,11 +1491,15 @@
       const activeShieldWrap = document.getElementById('activeShieldWrap');
       const tipTitle = document.getElementById('tipTitle');
       const tipText = document.getElementById('tipText');
+      const noticeDesc = document.getElementById('decommissionedNoticeDesc');
 
       const decommissionedIcon = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>';
 
       if (isDecommissioned) {
         if (notice) notice.style.display = 'block';
+        if (noticeDesc) {
+          noticeDesc.innerHTML = `Account ID <strong style="color:#ffffff; font-family:monospace;">${aid || ''}</strong> was permanently retired when the extension was uninstalled. It cannot be re-synced or reactivated. Please enter the new Account ID from your installed extension to pair this device.`;
+        }
         if (activeShieldWrap) activeShieldWrap.style.display = 'none';
         if (badgeInactive) {
           badgeInactive.style.display = 'inline-flex';
@@ -1482,7 +1523,7 @@
           enablePushBtn.innerHTML = `${decommissionedIcon} Account Decommissioned`;
         }
         if (tipTitle) tipTitle.textContent = 'Account Decommissioned';
-        if (tipText) tipText.innerHTML = 'This Account ID was permanently decommissioned when the extension was uninstalled. It cannot be reactivated. To resume real-time security alerts, reinstall the extension to receive a new Account ID.';
+        if (tipText) tipText.innerHTML = 'This Account ID was permanently decommissioned when the extension was uninstalled. It cannot be reactivated. Tap "Enter New Extension ID" above or paste your new Account ID from your LinkedIn extension to pair this device.';
       } else {
         if (notice) notice.style.display = 'none';
         if (badgeInactive) {
@@ -1533,16 +1574,33 @@
       }
 
       if (isAccountDecommissioned) {
-        alert('This Account ID has been decommissioned because the extension was uninstalled. It cannot be reactivated. Please reinstall the extension to generate a new Account ID.');
-        return;
-      }
-
-      if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
-        alert('Your browser does not support browser notifications.');
+        alert('This Account ID has been decommissioned because the extension was uninstalled. It cannot be reactivated. Please enter your new Extension Account ID.');
+        switchToNewAidEntry();
         return;
       }
 
       setButtonLoading(targetBtn, true, isResync ? 'Syncing...' : 'Connecting...');
+
+      try {
+        // Pre-flight check: verify account is still active on server
+        const statusRes = await fetch(`${WORKER_URL}/api/status?accountId=${encodeURIComponent(aid)}`);
+        const statusData = await statusRes.json();
+        if (statusData && (statusData.isUninstalled || statusData.accountStatus === 'uninstalled')) {
+          isAccountDecommissioned = true;
+          localStorage.removeItem('lit_aid');
+          setDecommissionedUI(true, aid);
+          updatePushState(false);
+          alert('This Account ID has been decommissioned because the extension was uninstalled. It cannot be re-synced. Please enter your new Extension Account ID.');
+          switchToNewAidEntry();
+          return;
+        }
+      } catch (_) {}
+
+      if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
+        alert('Your browser does not support browser notifications.');
+        setButtonLoading(targetBtn, false);
+        return;
+      }
 
       try {
         const permission = await Notification.requestPermission();
@@ -1746,41 +1804,20 @@
       }
       if (Notification.permission !== 'granted') {
         updatePushState(false);
-        if (aid) {
-          const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile|mobile|CriOS/i.test(navigator.userAgent) || (navigator.maxTouchPoints > 1 && !/Windows|Macintosh/i.test(navigator.userAgent));
-          fetch(`${WORKER_URL}/api/unsubscribe`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              accountId: aid,
-              isMobile: isMobileDevice,
-              isDesktop: !isMobileDevice
-            })
-          }).catch(() => {});
-        }
         return;
       }
       try {
         const reg = await navigator.serviceWorker.ready;
         const sub = await reg.pushManager.getSubscription();
         if (sub) {
+          if (isAccountDecommissioned) {
+            await sub.unsubscribe().catch(() => {});
+            updatePushState(false);
+            setDecommissionedUI(true, aid);
+            return;
+          }
           updatePushState(true);
           if (aid) fetchDeviceMode(aid);
-          // Auto-sync existing subscription with current Account ID in Cloudflare D1
-          if (aid) {
-            const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile|mobile|CriOS/i.test(navigator.userAgent) || (navigator.maxTouchPoints > 1 && !/Windows|Macintosh/i.test(navigator.userAgent));
-            fetch(`${WORKER_URL}/api/subscribe`, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                accountId: aid,
-                subscription: sub.toJSON(),
-                sendWelcome: false,
-                isMobile: isMobileDevice,
-                deviceType: isMobileDevice ? 'mobile' : 'desktop'
-              })
-            }).catch(() => {});
-          }
         } else {
           updatePushState(false);
         }
@@ -1891,10 +1928,20 @@
       }
     });
 
-    document.getElementById('accountIdInput')?.addEventListener('change', () => {
+    document.getElementById('switchToNewAidBtn')?.addEventListener('click', switchToNewAidEntry);
+
+    document.getElementById('accountIdInput')?.addEventListener('input', () => {
+      if (isAccountDecommissioned) {
+        isAccountDecommissioned = false;
+        setDecommissionedUI(false);
+      }
+    });
+
+    document.getElementById('accountIdInput')?.addEventListener('change', async () => {
       const aid = document.getElementById('accountIdInput').value.trim();
       if (aid) {
-        checkAccountLifecycle(aid);
+        const isDecomm = await checkAccountLifecycle(aid);
+        if (!isDecomm) await checkSubscriptionState();
       } else {
         localStorage.removeItem('lit_aid');
         isAccountDecommissioned = false;
@@ -1903,25 +1950,54 @@
       }
     });
 
-    // Auto-refresh audit trail every 15 seconds in background
+    // Auto-refresh audit trail every 10 minutes in background
     setInterval(() => {
       const aid = document.getElementById('accountIdInput')?.value.trim() || initialAid;
-      if (aid && !document.hidden) {
+      if (aid && !document.hidden && !isAccountDecommissioned) {
         loadLogs(aid, true);
       }
     }, 600000);
 
-    checkSubscriptionState();
-    window.addEventListener('focus', () => {
-      checkSubscriptionState();
+    async function initHub() {
+      if (initialAid) {
+        document.getElementById('accountIdInput').value = initialAid;
+        const isDecomm = await checkAccountLifecycle(initialAid);
+        if (isDecomm) {
+          updatePushState(false);
+          setDecommissionedUI(true, initialAid);
+          return;
+        }
+      }
+      await checkSubscriptionState();
+    }
+
+    initHub();
+
+    window.addEventListener('focus', async () => {
       const aid = document.getElementById('accountIdInput')?.value.trim() || initialAid;
-      if (aid) loadLogs(aid, true);
+      if (aid) {
+        const isDecomm = await checkAccountLifecycle(aid);
+        if (!isDecomm) {
+          await checkSubscriptionState();
+          loadLogs(aid, true);
+        }
+      } else {
+        await checkSubscriptionState();
+      }
     });
-    window.addEventListener('visibilitychange', () => {
+
+    window.addEventListener('visibilitychange', async () => {
       if (!document.hidden) {
-        checkSubscriptionState();
         const aid = document.getElementById('accountIdInput')?.value.trim() || initialAid;
-        if (aid) loadLogs(aid, true);
+        if (aid) {
+          const isDecomm = await checkAccountLifecycle(aid);
+          if (!isDecomm) {
+            await checkSubscriptionState();
+            loadLogs(aid, true);
+          }
+        } else {
+          await checkSubscriptionState();
+        }
       }
     });
     if (navigator.permissions && navigator.permissions.query) {
