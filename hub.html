@@ -1427,6 +1427,7 @@
     function switchToNewAidEntry() {
       isAccountDecommissioned = false;
       localStorage.removeItem('lit_aid');
+      localStorage.removeItem('lit_paired_aid');
       try {
         if (window.history && window.history.replaceState) {
           window.history.replaceState(null, '', window.location.pathname);
@@ -1458,6 +1459,7 @@
         if (data && (data.isUninstalled || data.accountStatus === 'uninstalled')) {
           isAccountDecommissioned = true;
           localStorage.removeItem('lit_aid');
+          localStorage.removeItem('lit_paired_aid');
           if ('serviceWorker' in navigator && 'PushManager' in window) {
             try {
               const reg = await navigator.serviceWorker.ready;
@@ -1475,6 +1477,7 @@
         if (data && (!data.exists || data.accountStatus === 'not_found' || data.isActive === false)) {
           isAccountDecommissioned = true;
           localStorage.removeItem('lit_aid');
+          localStorage.removeItem('lit_paired_aid');
           if ('serviceWorker' in navigator && 'PushManager' in window) {
             try {
               const reg = await navigator.serviceWorker.ready;
@@ -1694,6 +1697,7 @@
         const result = await res.json();
         if (result.success) {
           localStorage.setItem('lit_aid', aid);
+          localStorage.setItem('lit_paired_aid', aid);
           updatePushState(true);
           try {
             await fetch(`${WORKER_URL}/api/log`, {
@@ -1841,7 +1845,7 @@
       }
     }
 
-    async function checkSubscriptionState() {
+    async function checkSubscriptionState(statusData = null) {
       const aid = document.getElementById('accountIdInput')?.value.trim() || initialAid;
       if (isAccountDecommissioned) {
         updatePushState(false);
@@ -1856,6 +1860,14 @@
         updatePushState(false);
         return;
       }
+
+      // If device has not paired with THIS specific Account ID yet, must show Enable button!
+      const pairedAid = localStorage.getItem('lit_paired_aid');
+      if (!aid || pairedAid !== aid) {
+        updatePushState(false);
+        return;
+      }
+
       try {
         const reg = await navigator.serviceWorker.ready;
         const sub = await reg.pushManager.getSubscription();
@@ -1866,9 +1878,26 @@
             setDecommissionedUI(true, aid);
             return;
           }
+
+          // Verify with server: does this account actually have any active push subscriptions on the server?
+          let data = statusData;
+          if (!data && aid) {
+            try {
+              const res = await fetch(`${WORKER_URL}/api/status?accountId=${encodeURIComponent(aid)}`);
+              data = await res.json();
+            } catch (_) {}
+          }
+          if (data && data.hasPushSubscription === false && data.activeDevicesCount === 0) {
+            // Server has no subscription for this account -> not paired on server yet
+            localStorage.removeItem('lit_paired_aid');
+            updatePushState(false);
+            return;
+          }
+
           updatePushState(true);
           if (aid) fetchDeviceMode(aid);
         } else {
+          localStorage.removeItem('lit_paired_aid');
           updatePushState(false);
         }
       } catch (_) {
@@ -1961,6 +1990,7 @@
         }).catch(() => {});
       }
 
+      localStorage.removeItem('lit_paired_aid');
       updatePushState(false);
       alert('Device successfully unpaired. Push alerts disabled.');
       } finally {
