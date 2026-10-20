@@ -1044,6 +1044,36 @@
       color: #ffffff;
       background: rgba(255, 255, 255, 0.1);
     }
+
+    /* Desktop Mobile Pairing Notice Card */
+    .desktop-notice-card {
+      background: rgba(245, 158, 11, 0.08);
+      border: 1px solid rgba(245, 158, 11, 0.32);
+      border-radius: 6px;
+      padding: 14px 16px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+    .desktop-notice-card .desktop-notice-icon {
+      color: #f59e0b;
+      margin-top: 2px;
+      flex-shrink: 0;
+    }
+    .desktop-notice-card .desktop-notice-title {
+      color: #fbbf24;
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 4px;
+      display: block;
+    }
+    .desktop-notice-card .desktop-notice-text {
+      color: rgba(255, 255, 255, 0.85);
+      font-size: 12px;
+      line-height: 1.5;
+      display: block;
+    }
 </style>
 </head>
 <body>
@@ -1072,6 +1102,22 @@
       <div class="brand">
         <img src="icons/logo.svg" alt="LinkedInTools Logo">
         <span class="brand-title">LinkedInTools Hub</span>
+      </div>
+    </div>
+
+    <!-- Desktop Warning: Mobile Pairing Required (Only on Desktop) -->
+    <div id="desktopMobileNotice" class="info-tip-card desktop-notice-card" style="display: none;">
+      <div class="tip-icon-wrap desktop-notice-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect width="14" height="20" x="5" y="2" rx="2" ry="2"/>
+          <path d="M12 18h.01"/>
+        </svg>
+      </div>
+      <div class="tip-body">
+        <span class="tip-title desktop-notice-title">Action Required: Mobile Phone Pairing</span>
+        <span class="tip-text desktop-notice-text">
+          Desktop browser notifications only alert this computer. To receive real-time push alerts on your phone and dismiss the security warning in your LinkedIn extension, please open this link on your mobile phone to pair your device.
+        </span>
       </div>
     </div>
 
@@ -1468,6 +1514,7 @@
             } catch (_) {}
           }
           setDecommissionedUI(true, aid, 'uninstalled');
+          updateDesktopNotice(null);
           updatePushState(false);
           loadLogs(aid);
           return true;
@@ -1486,6 +1533,7 @@
             } catch (_) {}
           }
           setDecommissionedUI(true, aid, 'not_found');
+          updateDesktopNotice(null);
           updatePushState(false);
           loadLogs(aid);
           return true;
@@ -1496,12 +1544,40 @@
 
       isAccountDecommissioned = false;
       setDecommissionedUI(false);
+      updateDesktopNotice(data);
       localStorage.setItem('lit_aid', aid);
       const cached = localStorage.getItem('lit_push_mode_' + aid);
       if (cached) updateModeUI(cached);
       loadLogs(aid);
       fetchDeviceMode(aid);
       return false;
+    }
+
+    function updateDesktopNotice(serverData = null) {
+      const notice = document.getElementById('desktopMobileNotice');
+      if (!notice) return;
+
+      const isMobileClient = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile|mobile|CriOS/i.test(navigator.userAgent) || (navigator.maxTouchPoints > 1 && !/Windows|Macintosh/i.test(navigator.userAgent));
+
+      // Sadece desktopta görülecek (NEVER show on mobile)
+      if (isMobileClient) {
+        notice.style.display = 'none';
+        return;
+      }
+
+      // If account is decommissioned or invalid, hide mobile notice
+      if (isAccountDecommissioned) {
+        notice.style.display = 'none';
+        return;
+      }
+
+      const hasMobile = Boolean(serverData && (serverData.hasMobilePushSubscription === true || (serverData.mobileDevicesCount && serverData.mobileDevicesCount > 0)));
+
+      if (hasMobile) {
+        notice.style.display = 'none';
+      } else {
+        notice.style.display = 'flex';
+      }
     }
 
     function setDecommissionedUI(isInvalid, aid = '', reason = 'uninstalled') {
@@ -1712,8 +1788,10 @@
           } catch (_) {}
           if (isMobileDevice) {
             alert('Mobile notifications have been successfully activated! Your device is now paired.');
+            updateDesktopNotice({ hasMobilePushSubscription: true, mobileDevicesCount: 1 });
           } else {
             alert('Desktop notifications activated! To complete mobile security pairing and dismiss the warning in your LinkedIn extension, please also open this link on your mobile phone.');
+            updateDesktopNotice({ hasMobilePushSubscription: false, mobileDevicesCount: 0 });
           }
           loadLogs(aid);
         } else if (result.error === 'ACCOUNT_DECOMMISSIONED') {
@@ -1887,6 +1965,7 @@
               data = await res.json();
             } catch (_) {}
           }
+          updateDesktopNotice(data);
           if (data && data.hasPushSubscription === false && data.activeDevicesCount === 0) {
             // Server has no subscription for this account -> not paired on server yet
             localStorage.removeItem('lit_paired_aid');
@@ -2046,6 +2125,8 @@
           updatePushState(false);
           return;
         }
+      } else {
+        updateDesktopNotice(null);
       }
       await checkSubscriptionState();
     }
