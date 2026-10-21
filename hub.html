@@ -2140,7 +2140,13 @@
 
     initHub();
 
-    window.addEventListener('focus', async () => {
+    let _lastHubFocusCheck = 0;
+    async function handleHubWindowActivation() {
+      const now = Date.now();
+      // Throttle: avoid back-to-back duplicate checks within 30 seconds
+      if (now - _lastHubFocusCheck < 30000) return;
+      _lastHubFocusCheck = now;
+
       const aid = document.getElementById('accountIdInput')?.value.trim() || initialAid;
       if (aid) {
         const isDecomm = await checkAccountLifecycle(aid);
@@ -2151,21 +2157,11 @@
       } else {
         await checkSubscriptionState();
       }
-    });
+    }
 
-    window.addEventListener('visibilitychange', async () => {
-      if (!document.hidden) {
-        const aid = document.getElementById('accountIdInput')?.value.trim() || initialAid;
-        if (aid) {
-          const isDecomm = await checkAccountLifecycle(aid);
-          if (!isDecomm) {
-            await checkSubscriptionState();
-            loadLogs(aid, true);
-          }
-        } else {
-          await checkSubscriptionState();
-        }
-      }
+    window.addEventListener('focus', handleHubWindowActivation);
+    window.addEventListener('visibilitychange', () => {
+      if (!document.hidden) handleHubWindowActivation();
     });
     if (navigator.permissions && navigator.permissions.query) {
       navigator.permissions.query({ name: 'notifications' }).then(status => {
