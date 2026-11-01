@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>LiT HUB Page</title>
+  <title>LiTools Hub</title>
   <link rel="manifest" href="manifest.json">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
   <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
@@ -1121,7 +1121,7 @@
       <div class="tip-body">
         <span class="tip-title desktop-notice-title">Action Required: Mobile Phone Pairing</span>
         <span class="tip-text desktop-notice-text">
-          Desktop browser notifications only alert this computer. To receive real-time push alerts on your phone and dismiss the security warning in your LinkedIn extension, please open this link on your mobile phone to pair your device.
+          Desktop browser notifications only alert this computer. To receive real-time push alerts on your phone and dismiss the security warning in your LiTools extension, please open this link on your mobile phone to pair your device.
         </span>
       </div>
     </div>
@@ -1133,7 +1133,7 @@
       <ol>
         <li>Tap the <strong>Share</strong> icon in the Safari bottom toolbar.</li>
         <li>Select <strong>"Add to Home Screen"</strong>.</li>
-        <li>Launch LiT Security from your Home Screen and enable browser notifications.</li>
+        <li>Launch LiTools Security from your Home Screen and enable browser notifications.</li>
       </ol>
     </div>
 
@@ -1494,7 +1494,7 @@
       const tipTitle = document.getElementById('tipTitle');
       const tipText = document.getElementById('tipText');
       if (tipTitle) tipTitle.textContent = 'Pairing New Extension';
-      if (tipText) tipText.innerHTML = 'Enter the Account ID shown in your newly installed LinkedIn extension, then tap Enable Browser Notifications.';
+      if (tipText) tipText.innerHTML = 'Enter the Account ID shown in your newly installed LiTools extension, then tap Enable Browser Notifications.';
     }
 
     async function checkAccountLifecycle(aid) {
@@ -1607,7 +1607,7 @@
         if (reason === 'not_found') {
           if (titleText) titleText.textContent = 'Account ID Not Found / Inactive';
           if (noticeDesc) {
-            noticeDesc.innerHTML = `Account ID <strong style="color:#ffffff; font-family:monospace;">${aid || ''}</strong> is not registered among active extension users. Please make sure the LinkedIn extension is installed on your browser and enter the Account ID shown in its Security Hub.`;
+            noticeDesc.innerHTML = `Account ID <strong style="color:#ffffff; font-family:monospace;">${aid || ''}</strong> is not registered among active extension users. Please make sure the LiTools extension is installed on your browser and enter the Account ID shown in its Security Hub.`;
           }
           if (badgeInactive) {
             badgeInactive.style.display = 'inline-flex';
@@ -1659,7 +1659,7 @@
             enablePushBtn.innerHTML = `${decommissionedIcon} Account Decommissioned`;
           }
           if (tipTitle) tipTitle.textContent = 'Account Decommissioned';
-          if (tipText) tipText.innerHTML = 'This Account ID was permanently decommissioned when the extension was uninstalled. It cannot be reactivated. Tap "Enter New Extension ID" above or paste your new Account ID from your LinkedIn extension to pair this device.';
+          if (tipText) tipText.innerHTML = 'This Account ID was permanently decommissioned when the extension was uninstalled. It cannot be reactivated. Tap "Enter New Extension ID" above or paste your new Account ID from your LiTools extension to pair this device.';
         }
       } else {
         if (notice) notice.style.display = 'none';
@@ -1797,7 +1797,7 @@
             alert('Mobile notifications have been successfully activated! Your device is now paired.');
             updateDesktopNotice({ hasMobilePushSubscription: true, mobileDevicesCount: 1 });
           } else {
-            alert('Desktop notifications activated! To complete mobile security pairing and dismiss the warning in your LinkedIn extension, please also open this link on your mobile phone.');
+            alert('Desktop notifications activated! To complete mobile security pairing and dismiss the warning in your LiTools extension, please also open this link on your mobile phone.');
             updateDesktopNotice({ hasMobilePushSubscription: false, mobileDevicesCount: 0 });
           }
           loadLogs(aid);
