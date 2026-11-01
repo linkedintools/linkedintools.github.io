@@ -1,7 +1,7 @@
 {
-  "name": "LinkedIn Tools Security & Notification Hub",
-  "short_name": "LiT Security",
-  "description": "Real-time Security Logs and Web Push Alerts for LinkedIn Automation",
+  "name": "LiTools Security & Notification Hub",
+  "short_name": "LiTools Security",
+  "description": "Real-time Security Logs and Web Push Alerts for LiTools",
   "start_url": "/hub.html",
   "display": "standalone",
   "background_color": "#191919",
