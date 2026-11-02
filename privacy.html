@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Privacy Policy - LiTools: LinkedIn Connection & Network Assistant</title>
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+  <link rel="icon" type="image/svg+xml" href="icons/logo.svg">
+  <link rel="icon" type="image/png" href="icons/icon128.png">
+  <style>
+    :root {
+      --bg-main: #141414;
+      --bg-surface: #191919;
+      --bg-card: #202020;
+      --border: rgba(255, 255, 255, 0.08);
+      --border-hover: rgba(0, 138, 210, 0.45);
+      --text-1: #ffffff;
+      --text-2: rgba(255, 255, 255, 0.68);
+      --text-3: rgba(255, 255, 255, 0.38);
+      --accent: #0072A9;
+      --accent-hi: #008AD2;
+      --radius: 6px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-main);
+      color: var(--text-1);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      background: rgba(20, 20, 20, 0.88);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .nav-container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: var(--text-1);
+      font-weight: 600;
+      font-size: 17px;
+    }
+
+    .brand img {
+      width: 28px;
+      height: 28px;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .nav-link {
+      color: var(--text-2);
+      text-decoration: none;
+      font-size: 14px;
+      transition: color 0.15s;
+    }
+
+    .nav-link:hover {
+      color: var(--text-1);
+    }
+
+    .nav-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      color: var(--text-1);
+      padding: 6px 12px;
+      border-radius: var(--radius);
+      font-size: 13px;
+      font-weight: 500;
+      text-decoration: none;
+      transition: all 0.15s;
+    }
+
+    .nav-btn:hover {
+      border-color: var(--accent);
+      background: rgba(0, 114, 169, 0.15);
+    }
+
+    main {
+      flex: 1;
+      max-width: 860px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 40px 20px 60px;
+    }
+
+    .doc-header {
+      margin-bottom: 32px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .doc-badge {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--accent-hi);
+      background: rgba(0, 138, 210, 0.12);
+      border: 1px solid rgba(0, 138, 210, 0.25);
+      padding: 4px 10px;
+      border-radius: 4px;
+      margin-bottom: 12px;
+    }
+
+    h1 {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      letter-spacing: -0.02em;
+    }
+
+    .doc-meta {
+      font-size: 13px;
+      color: var(--text-3);
+    }
+
+    .policy-content {
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+    }
+
+    .policy-section {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+    }
+
+    h2 {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--text-1);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    p {
+      font-size: 14.5px;
+      color: var(--text-2);
+      margin-bottom: 12px;
+    }
+
+    p:last-child {
+      margin-bottom: 0;
+    }
+
+    ul {
+      margin: 10px 0 14px 22px;
+      color: var(--text-2);
+      font-size: 14px;
+    }
+
+    li {
+      margin-bottom: 6px;
+    }
+
+    strong {
+      color: var(--text-1);
+      font-weight: 600;
+    }
+
+    .highlight-box {
+      background: rgba(0, 114, 169, 0.08);
+      border-left: 3px solid var(--accent);
+      padding: 12px 16px;
+      border-radius: 0 var(--radius) var(--radius) 0;
+      margin: 14px 0;
+    }
+
+    .highlight-box p {
+      color: var(--text-1);
+      font-size: 13.5px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 14px;
+      font-size: 13.5px;
+    }
+
+    th, td {
+      border: 1px solid var(--border);
+      padding: 10px 14px;
+      text-align: left;
+    }
+
+    th {
+      background: var(--bg-surface);
+      color: var(--text-1);
+      font-weight: 600;
+    }
+
+    td {
+      color: var(--text-2);
+    }
+
+    footer {
+      background: var(--bg-surface);
+      border-top: 1px solid var(--border);
+      padding: 28px 20px;
+      text-align: center;
+      font-size: 13px;
+      color: var(--text-3);
+    }
+
+    footer a {
+      color: var(--text-2);
+      text-decoration: none;
+      margin: 0 6px;
+    }
+
+    footer a:hover {
+      color: var(--text-1);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Navigation -->
+  <header>
+    <div class="nav-container">
+      <a href="/index.html" class="brand">
+        <img src="icons/logo.svg" alt="LiTools Logo">
+        <span>LiTools</span>
+      </a>
+      <nav class="nav-links">
+        <a href="/index.html" class="nav-link">Home &amp; Support</a>
+        <a href="/hub.html" class="nav-btn">Mobile Hub</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="doc-header">
+      <span class="doc-badge">Official Legal Documentation</span>
+      <h1>Privacy Policy</h1>
+      <p class="doc-meta">Last Updated: November 2, 2026 &bull; Applies to LiTools: LinkedIn Connection &amp; Network Assistant</p>
+    </div>
+
+    <div class="policy-content">
+
+      <!-- Section 1: Overview & Philosophy -->
+      <section class="policy-section">
+        <h2>1. Overview &amp; Privacy Commitment</h2>
+        <p>
+          <strong>LiTools: LinkedIn Connection &amp; Network Assistant</strong> (&ldquo;LiTools&rdquo;, &ldquo;we&rdquo;, &ldquo;our&rdquo;, or &ldquo;the extension&rdquo;) is designed with privacy by architecture. Our fundamental principle is simple: <strong>your data belongs to you</strong>.
+        </p>
+        <p>
+          LiTools automates routine professional networking tasks and provides protective local lock screens for your LinkedIn browsing sessions. We do not sell your personal data, we do not track your browsing habits across the web, and we do not store your LinkedIn account credentials or messages on any remote server.
+        </p>
+        <div class="highlight-box">
+          <p>
+            <strong>Core Privacy Guarantee:</strong> LiTools operates primarily locally in your browser. Sensitive credentials (such as your Master Password and biometrics) never leave your device.
+          </p>
+        </div>
+      </section>
+
+      <!-- Section 2: Data Collection & Storage -->
+      <section class="policy-section">
+        <h2>2. Information We Handle and Where It Resides</h2>
+
+        <p><strong>A. Data Stored Strictly on Your Local Device:</strong></p>
+        <ul>
+          <li><strong>Master Password:</strong> Your master password is never stored in plain text. It is hashed using Web Crypto SHA-256 and stored locally in your browser&rsquo;s <code>chrome.storage.local</code> and IndexedDB. It is never transmitted across the network.</li>
+          <li><strong>Biometric Authentication:</strong> Biometric verification uses the official W3C WebAuthn standard (Windows Hello, Touch ID). Biometric sensor data is processed exclusively by your operating system&rsquo;s hardware enclave and is never accessible to the extension or our servers.</li>
+          <li><strong>Automation Preferences:</strong> Daily/weekly quotas, automation schedules, and user preferences are saved entirely inside your local browser storage.</li>
+        </ul>
+
+        <p><strong>B. Data Transmitted to Our Secure Worker (Cloudflare):</strong></p>
+        <p>
+          To deliver real-time mobile security push alerts when an unauthorized lock screen attempt occurs or a task finishes, the extension communicates with our secure telemetry worker:
+        </p>
+        <ul>
+          <li><strong>Account ID (AID):</strong> A randomly generated pseudonymous string (e.g. <code>aid_xxxxxxxx</code>) generated locally upon install. It contains no name, email, or LinkedIn identity.</li>
+          <li><strong>Security Event Telemetry:</strong> Timestamp and event descriptor (such as <code>INVALID_PASSWORD</code> or <code>GATE_TRIGGERED</code>) used exclusively to dispatch real-time push notifications to your paired mobile devices.</li>
+          <li><strong>Web Push Subscriptions:</strong> Standard VAPID push tokens generated by your browser when you explicitly tap &ldquo;Enable Notifications&rdquo; on the Mobile Security Hub.</li>
+        </ul>
+      </section>
+
+      <!-- Section 3: Third Parties & Selling -->
+      <section class="policy-section">
+        <h2>3. Zero Third-Party Sharing &amp; No Data Sale</h2>
+        <p>
+          We firmly believe in user trust. Under no circumstances do we:
+        </p>
+        <ul>
+          <li>Sell, lease, rent, or trade your personal or usage data to third parties or brokers.</li>
+          <li>Embed advertising SDKs, tracking pixels, or third-party behavioral analytics in the extension.</li>
+          <li>Monetize user information or share network activity with commercial entities.</li>
+        </ul>
+      </section>
+
+      <!-- Section 4: Chrome Permissions -->
+      <section class="policy-section">
+        <h2>4. Chrome Extension Permissions Justification</h2>
+        <p>
+          LiTools requests only the minimum necessary browser permissions to deliver its advertised capabilities:
+        </p>
+        <table>
+          <thead>
+            <tr>
+              <th>Permission</th>
+              <th>Technical Purpose</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>storage</code></td>
+              <td>Stores user settings, daily counters, and hashed master passwords locally.</td>
+            </tr>
+            <tr>
+              <td><code>alarms</code></td>
+              <td>Triggers scheduled automation tasks and periodic security checks at user-defined intervals.</td>
+            </tr>
+            <tr>
+              <td><code>tabs</code></td>
+              <td>Enforces the maximum 2 LinkedIn tabs policy and redirects locked tabs to the Security Gate.</td>
+            </tr>
+            <tr>
+              <td><code>sidePanel</code></td>
+              <td>Allows the extension dashboard and controls to be rendered conveniently in Chrome&rsquo;s side panel.</td>
+            </tr>
+            <tr>
+              <td><code>windows</code></td>
+              <td>Manages tab focus and brings the security unlock prompt to the foreground when needed.</td>
+            </tr>
+            <tr>
+              <td><code>scripting</code></td>
+              <td>Executes automated button clicks (Connect, Withdraw, Catch-Up) on LinkedIn web pages.</td>
+            </tr>
+            <tr>
+              <td><code>downloads</code></td>
+              <td>Allows users to export their activity reports and audit logs in CSV/HTML format.</td>
+            </tr>
+            <tr>
+              <td><code>notifications</code></td>
+              <td>Displays desktop notifications for completed automations and security warnings.</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- Section 5: User Rights & Deletion -->
+      <section class="policy-section">
+        <h2>5. Data Retention, Uninstallation &amp; Deletion</h2>
+        <p>
+          You maintain full sovereignty over your data at all times:
+        </p>
+        <ul>
+          <li><strong>Local Data Removal:</strong> Uninstalling the extension immediately and automatically wipes all local data, IndexedDB records, and stored credentials from your browser.</li>
+          <li><strong>Server Telemetry Deletion:</strong> Upon uninstallation, a decommission signal is transmitted to permanently invalidate the paired Account ID and destroy active push subscriptions.</li>
+          <li><strong>Manual Purge:</strong> You may unlink or decommission your Account ID at any time via the Mobile Security Hub interface.</li>
+        </ul>
+      </section>
+
+      <!-- Section 6: Contact -->
+      <section class="policy-section">
+        <h2>6. Contact Us &amp; Inquiries</h2>
+        <p>
+          If you have questions, feedback, or concerns regarding this Privacy Policy or the security architecture of LiTools, please contact our support team at:
+        </p>
+        <p style="margin-top: 10px;">
+          <strong>Email:</strong> <a href="mailto:linkedintools1@gmail.com" style="color: var(--accent-hi); text-decoration: none;">linkedintools1@gmail.com</a><br>
+          <strong>Official Portal:</strong> <a href="https://linkedintools.github.io/" style="color: var(--accent-hi); text-decoration: none;">https://linkedintools.github.io/</a>
+        </p>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <p>LiTools &copy; 2026. All rights reserved.</p>
+    <p style="margin-top: 8px;">
+      <a href="/index.html">Home &amp; Support</a> &bull;
+      <a href="/hub.html">Mobile Security Hub</a> &bull;
+      <a href="/privacy.html">Privacy Policy</a> &bull;
+      <a href="mailto:linkedintools1@gmail.com">Contact</a>
+    </p>
+  </footer>
+
+</body>
+</html>
