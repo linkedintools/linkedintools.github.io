@@ -1,6 +1,6 @@
 # LiTools: LinkedIn Connection & Network Assistant
 
-[LiTools](https://linkedintools.github.io/) is an advanced browser extension designed to automate LinkedIn networking, streamline connection management, and provide enterprise-grade multi-tier account security.
+The [LiTools](https://linkedintools.github.io/) assistant is a browser extension that automates networking processes on LinkedIn and simplifies connection management.
 
 ## Core Automations
 
