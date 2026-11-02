@@ -243,16 +243,6 @@
       font-size: 13px;
       color: var(--text-3);
     }
-
-    footer a {
-      color: var(--text-2);
-      text-decoration: none;
-      margin: 0 6px;
-    }
-
-    footer a:hover {
-      color: var(--text-1);
-    }
   </style>
 </head>
 <body>
@@ -401,7 +391,7 @@
           If you have questions, feedback, or concerns regarding this Privacy Policy or the security architecture of LiTools, please contact our support team at:
         </p>
         <p style="margin-top: 10px;">
-          <strong>Email:</strong> <a href="mailto:linkedintools1@gmail.com" style="color: var(--accent-hi); text-decoration: none;">linkedintools1@gmail.com</a><br>
+          <strong>Email:</strong> <a href="#" class="secure-mail-link" data-user="linkedintools1" data-domain="gmail.com" style="color: var(--accent-hi); text-decoration: none;" role="button"><span class="secure-mail-label">linkedintools1 [at] gmail.com</span></a><br>
           <strong>Official Portal:</strong> <a href="https://linkedintools.github.io/" style="color: var(--accent-hi); text-decoration: none;">https://linkedintools.github.io/</a>
         </p>
       </section>
@@ -412,13 +402,44 @@
   <!-- Footer -->
   <footer>
     <p>LiTools &copy; 2026. All rights reserved.</p>
-    <p style="margin-top: 8px;">
-      <a href="/index.html">Home &amp; Support</a> &bull;
-      <a href="/hub.html">Mobile Security Hub</a> &bull;
-      <a href="/privacy.html">Privacy Policy</a> &bull;
-      <a href="mailto:linkedintools1@gmail.com">Contact</a>
-    </p>
   </footer>
+
+  <script>
+    (function() {
+      function resolveMail(el) {
+        const u = el.getAttribute('data-user');
+        const d = el.getAttribute('data-domain');
+        if (u && d) {
+          return `${u}@${d}`;
+        }
+        return '';
+      }
+
+      function handleMailClick(e) {
+        const mail = resolveMail(this);
+        if (mail) {
+          e.preventDefault();
+          window.location.href = `mailto:${mail}?subject=${encodeURIComponent('LiTools Privacy & Support Inquiry')}`;
+        }
+      }
+
+      function handleMailHover() {
+        const mail = resolveMail(this);
+        if (mail && !this.getAttribute('data-decrypted')) {
+          this.setAttribute('data-decrypted', 'true');
+          this.setAttribute('href', `mailto:${mail}`);
+          const label = this.querySelector('.secure-mail-label');
+          if (label) label.textContent = mail;
+        }
+      }
+
+      document.querySelectorAll('.secure-mail-link').forEach(function(el) {
+        el.addEventListener('click', handleMailClick);
+        el.addEventListener('pointerenter', handleMailHover, { once: true });
+        el.addEventListener('focus', handleMailHover, { once: true });
+      });
+    })();
+  </script>
 
 </body>
 </html>

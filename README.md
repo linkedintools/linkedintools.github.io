@@ -56,9 +56,10 @@ The [LiTools](https://linkedintools.github.io/) assistant is a browser extension
 │ │   users from disabling      │ │   users who enter password  │ │   (mobile notifications),   │ │
 │ │   protection settings       │ │   can browse your account.  │ │   allowing you to take      │ │
 │ │   (LinkedIn Page View       │ │                             │ │   immediate action.         │ │
-│ │   Protection).              │ │ • There is also an option   │ │                             │ │
-│ │                             │ │   to redirect unauthorized  │ │                             │ │  
-│ │                             │ │   users to a fake page.     │ │                             │ │  
+│ │   Protection).              │ │ • Supports biometrics via   │ │                             │ │
+│ │                             │ │   Windows Hello & Touch ID  │ │                             │ │
+│ │                             │ │   for instant unlocking.    │ │                             │ │
+│ │                             │ │                             │ │                             │ │
 │ └─────────────────────────────┘ └─────────────────────────────┘ └─────────────────────────────┘ │
 └────────────────────────────────────────────────┬────────────────────────────────────────────────┘
                                                  │         

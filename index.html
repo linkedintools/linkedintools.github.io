@@ -140,7 +140,7 @@
     /* Hero Section */
     .hero {
       text-align: center;
-      max-width: 760px;
+      max-width: 1040px;
       margin: 0 auto 52px;
     }
 
@@ -159,21 +159,28 @@
     }
 
     .hero h1 {
-      font-size: 38px;
+      font-size: clamp(1.4rem, 0.8rem + 1.7vw, 2.15rem);
       font-weight: 750;
-      letter-spacing: -0.03em;
-      line-height: 1.2;
+      letter-spacing: -0.025em;
+      line-height: 1.25;
       margin-bottom: 16px;
       background: linear-gradient(180deg, #ffffff 0%, rgba(255, 255, 255, 0.82) 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
 
+    @media (min-width: 860px) {
+      .hero h1 {
+        white-space: nowrap;
+      }
+    }
+
     .hero p {
+      max-width: 680px;
+      margin: 0 auto 26px;
       font-size: 15.5px;
       color: var(--text-2);
       line-height: 1.55;
-      margin-bottom: 26px;
     }
 
     .hero-actions {
@@ -550,6 +557,7 @@
       <nav class="nav-links">
         <a href="#automations" class="nav-link">Automations</a>
         <a href="#protection" class="nav-link">Protection</a>
+        <a href="/privacy.html" class="nav-link">Privacy Policy</a>
         <a href="/hub.html" class="nav-btn">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
           Mobile Hub
@@ -702,10 +710,10 @@
                 <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
                 <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
               </svg>
-              Two Unlock Modes
+              Biometric &amp; Master Lock
             </div>
             <div class="protection-col-desc">
-              Unlock via Master Password / Platform Biometrics (Windows Hello & Touch ID), or enable Camouflage Gate mode presenting an authentic LinkedIn login replica with a discreet unlock hotspot.
+              Unlock via Master Password or Platform Biometrics (Windows Hello &amp; Touch ID) with hardware-level security enclave verification.
             </div>
           </div>
 
@@ -758,19 +766,20 @@
         <span class="secure-mail-label">Contact Support via Email</span>
       </a>
     </section>
+      <!-- SECTION 4: PRIVACY POLICY & DATA INTEGRITY -->
+    <section id="privacy" class="support-box">
+      <h2>Privacy &amp; Data Integrity</h2>
+      <p>LiTools is engineered with zero-compromise local data privacy. Review our transparent data handling and permission practices.</p>
+      <a href="/privacy.html" class="btn-primary" role="button">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/><path d="m9 12 2 2 4-4"/></svg>
+        <span>Read Official Privacy Policy</span>
+      </a>
+    </section>
   </main>
 
   <!-- Footer -->
   <footer>
     <p>LiTools &copy; 2026. All rights reserved.</p>
-    <p style="margin-top: 8px;">
-      <a href="/index.html">Support Home</a> &bull;
-      <a href="/hub.html">Mobile Security Hub</a> &bull;
-      <a href="/privacy.html">Privacy Policy</a> &bull;
-      <a href="#automations">6 Automations</a> &bull;
-      <a href="#protection">Page Protection</a> &bull;
-      <a href="#" class="secure-mail-link" data-user="linkedintools1" data-domain="gmail.com" role="button">Contact</a>
-    </p>
   </footer>
 
   <script>
