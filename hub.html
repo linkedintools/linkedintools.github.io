@@ -13,6 +13,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="LiTools Security">
+  <script src="i18n.js"></script>
   <style>
     :root {
       --bg-main: #191919;
@@ -1431,7 +1432,7 @@
 
       const textEl = document.getElementById('currentModeText');
       if (textEl) {
-        textEl.textContent = currentPushMode === 'basic' ? 'Basic Mode' : 'Detailed Mode';
+        textEl.textContent = currentPushMode === 'basic' ? (window.t ? window.t('Basic Mode', 'Basic Mode') : 'Basic Mode') : (window.t ? window.t('Detailed Mode', 'Detailed Mode') : 'Detailed Mode');
       }
       const optBasic = document.getElementById('optionModeBasic');
       const optDetailed = document.getElementById('optionModeDetailed');
@@ -1861,7 +1862,8 @@
         lastLogsPayload = payloadStr;
 
         if (!data.logs || data.logs.length === 0) {
-          listEl.innerHTML = '<li style="text-align: center; color: var(--text-muted); padding: 20px; font-size: 13px; list-style: none; border-left: none;">No security events recorded yet.</li>';
+          const emptyMsg = window.t ? window.t('No security events recorded yet.', 'No security events recorded yet.') : 'No security events recorded yet.';
+          listEl.innerHTML = `<li style="text-align: center; color: var(--text-muted); padding: 20px; font-size: 13px; list-style: none; border-left: none;">${emptyMsg}</li>`;
           return;
         }
 
@@ -1869,16 +1871,20 @@
           const isDanger = log.eventType === 'EXTENSION_UNINSTALLED' || log.eventType === 'ACCESS_DENIED';
           const isWarning = log.eventType === 'SECURITY_ENABLED' || log.eventType === 'SECURITY_DISABLED';
           const badgeClass = isDanger ? 'danger' : (isWarning ? 'warning' : '');
-          const dateStr = new Date(log.timestamp * 1000).toLocaleString('en-US');
+          const locCode = window.currentLang === 'pt' ? 'pt-BR' : window.currentLang === 'de' ? 'de-DE' : window.currentLang === 'fr' ? 'fr-FR' : window.currentLang === 'hi' ? 'hi-IN' : 'en-US';
+          const dateStr = new Date(log.timestamp * 1000).toLocaleString(locCode);
           const ipStr = formatClassicIpv4(log.ipAddress);
+
+          const eventTitle = window.localizeSecurityEvent ? window.localizeSecurityEvent(log.eventType) : log.eventType;
+          const eventDesc = window.localizeSecurityDetails ? window.localizeSecurityDetails(log.details) : (log.details || (window.t ? window.t('No details provided', 'No details provided') : 'No details provided'));
 
           return `
             <li class="log-item ${badgeClass}">
               <span class="log-item-dot ${badgeClass}"></span>
               <div class="log-grid">
-                <div class="log-col-left log-title">${log.eventType}</div>
+                <div class="log-col-left log-title">${eventTitle}</div>
                 <div class="log-col-right log-date">${dateStr}</div>
-                <div class="log-col-left log-desc" title="${(log.details || '').replace(/"/g, '&quot;')}">${log.details || 'No details provided'}</div>
+                <div class="log-col-left log-desc" title="${(eventDesc || '').replace(/"/g, '&quot;')}">${eventDesc}</div>
                 <div class="log-col-right log-ip">IP: ${ipStr}</div>
               </div>
             </li>
@@ -1907,21 +1913,21 @@
       if (isActive) {
         if (badge) {
           badge.className = 'status-badge status-active';
-          badge.innerHTML = `${activeBell} Active`;
+          badge.innerHTML = `${activeBell} ${window.t ? window.t('Active', 'Active') : 'Active'}`;
         }
         if (badgeInactive) badgeInactive.style.display = 'none';
-        if (tipTitle) tipTitle.textContent = 'Device Protected & Live';
-        if (tipText) tipText.innerHTML = 'Real-time browser notifications are actively monitoring this device. You will receive an instant notification according to your chosen alert mode.';
+        if (tipTitle) tipTitle.textContent = window.t ? window.t('Device Protected & Live', 'Device Protected & Live') : 'Device Protected & Live';
+        if (tipText) tipText.innerHTML = window.t ? window.t('Real-time browser notifications are actively monitoring this device. You will receive an instant notification according to your chosen alert mode.', 'Real-time browser notifications are actively monitoring this device. You will receive an instant notification according to your chosen alert mode.') : 'Real-time browser notifications are actively monitoring this device. You will receive an instant notification according to your chosen alert mode.';
         if (enablePushBtn) enablePushBtn.style.display = 'none';
         if (activeShieldWrap) activeShieldWrap.style.display = 'flex';
       } else {
         if (badgeInactive) {
           badgeInactive.style.display = 'inline-flex';
-          badgeInactive.innerHTML = `${inactiveBell} Inactive`;
+          badgeInactive.innerHTML = `${inactiveBell} ${window.t ? window.t('Inactive', 'Inactive') : 'Inactive'}`;
         }
         if (badge) {
           badge.className = 'status-badge status-inactive';
-          badge.innerHTML = `${inactiveBell} Inactive`;
+          badge.innerHTML = `${inactiveBell} ${window.t ? window.t('Inactive', 'Inactive') : 'Inactive'}`;
         }
         if (tipTitle) tipTitle.textContent = 'Push Notification Guide';
         if (tipText) tipText.innerHTML = 'If you enable notifications above, instant browser alerts will be dispatched to this device if the LiTools extension is removed or security protection is triggered.';
