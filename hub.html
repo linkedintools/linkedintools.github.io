@@ -1109,6 +1109,7 @@
         <img src="icons/logo.svg" alt="LiTools Logo">
         <span class="brand-title">LiTools Hub</span>
       </div>
+      <div id="litLangMount" style="margin-left: auto;"></div>
     </div>
 
     <!-- Desktop Warning: Mobile Pairing Required (Only on Desktop) -->
@@ -2175,6 +2176,24 @@
         status.onchange = checkSubscriptionState;
       }).catch(() => {});
     }
+    // Listen for live language changes and re-render dynamic strings
+    window.addEventListener('lit_locale_applied', () => {
+      const aid = document.getElementById('accountIdInput')?.value.trim() || initialAid;
+      if (isAccountDecommissioned) {
+        setDecommissionedUI(true, aid);
+        updatePushState(false);
+      } else {
+        setDecommissionedUI(false);
+        checkSubscriptionState();
+      }
+      lastLogsPayload = '';
+      if (aid) loadLogs(aid, true);
+      const m = (aid ? localStorage.getItem('lit_push_mode_' + aid) : null) || localStorage.getItem('lit_push_mode') || 'basic';
+      const modeTextEl = document.getElementById('currentModeText');
+      if (modeTextEl) {
+        modeTextEl.textContent = m === 'detailed' ? (window.t ? window.t('Detailed Mode', 'Detailed Mode') : 'Detailed Mode') : (window.t ? window.t('Basic Mode', 'Basic Mode') : 'Basic Mode');
+      }
+    });
   </script>
 </body>
 </html>
