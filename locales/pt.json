@@ -170,5 +170,16 @@
   "Security screen activated for tab {tabId}.": "Tela de segurança ativada para a guia {tabId}.",
   "LinkedIn Protection State Changed": "Estado de Proteção do LinkedIn Alterado",
   "Extension was uninstalled from browser.": "A extensão foi desinstalada do navegador.",
-  "No details provided": "Nenhum detalhe fornecido"
+  "No details provided": "Nenhum detalhe fornecido",
+  "Languages": "Idiomas",
+  "Account ID Not Found / Inactive": "ID de Conta Não Encontrado / Inativo",
+  "Not Registered": "Não Registrado",
+  "Account Not Registered": "Conta Não Registrada",
+  "Extension Not Found": "Extensão Não Encontrada",
+  "This Account ID is not active in the system. Make sure the extension is installed in your browser and enter its active Account ID above.": "Este ID de Conta não está ativo no sistema. Certifique-se de que a extensão esteja instalada em seu navegador e insira o ID de Conta ativo acima.",
+  "Pairing New Extension": "Emparelhando Nova Extensão",
+  "Enter the Account ID shown in your newly installed LiTools extension, then tap Enable Browser Notifications.": "Insira o ID de Conta mostrado na sua extensão LiTools recém-instalada e toque em Ativar Notificações no Navegador.",
+  "Decommissioned": "Desativado",
+  "Account Decommissioned": "Conta Desativada",
+  "This Account ID was permanently decommissioned when the extension was uninstalled. It cannot be reactivated. Tap \"Enter New Extension ID\" above or paste your new Account ID from your LiTools extension to pair this device.": "Este ID de Conta foi desativado permanentemente quando a extensão foi desinstalada. Não pode ser reativado. Toque em \"Inserir Novo ID de Extensão\" acima ou cole o novo ID da extensão LiTools."
 }

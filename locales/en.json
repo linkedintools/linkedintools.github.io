@@ -170,5 +170,16 @@
   "Security screen activated for tab {tabId}.": "Security screen activated for tab {tabId}.",
   "LinkedIn Protection State Changed": "LinkedIn Protection State Changed",
   "Extension was uninstalled from browser.": "Extension was uninstalled from browser.",
-  "No details provided": "No details provided"
+  "No details provided": "No details provided",
+  "Languages": "Languages",
+  "Account ID Not Found / Inactive": "Account ID Not Found / Inactive",
+  "Not Registered": "Not Registered",
+  "Account Not Registered": "Account Not Registered",
+  "Extension Not Found": "Extension Not Found",
+  "This Account ID is not active in the system. Make sure the extension is installed in your browser and enter its active Account ID above.": "This Account ID is not active in the system. Make sure the extension is installed in your browser and enter its active Account ID above.",
+  "Pairing New Extension": "Pairing New Extension",
+  "Enter the Account ID shown in your newly installed LiTools extension, then tap Enable Browser Notifications.": "Enter the Account ID shown in your newly installed LiTools extension, then tap Enable Browser Notifications.",
+  "Decommissioned": "Decommissioned",
+  "Account Decommissioned": "Account Decommissioned",
+  "This Account ID was permanently decommissioned when the extension was uninstalled. It cannot be reactivated. Tap \"Enter New Extension ID\" above or paste your new Account ID from your LiTools extension to pair this device.": "This Account ID was permanently decommissioned when the extension was uninstalled. It cannot be reactivated. Tap \"Enter New Extension ID\" above or paste your new Account ID from your LiTools extension to pair this device."
 }

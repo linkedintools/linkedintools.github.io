@@ -170,5 +170,16 @@
   "Security screen activated for tab {tabId}.": "टैब {tabId} के लिए सुरक्षा स्क्रीन सक्रिय।",
   "LinkedIn Protection State Changed": "लिंक्डइन सुरक्षा स्थिति बदली गई",
   "Extension was uninstalled from browser.": "ब्राउज़र से एक्सटेंशन अनइंस्टॉल किया गया।",
-  "No details provided": "कोई विवरण उपलब्ध नहीं"
+  "No details provided": "कोई विवरण उपलब्ध नहीं",
+  "Languages": "भाषाएं",
+  "Account ID Not Found / Inactive": "खाता आईडी नहीं मिला / निष्क्रिय",
+  "Not Registered": "पंजीकृत नहीं",
+  "Account Not Registered": "खाता पंजीकृत नहीं",
+  "Extension Not Found": "एक्सटेंशन नहीं मिला",
+  "This Account ID is not active in the system. Make sure the extension is installed in your browser and enter its active Account ID above.": "यह खाता आईडी सिस्टम में सक्रिय नहीं है। सुनिश्चित करें कि एक्सटेंशन आपके ब्राउज़र में स्थापित है और ऊपर अपनी सक्रिय खाता आईडी दर्ज करें।",
+  "Pairing New Extension": "नया एक्सटेंशन युग्मित कर रहे हैं",
+  "Enter the Account ID shown in your newly installed LiTools extension, then tap Enable Browser Notifications.": "अपने नए स्थापित LiTools एक्सटेंशन में दिखाए गए खाता आईडी दर्ज करें, फिर ब्राउज़र सूचनाएं सक्षम करें पर टैप करें।",
+  "Decommissioned": "सेवामुक्त",
+  "Account Decommissioned": "खाता सेवामुक्त",
+  "This Account ID was permanently decommissioned when the extension was uninstalled. It cannot be reactivated. Tap \"Enter New Extension ID\" above or paste your new Account ID from your LiTools extension to pair this device.": "एक्सटेंशन अनइंस्टॉल होने पर इस खाता आईडी को स्थायी रूप से सेवामुक्त कर दिया गया था। इसे पुनर्सक्रिय नहीं किया जा सकता है। ऊपर \"नया एक्सटेंशन आईडी दर्ज करें\" पर टैप करें।"
 }

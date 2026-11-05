@@ -4,14 +4,23 @@
  *
  * Rules:
  * 1. For extension users: all pages and content open in the same language as active LinkedIn language.
- * 2. For non-extension users: default strictly to English ('en').
- * 3. Locale files are stored in ./locales/{lang}.json on GitHub.
+ * 2. For non-extension users: default strictly to English ('en') unless manually changed via switcher.
+ * 3. Every page includes an interactive "Languages" button and dropdown to switch language anytime.
+ * 4. Locale files are stored in ./locales/{lang}.json on GitHub.
  */
 (function() {
   'use strict';
 
   const SUPPORTED_LANGS = ['en', 'de', 'pt', 'fr', 'hi'];
   const DEFAULT_LANG = 'en';
+
+  const LANG_NAMES = {
+    en: 'English',
+    de: 'Deutsch',
+    pt: 'Português',
+    fr: 'Français',
+    hi: 'हिन्दी'
+  };
 
   let currentLang = DEFAULT_LANG;
   let currentDict = {};
@@ -23,20 +32,20 @@
     return SUPPORTED_LANGS.includes(base) ? base : DEFAULT_LANG;
   }
 
-  // Detect whether this visitor is an authentic LiTools extension user
-  function detectExtensionUserAndLanguage() {
+  // Detect whether this visitor is an authentic LiTools extension user or has selected a language
+  function detectInitialLanguage() {
     try {
       const params = new URLSearchParams(window.location.search);
       const urlLang = params.get('lang');
 
-      // 1. If explicit valid lang query parameter is present (passed from extension link or navigation)
+      // 1. Explicit valid lang query parameter
       if (urlLang && SUPPORTED_LANGS.includes(normalizeLang(urlLang))) {
         const clean = normalizeLang(urlLang);
         try {
           localStorage.setItem('lit_extension_installed', 'true');
           localStorage.setItem('lit_extension_lang', clean);
         } catch (_) {}
-        return { isExtensionUser: true, lang: clean };
+        return clean;
       }
 
       // 2. Check DOM attribute injected by LiTools content script (website-bridge.js)
@@ -48,23 +57,23 @@
           localStorage.setItem('lit_extension_installed', 'true');
           localStorage.setItem('lit_extension_lang', clean);
         } catch (_) {}
-        return { isExtensionUser: true, lang: clean };
+        return clean;
       }
 
-      // 3. Check persistent storage from previous session by an extension user
+      // 3. Check persistent storage (extension installed or manual choice)
       const isInstalled = localStorage.getItem('lit_extension_installed') === 'true' ||
                           sessionStorage.getItem('lit_extension_installed') === 'true';
       const storedLang = localStorage.getItem('lit_extension_lang') ||
                          sessionStorage.getItem('lit_extension_lang');
 
       if (isInstalled && storedLang && SUPPORTED_LANGS.includes(normalizeLang(storedLang))) {
-        return { isExtensionUser: true, lang: normalizeLang(storedLang) };
+        return normalizeLang(storedLang);
       }
 
       // 4. Non-extension user -> Strictly English ('en')
-      return { isExtensionUser: false, lang: DEFAULT_LANG };
+      return DEFAULT_LANG;
     } catch (_) {
-      return { isExtensionUser: false, lang: DEFAULT_LANG };
+      return DEFAULT_LANG;
     }
   }
 
@@ -74,7 +83,6 @@
       return _localeCache[target];
     }
     try {
-      // Determine base URL relative to this script or root
       const scriptEl = document.currentScript || document.querySelector('script[src*="i18n.js"]');
       let basePath = '';
       if (scriptEl && scriptEl.src) {
@@ -185,13 +193,234 @@
     return t(trimmed, details);
   }
 
+  // Inject Styles for the Languages Switcher Component
+  function injectSwitcherStyles() {
+    if (document.getElementById('lit-lang-styles')) return;
+    const style = document.createElement('style');
+    style.id = 'lit-lang-styles';
+    style.textContent = `
+      .lit-lang-container {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        z-index: 1000;
+      }
+      .lit-lang-btn {
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.16);
+        color: #ffffff;
+        padding: 6px 12px;
+        border-radius: 6px;
+        font-size: 12.5px;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        cursor: pointer;
+        transition: all 0.15s ease;
+        user-select: none;
+        line-height: 1.4;
+      }
+      .lit-lang-btn:hover, .lit-lang-btn.active {
+        background: rgba(255, 255, 255, 0.14);
+        border-color: rgba(0, 138, 210, 0.6);
+        color: #ffffff;
+      }
+      .lit-lang-btn svg.lit-globe-icon {
+        width: 14px;
+        height: 14px;
+        opacity: 0.9;
+        flex-shrink: 0;
+      }
+      .lit-lang-btn svg.lit-arrow-icon {
+        width: 10px;
+        height: 10px;
+        opacity: 0.7;
+        transition: transform 0.2s ease;
+        flex-shrink: 0;
+      }
+      .lit-lang-btn.active svg.lit-arrow-icon {
+        transform: rotate(180deg);
+      }
+      .lit-lang-menu {
+        display: none;
+        position: absolute;
+        top: calc(100% + 6px);
+        right: 0;
+        background: #1e1e1e;
+        border: 1px solid rgba(255, 255, 255, 0.16);
+        border-radius: 6px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+        min-width: 160px;
+        padding: 5px 0;
+        z-index: 99999;
+      }
+      .lit-lang-menu.open {
+        display: block;
+        animation: litFadeIn 0.15s ease-out;
+      }
+      @keyframes litFadeIn {
+        from { opacity: 0; transform: translateY(-4px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      .lit-lang-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 8px 14px;
+        color: rgba(255, 255, 255, 0.82);
+        font-size: 13px;
+        cursor: pointer;
+        transition: background 0.12s ease, color 0.12s ease;
+        user-select: none;
+      }
+      .lit-lang-item:hover {
+        background: rgba(0, 138, 210, 0.18);
+        color: #ffffff;
+      }
+      .lit-lang-item.selected {
+        color: #38bdf8;
+        font-weight: 600;
+        background: rgba(0, 138, 210, 0.09);
+      }
+      .lit-lang-item-check {
+        font-size: 12px;
+        color: #38bdf8;
+        font-weight: bold;
+      }
+    `;
+    document.head.appendChild(style);
+  }
+
+  // Render Language Switcher Widget
+  function renderLanguageSwitcher() {
+    injectSwitcherStyles();
+
+    let mountEl = document.getElementById('litLangMount');
+    if (!mountEl) {
+      const targetWrap = document.querySelector('header .nav-container, .header, .card');
+      if (targetWrap) {
+        mountEl = document.createElement('div');
+        mountEl.id = 'litLangMount';
+        targetWrap.appendChild(mountEl);
+      }
+    }
+    if (!mountEl) return;
+
+    if (mountEl.querySelector('#litLangSwitcher')) {
+      updateLanguageSwitcherState();
+      return;
+    }
+
+    const itemsHtml = SUPPORTED_LANGS.map(code => {
+      const isSelected = code === currentLang;
+      return `
+        <div class="lit-lang-item ${isSelected ? 'selected' : ''}" data-code="${code}" role="menuitem">
+          <span>${LANG_NAMES[code] || code}</span>
+          <span class="lit-lang-item-check" style="${isSelected ? '' : 'display:none;'}">✓</span>
+        </div>
+      `;
+    }).join('');
+
+    mountEl.innerHTML = `
+      <div class="lit-lang-container" id="litLangSwitcher">
+        <button type="button" class="lit-lang-btn" id="litLangBtn" aria-haspopup="true" aria-expanded="false" title="Languages">
+          <svg class="lit-globe-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"></path>
+            <path d="M2 12h20"></path>
+          </svg>
+          <span class="lit-lang-label">Languages</span>
+          <svg class="lit-arrow-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="m6 9 6 6 6-6"></path>
+          </svg>
+        </button>
+        <div class="lit-lang-menu" id="litLangMenu" role="menu">
+          ${itemsHtml}
+        </div>
+      </div>
+    `;
+
+    const btn = document.getElementById('litLangBtn');
+    const menu = document.getElementById('litLangMenu');
+
+    if (!btn || !menu) return;
+
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const isOpen = menu.classList.contains('open');
+      if (isOpen) {
+        menu.classList.remove('open');
+        btn.classList.remove('active');
+        btn.setAttribute('aria-expanded', 'false');
+      } else {
+        menu.classList.add('open');
+        btn.classList.add('active');
+        btn.setAttribute('aria-expanded', 'true');
+      }
+    });
+
+    menu.querySelectorAll('.lit-lang-item').forEach(item => {
+      item.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const code = item.getAttribute('data-code');
+        if (code) {
+          menu.classList.remove('open');
+          btn.classList.remove('active');
+          btn.setAttribute('aria-expanded', 'false');
+
+          try {
+            localStorage.setItem('lit_extension_installed', 'true');
+            localStorage.setItem('lit_extension_lang', code);
+          } catch (_) {}
+
+          try {
+            const url = new URL(window.location.href);
+            url.searchParams.set('lang', code);
+            window.history.replaceState({}, '', url.toString());
+          } catch (_) {}
+
+          applyLanguage(code);
+        }
+      });
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!mountEl.contains(e.target)) {
+        menu.classList.remove('open');
+        btn.classList.remove('active');
+        btn.setAttribute('aria-expanded', 'false');
+      }
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        menu.classList.remove('open');
+        btn.classList.remove('active');
+        btn.setAttribute('aria-expanded', 'false');
+      }
+    });
+  }
+
+  function updateLanguageSwitcherState() {
+    const menu = document.getElementById('litLangMenu');
+    if (!menu) return;
+    menu.querySelectorAll('.lit-lang-item').forEach(it => {
+      const isTarget = it.getAttribute('data-code') === currentLang;
+      it.classList.toggle('selected', isTarget);
+      const check = it.querySelector('.lit-lang-item-check');
+      if (check) check.style.display = isTarget ? '' : 'none';
+    });
+  }
+
   function translateDOM(dict) {
     if (!dict) return;
 
     // 1. Update HTML lang attribute
     document.documentElement.lang = currentLang;
 
-    // 2. Translate document title if matching
+    // 2. Translate document title
     if (document.title) {
       if (!document._litOrigTitle) document._litOrigTitle = document.title.trim();
       const trTitle = dict[document._litOrigTitle];
@@ -199,13 +428,17 @@
     }
 
     // 3. TreeWalker for all text nodes
-    const walker = document.createTreeWalker(document.body || document.documentElement, NodeFilter.SHOW_TEXT);
+    const root = document.body || document.documentElement;
+    if (!root) return;
+    const SHOW_TEXT = (typeof window.NodeFilter !== 'undefined' && window.NodeFilter.SHOW_TEXT) || 4;
+    const walker = document.createTreeWalker(root, SHOW_TEXT);
     let textNode;
     while ((textNode = walker.nextNode())) {
       const parent = textNode.parentElement;
       if (!parent) continue;
       const tag = parent.tagName;
       if (tag === 'SCRIPT' || tag === 'STYLE' || tag === 'NOSCRIPT' || tag === 'CODE') continue;
+      if (parent.closest('#litLangSwitcher')) continue; // Skip language switcher button text
 
       const raw = textNode.nodeValue;
       const trimmed = raw.trim();
@@ -220,13 +453,13 @@
       if (target && target !== trimmed) {
         textNode.nodeValue = raw.replace(trimmed, target);
       } else if (!target && currentLang === DEFAULT_LANG && trimmed !== orig) {
-        // Revert to English original
         textNode.nodeValue = raw.replace(trimmed, orig);
       }
     }
 
     // 4. Attribute translations (title, placeholder, aria-label)
     document.querySelectorAll('[title], [placeholder], [aria-label]').forEach(el => {
+      if (el.closest('#litLangSwitcher')) return;
       if (el.hasAttribute('title')) {
         const val = el.getAttribute('title').trim();
         if (!el._litOrigTitle) el._litOrigTitle = val;
@@ -255,7 +488,6 @@
       document.querySelectorAll('a[href]').forEach(a => {
         const href = a.getAttribute('href');
         if (!href || href.startsWith('#') || href.startsWith('mailto:') || href.startsWith('javascript:')) return;
-        // Internal page link
         if (href.endsWith('.html') || href.startsWith('/') || href.startsWith('./')) {
           try {
             const url = new URL(href, window.location.origin);
@@ -267,6 +499,9 @@
         }
       });
     }
+
+    // 6. Update Switcher active state
+    updateLanguageSwitcherState();
   }
 
   async function applyLanguage(lang) {
@@ -278,14 +513,17 @@
     currentDict = dict;
     window.currentLocaleDict = dict;
 
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', () => translateDOM(dict), { once: true });
-    } else {
+    const run = () => {
+      renderLanguageSwitcher();
       translateDOM(dict);
-    }
+      window.dispatchEvent(new CustomEvent('lit_locale_applied', { detail: { lang: clean, dict } }));
+    };
 
-    // Trigger re-render of dynamic page elements if listeners exist
-    window.dispatchEvent(new CustomEvent('lit_locale_applied', { detail: { lang: clean, dict } }));
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', run, { once: true });
+    } else {
+      run();
+    }
   }
 
   // Public API
@@ -296,8 +534,8 @@
   window.currentLang = currentLang;
 
   // Initialize Language
-  const detection = detectExtensionUserAndLanguage();
-  applyLanguage(detection.lang);
+  const initialLang = detectInitialLanguage();
+  applyLanguage(initialLang);
 
   // Runtime listener for extension handshake (website-bridge.js)
   window.addEventListener('lit_extension_ready', (e) => {
