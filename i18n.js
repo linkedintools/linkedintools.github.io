@@ -199,6 +199,10 @@
     const style = document.createElement('style');
     style.id = 'lit-lang-styles';
     style.textContent = `
+      #litLangMount {
+        position: relative;
+        z-index: 1000;
+      }
       .lit-lang-container {
         position: relative;
         display: inline-flex;
