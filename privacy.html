@@ -244,6 +244,38 @@
       font-size: 13px;
       color: var(--text-3);
     }
+  
+    /* Toast Notification for Clipboard Copy */
+    .lit-toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: #111827;
+      color: #ffffff;
+      border: 1px solid rgba(0, 114, 169, 0.5);
+      border-radius: 8px;
+      padding: 10px 18px;
+      font-size: 13px;
+      font-weight: 500;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease, transform 0.25s ease;
+      z-index: 99999;
+    }
+    .lit-toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+      pointer-events: auto;
+    }
+    .lit-toast svg {
+      color: #38bdf8;
+    }
+
   </style>
 </head>
 <body>
@@ -256,11 +288,14 @@
         <span>LiTools</span>
       </a>
       <div style="display: flex; align-items: center; gap: 14px;">
-        <div id="litLangMount"></div>
         <nav class="nav-links">
         <a href="/index.html" class="nav-link">Home &amp; Support</a>
-        <a href="/hub.html" class="nav-btn">Mobile Hub</a>
+        <a href="/hub.html" class="nav-btn">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+          Mobile Hub
+        </a>
       </nav>
+        <div id="litLangMount"></div>
       </div>
     </div>
   </header>
@@ -419,12 +454,58 @@
         return '';
       }
 
-      function handleMailClick(e) {
-        const mail = resolveMail(this);
-        if (mail) {
-          e.preventDefault();
-          window.location.href = `mailto:${mail}?subject=${encodeURIComponent('LiTools Privacy & Support Inquiry')}`;
+      function showCopyToast(msg) {
+        let toast = document.getElementById('litToast');
+        if (!toast) {
+          toast = document.createElement('div');
+          toast.id = 'litToast';
+          toast.className = 'lit-toast';
+          toast.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span id="litToastMsg"></span>`;
+          document.body.appendChild(toast);
         }
+        document.getElementById('litToastMsg').textContent = msg;
+        toast.classList.add('show');
+        clearTimeout(toast._timer);
+        toast._timer = setTimeout(function() {
+          toast.classList.remove('show');
+        }, 3200);
+      }
+
+      async function copyToClipboard(text) {
+        try {
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            await navigator.clipboard.writeText(text);
+            return true;
+          }
+        } catch (_) {}
+        try {
+          const ta = document.createElement('textarea');
+          ta.value = text;
+          ta.style.position = 'fixed';
+          ta.style.opacity = '0';
+          document.body.appendChild(ta);
+          ta.select();
+          document.execCommand('copy');
+          document.body.removeChild(ta);
+          return true;
+        } catch (_) {
+          return false;
+        }
+      }
+
+      async function handleMailClick(e) {
+        e.preventDefault();
+        const mail = resolveMail(this);
+        if (!mail) return;
+
+        const copied = await copyToClipboard(mail);
+        const subject = encodeURIComponent('LiTools Privacy & Support Inquiry');
+        
+        showCopyToast(copied ? `${mail} copied to clipboard!` : `Email: ${mail}`);
+
+        try {
+          window.location.href = `mailto:${mail}?subject=${subject}`;
+        } catch (_) {}
       }
 
       function handleMailHover() {
@@ -433,7 +514,9 @@
           this.setAttribute('data-decrypted', 'true');
           this.setAttribute('href', `mailto:${mail}`);
           const label = this.querySelector('.secure-mail-label');
-          if (label) label.textContent = mail;
+          if (label && label.textContent.includes('[at]')) {
+            label.textContent = mail;
+          }
         }
       }
 
