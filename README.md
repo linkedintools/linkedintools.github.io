@@ -1,6 +1,8 @@
 # LiTools: LinkedIn Connection & Network Assistant
 
-The [LiTools](https://linkedintools.github.io/) assistant is a browser extension that automates networking processes on LinkedIn and simplifies connection management.
+[![Available in the Chrome Web Store](https://img.shields.io/badge/Chrome_Web_Store-Available_Now-blue?logo=googlechrome&logoColor=white)](https://chromewebstore.google.com/detail/litools/jcnhbikighjdhfpjeoahcljgehfnegoo)
+
+The [LiTools](https://linkedintools.github.io/) assistant is a browser extension that automates networking processes on LinkedIn and simplifies connection management. Officially available on the [Chrome Web Store](https://chromewebstore.google.com/detail/litools/jcnhbikighjdhfpjeoahcljgehfnegoo).
 
 ## Core Automations
 
