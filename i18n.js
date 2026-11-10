@@ -42,7 +42,7 @@
       if (urlLang && SUPPORTED_LANGS.includes(normalizeLang(urlLang))) {
         const clean = normalizeLang(urlLang);
         try {
-          localStorage.setItem('lit_extension_installed', 'true');
+          localStorage.setItem('lit_user_lang', clean);
           localStorage.setItem('lit_extension_lang', clean);
         } catch (_) {}
         return clean;
@@ -54,23 +54,24 @@
       if (attrInstalled === 'true' && attrLang) {
         const clean = normalizeLang(attrLang);
         try {
+          localStorage.setItem('lit_user_lang', clean);
           localStorage.setItem('lit_extension_installed', 'true');
           localStorage.setItem('lit_extension_lang', clean);
         } catch (_) {}
         return clean;
       }
 
-      // 3. Check persistent storage (extension installed or manual choice)
-      const isInstalled = localStorage.getItem('lit_extension_installed') === 'true' ||
-                          sessionStorage.getItem('lit_extension_installed') === 'true';
-      const storedLang = localStorage.getItem('lit_extension_lang') ||
-                         sessionStorage.getItem('lit_extension_lang');
+      // 3. Check persistent user choice or extension preference across all pages
+      const storedUserLang = localStorage.getItem('lit_user_lang') ||
+                             sessionStorage.getItem('lit_user_lang') ||
+                             localStorage.getItem('lit_extension_lang') ||
+                             sessionStorage.getItem('lit_extension_lang');
 
-      if (isInstalled && storedLang && SUPPORTED_LANGS.includes(normalizeLang(storedLang))) {
-        return normalizeLang(storedLang);
+      if (storedUserLang && SUPPORTED_LANGS.includes(normalizeLang(storedUserLang))) {
+        return normalizeLang(storedUserLang);
       }
 
-      // 4. Non-extension user -> Strictly English ('en')
+      // 4. Default strictly to English ('en')
       return DEFAULT_LANG;
     } catch (_) {
       return DEFAULT_LANG;
@@ -375,6 +376,7 @@
           btn.setAttribute('aria-expanded', 'false');
 
           try {
+            localStorage.setItem('lit_user_lang', code);
             localStorage.setItem('lit_extension_installed', 'true');
             localStorage.setItem('lit_extension_lang', code);
           } catch (_) {}
@@ -488,21 +490,19 @@
     });
 
     // 5. Update internal links to maintain language consistency during user navigation
-    if (currentLang !== DEFAULT_LANG) {
-      document.querySelectorAll('a[href]').forEach(a => {
-        const href = a.getAttribute('href');
-        if (!href || href.startsWith('#') || href.startsWith('mailto:') || href.startsWith('javascript:')) return;
-        if (href.endsWith('.html') || href.startsWith('/') || href.startsWith('./')) {
-          try {
-            const url = new URL(href, window.location.origin);
-            if (url.origin === window.location.origin) {
-              url.searchParams.set('lang', currentLang);
-              a.setAttribute('href', url.pathname + url.search + url.hash);
-            }
-          } catch (_) {}
-        }
-      });
-    }
+    document.querySelectorAll('a[href]').forEach(a => {
+      const href = a.getAttribute('href');
+      if (!href || href.startsWith('#') || href.startsWith('mailto:') || href.startsWith('javascript:')) return;
+      if (href.endsWith('.html') || href.startsWith('/') || href.startsWith('./')) {
+        try {
+          const url = new URL(href, window.location.origin);
+          if (url.origin === window.location.origin) {
+            url.searchParams.set('lang', currentLang);
+            a.setAttribute('href', url.pathname + url.search + url.hash);
+          }
+        } catch (_) {}
+      }
+    });
 
     // 6. Update Switcher active state
     updateLanguageSwitcherState();
@@ -545,6 +545,7 @@
   window.addEventListener('lit_extension_ready', (e) => {
     if (e.detail && e.detail.lang) {
       try {
+        localStorage.setItem('lit_user_lang', e.detail.lang);
         localStorage.setItem('lit_extension_installed', 'true');
         localStorage.setItem('lit_extension_lang', e.detail.lang);
       } catch (_) {}
@@ -557,6 +558,7 @@
   window.addEventListener('message', (e) => {
     if (e.data && e.data.type === 'LIT_EXTENSION_LANG_SYNC' && e.data.lang) {
       try {
+        localStorage.setItem('lit_user_lang', e.data.lang);
         localStorage.setItem('lit_extension_installed', 'true');
         localStorage.setItem('lit_extension_lang', e.data.lang);
       } catch (_) {}

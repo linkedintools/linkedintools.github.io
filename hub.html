@@ -186,7 +186,11 @@
       text-decoration: none;
       color: var(--text-main);
       user-select: none;
-      cursor: default;
+      cursor: pointer;
+      transition: opacity 0.15s ease;
+    }
+    .brand:hover {
+      opacity: 0.85;
     }
 
     .brand img {
@@ -1105,10 +1109,10 @@
           <div class="line line-3"></div>
         </div>
       </div>
-      <div class="brand">
+      <a href="/index.html" class="brand">
         <img src="icons/logo.svg" alt="LiTools Logo">
         <span class="brand-title">LiTools Hub</span>
-      </div>
+      </a>
       <div id="litLangMount" style="margin-left: auto;"></div>
     </div>
 
